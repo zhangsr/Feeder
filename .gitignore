@@ -1,0 +1,17 @@
+# Local configuration file (sdk path, etc)
+local.properties
+
+# Intellij project files
+*.iml
+*.ipr
+*.iws
+.idea/
+.gradle/
+local.properties
+gradle.properties
+build/
+gradle/
+gradlew
+gradlew.bat
+*~
+*.swp
