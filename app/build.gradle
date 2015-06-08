@@ -21,5 +21,14 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:22.0.0'
+    compile 'com.android.support:appcompat-v7:22.1.1'
+    compile 'me.drakeet.materialdialog:library:1.2.2'
+    dependencies {
+        compile 'com.nineoldandroids:library:2.4.0'
+        compile 'com.github.sd6352051.niftydialogeffects:niftydialogeffects:1.0.0@aar'
+    }
+    compile 'info.hoang8f:android-segmented:1.0.5'
+    compile 'com.baoyz.pullrefreshlayout:library:1.0.1'
+    compile 'commons-io:commons-io:2.4'
+    compile 'de.greenrobot:greendao:1.3.7'
 }
