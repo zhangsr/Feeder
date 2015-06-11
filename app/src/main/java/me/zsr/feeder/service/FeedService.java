@@ -5,6 +5,11 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 
+/**
+ * Description: Feed data handler.
+ * Author: Match
+ * Date: 15-6-11
+ */
 public class FeedService extends Service {
     private IBinder mBinder = new FeedBinder();
 

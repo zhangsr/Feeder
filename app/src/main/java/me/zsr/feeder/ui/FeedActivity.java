@@ -19,7 +19,7 @@ import java.util.List;
 
 import me.zsr.feeder.R;
 
-public class MainActivity extends Activity implements View.OnClickListener {
+public class FeedActivity extends Activity implements View.OnClickListener {
     private ImageButton mAddFeedButton;
     private ListView mFeedListView;
     private ImageButton mFavorButton;
@@ -76,7 +76,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.add_feed_btn:
-                startActivity(new Intent(MainActivity.this, AddSourceActivity.class));
+                startActivity(new Intent(FeedActivity.this, AddSourceActivity.class));
                 break;
             case R.id.favor_btn:
                 // Refresh UI
@@ -127,7 +127,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder viewHolder;
             if (convertView == null) {
-                convertView = LayoutInflater.from(MainActivity.this).inflate(R.layout.main_list_item, null);
+                convertView = LayoutInflater.from(FeedActivity.this).inflate(R.layout.main_list_item, null);
                 viewHolder = new ViewHolder();
                 viewHolder.imageView = (ImageView) convertView.findViewById(R.id.main_list_item_img);
                 viewHolder.titleTextView = (TextView) convertView.findViewById(R.id.main_list_item_title_txt);
