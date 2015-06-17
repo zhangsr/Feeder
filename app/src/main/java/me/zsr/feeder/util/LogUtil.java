@@ -12,6 +12,7 @@ public class LogUtil {
     private static boolean mLogAll = true;
     private static final boolean LOGD_DEBUG = true;
     private static final boolean LOGI_DEBUG = true;
+    private static final boolean LOGW_DEBUG = true;
     private static final boolean LOGE_DEBUG = true;
     private static final int STACK_INDEX = 2;
 
@@ -32,6 +33,16 @@ public class LogUtil {
     public static void i(String msg) {
         if (LOGI_DEBUG && mLogAll) {
             Log.i(DEFAULT_TAG, getInformation(msg));
+        }
+    }
+
+    /**
+     * Used for exception log
+     * @param msg
+     */
+    public static void w(String msg) {
+        if (LOGW_DEBUG && mLogAll) {
+            Log.e(DEFAULT_TAG, getInformation(msg));
         }
     }
 

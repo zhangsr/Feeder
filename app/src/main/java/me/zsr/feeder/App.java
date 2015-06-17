@@ -1,11 +1,16 @@
 package me.zsr.feeder;
 
 import android.app.Application;
+import android.content.Context;
+
+import com.android.volley.toolbox.ImageLoader;
 
 import org.mcsoxford.rss.RSSFeed;
 import org.mcsoxford.rss.RSSReader;
 import org.mcsoxford.rss.RSSReaderException;
 
+import me.zsr.feeder.dao.DaoMaster;
+import me.zsr.feeder.dao.DaoSession;
 import me.zsr.feeder.util.LogUtil;
 
 /**
@@ -14,7 +19,10 @@ import me.zsr.feeder.util.LogUtil;
  * @date: 15-5-13
  */
 public class App extends Application {
+    public static final String KEY_BUNDLE_SOURCE_ID = "source_id";
+    private static final String DB_NAME = "feed_db";
     private static App sInstance;
+    private static DaoSession sDaoSession;
 
     public static App getInstance() {
         return sInstance;
@@ -25,35 +33,13 @@ public class App extends Application {
         super.onCreate();
 
         sInstance = this;
+    }
 
-        // Test
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                RSSReader reader = new RSSReader();
-                RSSFeed feed;
-                try {
-                    feed = reader.load("http://zhihu.com/rss");
-//                    for (RSSItem item : feed.getItems()) {
-//                        Log.e("Saul", "item=" + item.getContent());
-//                    }
-                    LogUtil.e("Feed Title=" + feed.getTitle());
-                    LogUtil.e("Feed Link=" + feed.getLink());
-                    LogUtil.e("Feed Description=" + feed.getDescription());
-//                    LogUtil.e("Feed Link=" + feed.getPubDate().toString());
-                    String categoriesStr = "";
-                    for (String s : feed.getCategories()) {
-                        categoriesStr += s;
-                    }
-                    LogUtil.e("Feed Categories=" + categoriesStr);
-                    LogUtil.e("Item Title=" + feed.getItems().get(0).getTitle());
-                    LogUtil.e("Item PubDate=" + feed.getItems().get(0).getPubDate().toString());
-                    LogUtil.e("Item Description=" + feed.getItems().get(0).getDescription());
-                    LogUtil.e("Item Content=" + feed.getItems().get(0).getContent());
-                } catch (RSSReaderException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
+    public static DaoSession getDaoSession() {
+        if (sDaoSession == null) {
+            DaoMaster.OpenHelper helper = new DaoMaster.DevOpenHelper(getInstance(), DB_NAME, null);
+            sDaoSession = new DaoMaster(helper.getWritableDatabase()).newSession();
+        }
+        return sDaoSession;
     }
 }

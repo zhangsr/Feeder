@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="48dp">
 
-        <ImageView
+        <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/main_list_item_img"
             android:background="@android:color/darker_gray"
             android:layout_width="24dp"
@@ -21,7 +21,6 @@
             android:singleLine="true"
             android:ellipsize="end"
             android:textSize="16sp"
-            android:text="知乎每日精选"
             android:textColor="@android:color/black"
             android:alpha="0.87"
             android:layout_marginLeft="56dp"

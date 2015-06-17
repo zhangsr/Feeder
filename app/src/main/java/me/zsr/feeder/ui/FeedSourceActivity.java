@@ -3,47 +3,65 @@ package me.zsr.feeder.ui;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.NetworkImageView;
 import com.baoyz.widget.PullRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
+import me.zsr.feeder.App;
 import me.zsr.feeder.R;
+import me.zsr.feeder.dao.FeedSource;
+import me.zsr.feeder.util.CommonEvent;
+import me.zsr.feeder.util.FeedDBUtil;
+import me.zsr.feeder.util.FeedNetworkUtil;
+import me.zsr.feeder.util.VolleySingleton;
 
-public class FeedActivity extends Activity implements View.OnClickListener {
+public class FeedSourceActivity extends Activity implements View.OnClickListener {
     private ImageButton mAddFeedButton;
     private ListView mFeedListView;
     private ImageButton mFavorButton;
     private ImageButton mUnreadButton;
     private ImageButton mAllButton;
-    private List<String> mTestFeedList = new ArrayList<>();
+    private List<FeedSource> mFeedSourceList = new ArrayList<>();
     private FeedAdapter mFeedAdapter;
     private PullRefreshLayout mPullRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_feed_source);
 
         initData();
         initView();
         setListener();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        EventBus.getDefault().unregister(this);
+    }
+
     private void initData() {
-        mTestFeedList.add("知乎每日精选");
-        mTestFeedList.add("干货集中营");
-        mTestFeedList.add("开发者头条");
-        mTestFeedList.add("Matrix67");
+        mFeedSourceList = FeedDBUtil.getInstance().loadAll();
     }
 
     private void initView() {
@@ -70,13 +88,23 @@ public class FeedActivity extends Activity implements View.OnClickListener {
 
             }
         });
+        mFeedListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Bundle bundle = new Bundle();
+                bundle.putLong(App.KEY_BUNDLE_SOURCE_ID, mFeedSourceList.get(position).getId());
+                Intent intent = new Intent(FeedSourceActivity.this , FeedItemActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.add_feed_btn:
-                startActivity(new Intent(FeedActivity.this, AddSourceActivity.class));
+                startActivity(new Intent(FeedSourceActivity.this, AddSourceActivity.class));
                 break;
             case R.id.favor_btn:
                 // Refresh UI
@@ -110,12 +138,12 @@ public class FeedActivity extends Activity implements View.OnClickListener {
 
         @Override
         public int getCount() {
-            return mTestFeedList.size();
+            return mFeedSourceList.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return mTestFeedList.get(position);
+            return mFeedSourceList.get(position);
         }
 
         @Override
@@ -125,11 +153,12 @@ public class FeedActivity extends Activity implements View.OnClickListener {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+            FeedSource feedSource = mFeedSourceList.get(position);
             ViewHolder viewHolder;
             if (convertView == null) {
-                convertView = LayoutInflater.from(FeedActivity.this).inflate(R.layout.main_list_item, null);
+                convertView = LayoutInflater.from(FeedSourceActivity.this).inflate(R.layout.feed_source_list_item, null);
                 viewHolder = new ViewHolder();
-                viewHolder.imageView = (ImageView) convertView.findViewById(R.id.main_list_item_img);
+                viewHolder.imageView = (NetworkImageView) convertView.findViewById(R.id.main_list_item_img);
                 viewHolder.titleTextView = (TextView) convertView.findViewById(R.id.main_list_item_title_txt);
                 viewHolder.numTextView = (TextView) convertView.findViewById(R.id.main_list_item_num_txt);
                 convertView.setTag(viewHolder);
@@ -137,15 +166,38 @@ public class FeedActivity extends Activity implements View.OnClickListener {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
 
-            viewHolder.titleTextView.setText(mTestFeedList.get(position));
-            viewHolder.numTextView.setText("" + (int) (Math.random() * 1000));
+            viewHolder.imageView.setImageUrl(feedSource.getFavicon(), VolleySingleton.getInstance().getImageLoader());
+            viewHolder.titleTextView.setText(feedSource.getTitle());
+            viewHolder.numTextView.setText("" + feedSource.getFeedItems().size());
             return convertView;
         }
 
         private class ViewHolder {
-            ImageView imageView;
+            NetworkImageView imageView;
             TextView titleTextView;
             TextView numTextView;
         }
+    }
+
+    public void onEventMainThread(CommonEvent commonEvent) {
+        switch (commonEvent) {
+            case FEED_DB_UPDATED:
+                mFeedSourceList = FeedDBUtil.getInstance().loadAll();
+                mFeedAdapter.notifyDataSetChanged();
+                break;
+            default:
+        }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_VOLUME_DOWN:
+                // Test add source
+//                FeedNetworkUtil.addFeedSource("http://www.coolshell.cn/feed");
+                FeedNetworkUtil.addFeedSource("http://www.zhihu.com/rss");
+                break;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }
