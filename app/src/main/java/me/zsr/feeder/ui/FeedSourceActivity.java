@@ -104,7 +104,7 @@ public class FeedSourceActivity extends Activity implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.add_feed_btn:
-                startActivity(new Intent(FeedSourceActivity.this, AddSourceActivity.class));
+                //todo show dialog
                 break;
             case R.id.favor_btn:
                 // Refresh UI

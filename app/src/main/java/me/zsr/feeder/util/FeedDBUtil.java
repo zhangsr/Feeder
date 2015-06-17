@@ -4,7 +4,6 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 import me.zsr.feeder.App;
-import me.zsr.feeder.dao.FeedItemDao;
 import me.zsr.feeder.dao.FeedSource;
 import me.zsr.feeder.dao.FeedSourceDao;
 

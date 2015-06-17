@@ -18,10 +18,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ui.AddSourceActivity"
-            android:label="@string/title_activity_add_source" >
-        </activity>
 
         <activity
             android:name=".ui.FeedItemActivity"

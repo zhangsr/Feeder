@@ -82,6 +82,7 @@ public class FeedItemListAdapter extends BaseAdapter implements StickyListHeader
     @Override
     public long getHeaderId(int position) {
         //return the first character of the country as ID because this is what headers are based upon
+        //todo format date
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("DD");
         long id = Long.valueOf(simpleDateFormat.format(mFeedSource.getFeedItems().get(position).getDate()));
         return id;
