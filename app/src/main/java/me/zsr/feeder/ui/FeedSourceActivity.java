@@ -85,7 +85,7 @@ public class FeedSourceActivity extends Activity implements View.OnClickListener
         mPullRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
+                FeedNetworkUtil.fetchAll();
             }
         });
         mFeedListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -182,6 +182,7 @@ public class FeedSourceActivity extends Activity implements View.OnClickListener
     public void onEventMainThread(CommonEvent commonEvent) {
         switch (commonEvent) {
             case FEED_DB_UPDATED:
+                mPullRefreshLayout.setRefreshing(false);
                 mFeedSourceList = FeedDBUtil.getInstance().loadAll();
                 mFeedAdapter.notifyDataSetChanged();
                 break;

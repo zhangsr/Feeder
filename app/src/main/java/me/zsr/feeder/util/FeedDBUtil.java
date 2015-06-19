@@ -4,6 +4,8 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 import me.zsr.feeder.App;
+import me.zsr.feeder.dao.FeedItem;
+import me.zsr.feeder.dao.FeedItemDao;
 import me.zsr.feeder.dao.FeedSource;
 import me.zsr.feeder.dao.FeedSourceDao;
 
@@ -15,6 +17,7 @@ import me.zsr.feeder.dao.FeedSourceDao;
 public class FeedDBUtil {
     private static FeedDBUtil sFeedDBUtil;
     private FeedSourceDao mFeedSourceDao;
+    private FeedItemDao mFeedItemDao;
 
     private FeedDBUtil() {}
 
@@ -23,12 +26,18 @@ public class FeedDBUtil {
             // All init here
             sFeedDBUtil = new FeedDBUtil();
             sFeedDBUtil.mFeedSourceDao = App.getDaoSession().getFeedSourceDao();
+            sFeedDBUtil.mFeedItemDao = App.getDaoSession().getFeedItemDao();
         }
         return sFeedDBUtil;
     }
 
     public void saveFeedSource(FeedSource feedSource) {
         mFeedSourceDao.insertOrReplace(feedSource);
+//        EventBus.getDefault().post(CommonEvent.FEED_DB_UPDATED);
+    }
+
+    public void saveFeedItem(List<FeedItem> feedItemList) {
+        mFeedItemDao.insertOrReplaceInTx(feedItemList);
         EventBus.getDefault().post(CommonEvent.FEED_DB_UPDATED);
     }
 

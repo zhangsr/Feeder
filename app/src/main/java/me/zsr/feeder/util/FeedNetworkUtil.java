@@ -5,9 +5,9 @@ import org.mcsoxford.rss.RSSItem;
 import org.mcsoxford.rss.RSSReader;
 import org.mcsoxford.rss.RSSReaderException;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import me.zsr.feeder.App;
 import me.zsr.feeder.dao.FeedItem;
 import me.zsr.feeder.dao.FeedSource;
 
@@ -18,10 +18,17 @@ import me.zsr.feeder.dao.FeedSource;
  */
 public class FeedNetworkUtil {
     public static void fetchAll() {
-
+        List<FeedSource> feedSourceList = FeedDBUtil.getInstance().loadAll();
+        for (FeedSource source : feedSourceList) {
+            fetchItem(source);
+        }
     }
 
-    public static void fetchSpecificSource(final FeedSource feedSource) {
+    public static void fetchItem(final FeedSource feedSource) {
+        if (feedSource == null) {
+            return;
+        }
+
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -29,19 +36,7 @@ public class FeedNetworkUtil {
                 RSSFeed feed;
                 try {
                     feed = reader.load(feedSource.getUrl());
-                    List<FeedItem> feedItemList = feedSource.getFeedItems();
-                    for (RSSItem item : feed.getItems()) {
-                        FeedItem feedItem = new FeedItem(
-                                null,
-                                item.getTitle(),
-                                item.getLink().toString(),
-                                item.getDescription(),
-                                "unread",
-                                item.getPubDate(),
-                                feedSource.getId());
-                        feedItemList.add(feedItem);
-                    }
-                    FeedDBUtil.getInstance().saveFeedSource(feedSource);
+                    FeedDBUtil.getInstance().saveFeedItem(parseItem(feed, feedSource.getId()));
                 } catch (RSSReaderException e) {
                     e.printStackTrace();
                 }
@@ -83,17 +78,36 @@ public class FeedNetworkUtil {
                             feed.getLink().toString() + "/favicon.ico",
                             feed.getDescription()
                     );
-                    App.getDaoSession().getFeedSourceDao().insertOrReplace(feedSource);
-                    fetchSpecificSource(feedSource);
+                    FeedDBUtil.getInstance().saveFeedSource(feedSource);
+                    FeedDBUtil.getInstance().saveFeedItem(parseItem(feed, feedSource.getId()));
                 } catch (RSSReaderException e) {
                     e.printStackTrace();
                 }
             }
         }).start();
-
     }
 
     public interface OnVerifyFeedListener {
         void onResult(boolean isValid);
+    }
+
+    private static List<FeedItem> parseItem(RSSFeed rssFeed, long feedSourceId) {
+        List<FeedItem> feedItemList = new ArrayList<>();
+
+        if (rssFeed != null) {
+            for (RSSItem item : rssFeed.getItems()) {
+                FeedItem feedItem = new FeedItem(
+                        null,
+                        item.getTitle(),
+                        item.getLink().toString(),
+                        item.getDescription(),
+                        "unread",
+                        item.getPubDate(),
+                        feedSourceId);
+                feedItemList.add(feedItem);
+            }
+        }
+
+        return feedItemList;
     }
 }
