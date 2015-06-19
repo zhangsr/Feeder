@@ -55,6 +55,20 @@ public class FeedDBUtil {
         }
     }
 
+    public FeedItem getFeedItemById(long id) {
+        List<FeedItem> list = App.getDaoSession().getFeedItemDao().queryBuilder()
+                .where(FeedItemDao.Properties.Id.eq(id)).list();
+        if (list.size() == 0) {
+            LogUtil.w("No FeedItem found.");
+            return null;
+        } if (list.size() == 1) {
+            return list.get(0);
+        } else {
+            LogUtil.e("Somethings wrong with DB !!");
+            return null;
+        }
+    }
+
     public List<FeedSource> loadAll() {
         return mFeedSourceDao.loadAll();
     }

@@ -20,6 +20,7 @@ import me.zsr.feeder.util.LogUtil;
  */
 public class App extends Application {
     public static final String KEY_BUNDLE_SOURCE_ID = "source_id";
+    public static final String KEY_BUNDLE_ITEM_ID = "item_id";
     private static final String DB_NAME = "feed_db";
     private static App sInstance;
     private static DaoSession sDaoSession;

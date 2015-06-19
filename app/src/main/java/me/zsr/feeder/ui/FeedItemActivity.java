@@ -1,7 +1,10 @@
 package me.zsr.feeder.ui;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 
 import me.zsr.feeder.App;
 import me.zsr.feeder.R;
@@ -35,6 +38,15 @@ public class FeedItemActivity extends Activity {
     }
 
     private void setListener() {
-
+        mFeedItemListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Bundle bundle = new Bundle();
+                bundle.putLong(App.KEY_BUNDLE_ITEM_ID, mFeedSource.getFeedItems().get(position).getId());
+                Intent intent = new Intent(FeedItemActivity.this , FeedBodyActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
     }
 }
