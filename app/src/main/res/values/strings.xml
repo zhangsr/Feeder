@@ -6,4 +6,5 @@
     <string name="title_activity_add_source">AddSourceActivity</string>
     <string name="title_activity_feed_item">FeedItemActivity</string>
     <string name="title_activity_feed_body">FeedBodyActivity</string>
+    <string name="add_feed">添加订阅</string>
 </resources>

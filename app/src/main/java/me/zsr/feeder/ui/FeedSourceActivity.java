@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,8 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.toolbox.NetworkImageView;
 import com.baoyz.widget.PullRefreshLayout;
 
@@ -104,7 +107,7 @@ public class FeedSourceActivity extends Activity implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.add_feed_btn:
-                //todo show dialog
+                showAddFeedDialog();
                 break;
             case R.id.favor_btn:
                 // Refresh UI
@@ -132,6 +135,23 @@ public class FeedSourceActivity extends Activity implements View.OnClickListener
                 break;
             default:
         }
+    }
+
+    private void showAddFeedDialog() {
+        new MaterialDialog.Builder(this)
+                .title("添加订阅")
+                .content("RSS地址、网址或名称")
+                .inputType(InputType.TYPE_CLASS_TEXT |
+                        InputType.TYPE_TEXT_VARIATION_PERSON_NAME |
+                        InputType.TYPE_TEXT_FLAG_CAP_WORDS)
+                .positiveText("添加")
+                .alwaysCallInputCallback() // this forces the callback to be invoked with every input change
+                .input(R.string.abc_search_hint, 0, false, new MaterialDialog.InputCallback() {
+                    @Override
+                    public void onInput(MaterialDialog dialog, CharSequence input) {
+                        dialog.getActionButton(DialogAction.POSITIVE).setEnabled(true);
+                    }
+                }).show();
     }
 
     private class FeedAdapter extends BaseAdapter {

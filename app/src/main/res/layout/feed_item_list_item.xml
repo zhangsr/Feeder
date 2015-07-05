@@ -4,19 +4,20 @@
               android:layout_height="match_parent">
 
     <LinearLayout
-        android:gravity="center_vertical"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:layout_width="match_parent"
-        android:layout_height="48dp">
+        android:layout_height="88dp">
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/feed_item_list_item_img"
             android:background="@android:color/darker_gray"
-            android:layout_width="24dp"
-            android:layout_height="24dp"/>
+            android:layout_marginTop="20dp"
+            android:layout_width="16dp"
+            android:layout_height="16dp"/>
 
         <LinearLayout
+            android:layout_gravity="center_vertical"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -24,6 +25,7 @@
             <TextView
                 android:layout_gravity="end"
                 android:text="18:39"
+                android:textSize="12sp"
                 android:textColor="@android:color/black"
                 android:fontFamily="sans-serif"
                 android:alpha="0.54"
@@ -33,22 +35,25 @@
             <TextView
                 android:id="@+id/feed_item_list_item_title_txt"
                 android:textSize="16sp"
+                android:ellipsize="end"
+                android:lines="2"
                 android:textColor="@android:color/black"
                 android:alpha="0.87"
-                android:layout_marginLeft="56dp"
-                android:layout_marginRight="56dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
                 android:fontFamily="sans-serif"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
             <TextView
                 android:id="@+id/feed_item_list_item_description_txt"
+                android:textSize="14sp"
                 android:singleLine="true"
                 android:ellipsize="end"
                 android:textColor="@android:color/black"
                 android:alpha="0.54"
-                android:layout_marginLeft="56dp"
-                android:layout_marginRight="56dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
                 android:fontFamily="sans-serif"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>

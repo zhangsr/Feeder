@@ -6,12 +6,15 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.NetworkImageView;
+
 import java.text.SimpleDateFormat;
 
 import me.zsr.feeder.App;
 import me.zsr.feeder.R;
 import me.zsr.feeder.dao.FeedItem;
 import me.zsr.feeder.dao.FeedSource;
+import me.zsr.feeder.util.VolleySingleton;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 /**
@@ -51,12 +54,14 @@ public class FeedItemListAdapter extends BaseAdapter implements StickyListHeader
         if (convertView == null) {
             viewHolder = new ViewHolder();
             convertView = mLayoutInflater.inflate(R.layout.feed_item_list_item, null);
+            viewHolder.imageView = (NetworkImageView) convertView.findViewById(R.id.feed_item_list_item_img);
             viewHolder.titleTextView = (TextView) convertView.findViewById(R.id.feed_item_list_item_title_txt);
             viewHolder.descriptionTextView = (TextView) convertView.findViewById(R.id.feed_item_list_item_description_txt);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
+        viewHolder.imageView.setImageUrl(mFeedSource.getFavicon(), VolleySingleton.getInstance().getImageLoader());
         viewHolder.titleTextView.setText(feedItem.getTitle());
         viewHolder.descriptionTextView.setText(feedItem.getDescription());
 
@@ -93,6 +98,7 @@ public class FeedItemListAdapter extends BaseAdapter implements StickyListHeader
     }
 
     class ViewHolder {
+        NetworkImageView imageView;
         TextView titleTextView;
         TextView descriptionTextView;
     }
