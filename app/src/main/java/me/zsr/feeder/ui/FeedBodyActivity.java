@@ -2,8 +2,8 @@ package me.zsr.feeder.ui;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
+
+import org.sufficientlysecure.htmltextview.HtmlTextView;
 
 import me.zsr.feeder.App;
 import me.zsr.feeder.R;
@@ -12,7 +12,7 @@ import me.zsr.feeder.util.FeedDBUtil;
 
 public class FeedBodyActivity extends Activity {
     private FeedItem mFeedItem;
-    private WebView mBodyWebView;
+    private HtmlTextView mBodyTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,10 +30,8 @@ public class FeedBodyActivity extends Activity {
     }
 
     private void initView() {
-        mBodyWebView = (WebView) findViewById(R.id.feed_body_web);
-        WebSettings webSettings = mBodyWebView.getSettings();
-        webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-        mBodyWebView.loadDataWithBaseURL("", mFeedItem.getDescription(), "text/html", "UTF-8", "");
+        mBodyTextView = (HtmlTextView) findViewById(R.id.feed_body_txt);
+        mBodyTextView.setHtmlFromString(mFeedItem.getDescription(), false);
     }
 
     private void setListener() {
