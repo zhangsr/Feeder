@@ -3,7 +3,10 @@ package me.zsr.feeder;
 import android.app.Application;
 import android.content.Context;
 
-import com.android.volley.toolbox.ImageLoader;
+import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 
 import org.mcsoxford.rss.RSSFeed;
 import org.mcsoxford.rss.RSSReader;
@@ -34,6 +37,8 @@ public class App extends Application {
         super.onCreate();
 
         sInstance = this;
+
+        initUniversalImageLoader();
     }
 
     public static DaoSession getDaoSession() {
@@ -42,5 +47,17 @@ public class App extends Application {
             sDaoSession = new DaoMaster(helper.getWritableDatabase()).newSession();
         }
         return sDaoSession;
+    }
+
+    private void initUniversalImageLoader() {
+        ImageLoaderConfiguration config =
+                new ImageLoaderConfiguration.Builder(this)
+                        .diskCacheSize(50 * 1024 * 1024)
+                        .threadPriority(Thread.MAX_PRIORITY)
+                        .denyCacheImageMultipleSizesInMemory()
+                        .memoryCache(new LruMemoryCache(10 * 1024 * 1024))
+                        .tasksProcessingOrder(QueueProcessingType.FIFO)
+                        .build();
+        ImageLoader.getInstance().init(config);
     }
 }

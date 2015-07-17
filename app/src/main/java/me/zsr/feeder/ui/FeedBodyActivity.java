@@ -2,6 +2,7 @@ package me.zsr.feeder.ui;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.widget.TextView;
 
 import org.sufficientlysecure.htmltextview.HtmlTextView;
 
@@ -12,7 +13,8 @@ import me.zsr.feeder.util.FeedDBUtil;
 
 public class FeedBodyActivity extends Activity {
     private FeedItem mFeedItem;
-    private HtmlTextView mBodyTextView;
+    private HtmlTextView mContentTextView;
+    private TextView mTitleTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +32,10 @@ public class FeedBodyActivity extends Activity {
     }
 
     private void initView() {
-        mBodyTextView = (HtmlTextView) findViewById(R.id.feed_body_txt);
-        mBodyTextView.setHtmlText(mFeedItem.getDescription());
+        mTitleTextView = (TextView) findViewById(R.id.feed_body_title);
+        mTitleTextView.setText(mFeedItem.getTitle());
+        mContentTextView = (HtmlTextView) findViewById(R.id.feed_body_content);
+        mContentTextView.setHtmlText(mFeedItem.getDescription());
     }
 
     private void setListener() {
