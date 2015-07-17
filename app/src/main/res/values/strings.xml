@@ -7,4 +7,7 @@
     <string name="title_activity_feed_item">FeedItemActivity</string>
     <string name="title_activity_feed_body">FeedBodyActivity</string>
     <string name="add_feed">添加订阅</string>
+    <string name="today">今天</string>
+    <string name="yestoday">昨天</string>
+    <string name="before_yestoday">前天</string>
 </resources>

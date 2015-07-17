@@ -8,12 +8,15 @@ import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
 
+import org.jsoup.Jsoup;
+
 import java.text.SimpleDateFormat;
 
 import me.zsr.feeder.App;
 import me.zsr.feeder.R;
 import me.zsr.feeder.dao.FeedItem;
 import me.zsr.feeder.dao.FeedSource;
+import me.zsr.feeder.util.DateUtil;
 import me.zsr.feeder.util.VolleySingleton;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
@@ -63,7 +66,7 @@ public class FeedItemListAdapter extends BaseAdapter implements StickyListHeader
         }
         viewHolder.imageView.setImageUrl(mFeedSource.getFavicon(), VolleySingleton.getInstance().getImageLoader());
         viewHolder.titleTextView.setText(feedItem.getTitle());
-        viewHolder.descriptionTextView.setText(feedItem.getDescription());
+        viewHolder.descriptionTextView.setText(Jsoup.parse(feedItem.getDescription()).text());
 
         return convertView;
     }
@@ -80,7 +83,7 @@ public class FeedItemListAdapter extends BaseAdapter implements StickyListHeader
         } else {
             headerViewHolder = (HeaderViewHolder) convertView.getTag();
         }
-        headerViewHolder.textView.setText(feedItem.getDate().toString().substring(0, 2));
+        headerViewHolder.textView.setText(DateUtil.formatDate(feedItem.getDate()));
         return convertView;
     }
 
