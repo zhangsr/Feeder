@@ -31,7 +31,7 @@ public class FeedBodyActivity extends Activity {
 
     private void initView() {
         mBodyTextView = (HtmlTextView) findViewById(R.id.feed_body_txt);
-        mBodyTextView.setHtmlFromString(mFeedItem.getDescription(), false);
+        mBodyTextView.setHtmlText(mFeedItem.getDescription());
     }
 
     private void setListener() {
