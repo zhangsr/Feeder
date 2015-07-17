@@ -1,6 +1,5 @@
 package me.zsr.feeder.ui;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -13,6 +12,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -29,9 +29,10 @@ import me.zsr.feeder.dao.FeedSource;
 import me.zsr.feeder.util.CommonEvent;
 import me.zsr.feeder.util.FeedDBUtil;
 import me.zsr.feeder.util.FeedNetworkUtil;
+import me.zsr.feeder.util.LogUtil;
 import me.zsr.feeder.util.VolleySingleton;
 
-public class FeedSourceActivity extends Activity implements View.OnClickListener {
+public class FeedSourceActivity extends BaseActivity implements View.OnClickListener {
     private ImageButton mAddFeedButton;
     private ListView mFeedListView;
     private ImageButton mFavorButton;
@@ -96,7 +97,7 @@ public class FeedSourceActivity extends Activity implements View.OnClickListener
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Bundle bundle = new Bundle();
                 bundle.putLong(App.KEY_BUNDLE_SOURCE_ID, mFeedSourceList.get(position).getId());
-                Intent intent = new Intent(FeedSourceActivity.this , FeedItemActivity.class);
+                Intent intent = new Intent(FeedSourceActivity.this, FeedItemActivity.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
@@ -146,6 +147,24 @@ public class FeedSourceActivity extends Activity implements View.OnClickListener
                         InputType.TYPE_TEXT_FLAG_CAP_WORDS)
                 .positiveText("添加")
                 .alwaysCallInputCallback() // this forces the callback to be invoked with every input change
+                .callback(new MaterialDialog.ButtonCallback() {
+                    @Override
+                    public void onPositive(MaterialDialog dialog) {
+                        super.onPositive(dialog);
+                        final String url = dialog.getInputEditText().getText().toString();
+                        FeedNetworkUtil.verifyFeedSource(url, new FeedNetworkUtil.OnVerifyFeedListener() {
+                                    @Override
+                                    public void onResult(boolean isValid) {
+                                        if (isValid) {
+                                            FeedNetworkUtil.addFeedSource(url);
+                                        } else {
+                                            LogUtil.e("Source invalid");
+                                            Toast.makeText(App.getInstance(), "Source invalid", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+                    }
+                })
                 .input(R.string.abc_search_hint, 0, false, new MaterialDialog.InputCallback() {
                     @Override
                     public void onInput(MaterialDialog dialog, CharSequence input) {
@@ -213,11 +232,12 @@ public class FeedSourceActivity extends Activity implements View.OnClickListener
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         switch (keyCode) {
-            case KeyEvent.KEYCODE_VOLUME_DOWN:
+            case KeyEvent.KEYCODE_VOLUME_UP:
                 // Test add source
 //                FeedNetworkUtil.addFeedSource("http://www.coolshell.cn/feed");
                 FeedNetworkUtil.addFeedSource("http://www.zhihu.com/rss");
-                break;
+                return true;
+            default:
         }
         return super.onKeyDown(keyCode, event);
     }

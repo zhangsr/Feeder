@@ -1,62 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/white">
 
     <LinearLayout
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
         android:layout_width="match_parent"
-        android:layout_height="88dp">
+        android:layout_height="88dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/feed_item_list_item_img"
-            android:background="@android:color/darker_gray"
-            android:layout_marginTop="20dp"
             android:layout_width="16dp"
-            android:layout_height="16dp"/>
+            android:layout_height="16dp"
+            android:layout_marginTop="20dp"
+            android:background="@android:color/darker_gray"/>
 
         <LinearLayout
-            android:layout_gravity="center_vertical"
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:orientation="vertical">
 
             <TextView
-                android:layout_gravity="end"
-                android:text="18:39"
-                android:textSize="12sp"
-                android:textColor="@android:color/black"
-                android:fontFamily="sans-serif"
-                android:alpha="0.54"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:alpha="0.54"
+                android:fontFamily="sans-serif"
+                android:text="18:39"
+                android:textColor="@android:color/black"
+                android:textSize="12sp"/>
 
             <TextView
                 android:id="@+id/feed_item_list_item_title_txt"
-                android:textSize="16sp"
-                android:ellipsize="end"
-                android:lines="2"
-                android:textColor="@android:color/black"
-                android:alpha="0.87"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
+                android:alpha="0.87"
+                android:ellipsize="end"
                 android:fontFamily="sans-serif"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:lines="2"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"/>
 
             <TextView
                 android:id="@+id/feed_item_list_item_description_txt"
-                android:textSize="14sp"
-                android:singleLine="true"
-                android:ellipsize="end"
-                android:textColor="@android:color/black"
-                android:alpha="0.54"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
+                android:alpha="0.54"
+                android:ellipsize="end"
                 android:fontFamily="sans-serif"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:singleLine="true"
+                android:textColor="@android:color/black"
+                android:textSize="14sp"/>
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

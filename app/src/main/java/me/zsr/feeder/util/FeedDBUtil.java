@@ -72,4 +72,9 @@ public class FeedDBUtil {
     public List<FeedSource> loadAll() {
         return mFeedSourceDao.loadAll();
     }
+
+    public boolean hasSource(String url) {
+        return App.getDaoSession().getFeedSourceDao().queryBuilder()
+                .where(FeedSourceDao.Properties.Url.eq(url)).list().size() > 0;
+    }
 }

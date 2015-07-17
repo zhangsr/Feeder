@@ -1,6 +1,5 @@
 package me.zsr.feeder.ui;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -11,10 +10,11 @@ import me.zsr.feeder.R;
 import me.zsr.feeder.dao.FeedItem;
 import me.zsr.feeder.util.FeedDBUtil;
 
-public class FeedBodyActivity extends Activity {
+public class FeedBodyActivity extends BaseActivity {
     private FeedItem mFeedItem;
     private HtmlTextView mContentTextView;
     private TextView mTitleTextView;
+    private TextView mSourceTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +34,8 @@ public class FeedBodyActivity extends Activity {
     private void initView() {
         mTitleTextView = (TextView) findViewById(R.id.feed_body_title);
         mTitleTextView.setText(mFeedItem.getTitle());
+        mSourceTextView = (TextView) findViewById(R.id.feed_body_source);
+        mSourceTextView.setText(mFeedItem.getFeedSource().getTitle());
         mContentTextView = (HtmlTextView) findViewById(R.id.feed_body_content);
         mContentTextView.setHtmlText(mFeedItem.getDescription());
     }

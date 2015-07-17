@@ -1,5 +1,7 @@
 package me.zsr.feeder.util;
 
+import android.widget.Toast;
+
 import org.mcsoxford.rss.RSSFeed;
 import org.mcsoxford.rss.RSSItem;
 import org.mcsoxford.rss.RSSReader;
@@ -8,6 +10,7 @@ import org.mcsoxford.rss.RSSReaderException;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.zsr.feeder.App;
 import me.zsr.feeder.dao.FeedItem;
 import me.zsr.feeder.dao.FeedSource;
 
@@ -45,6 +48,9 @@ public class FeedNetworkUtil {
     }
 
     public static void verifyFeedSource(final String url, final OnVerifyFeedListener listener) {
+        // TODO
+        String regex = "^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
+        
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -64,6 +70,13 @@ public class FeedNetworkUtil {
     }
 
     public static void addFeedSource(final String url) {
+        if (FeedDBUtil.getInstance().hasSource(url)) {
+            LogUtil.e("Source reduplicated");
+            Toast.makeText(App.getInstance(), "Source reduplicated",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         new Thread(new Runnable() {
             @Override
             public void run() {

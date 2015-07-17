@@ -1,6 +1,5 @@
 package me.zsr.feeder.ui;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -12,7 +11,7 @@ import me.zsr.feeder.dao.FeedSource;
 import me.zsr.feeder.util.FeedDBUtil;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
-public class FeedItemActivity extends Activity {
+public class FeedItemActivity extends BaseActivity {
     private StickyListHeadersListView mFeedItemListView;
     private FeedSource mFeedSource;
 

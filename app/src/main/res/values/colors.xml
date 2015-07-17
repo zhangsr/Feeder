@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="main_grey">#484743</color>
+    <color name="main_grey">#444444</color>
 
     <!-- http://www.google.com/design/spec/style/color.html#color-color-palette -->
     <color name="material_indigo_500">#3F51B5</color>
