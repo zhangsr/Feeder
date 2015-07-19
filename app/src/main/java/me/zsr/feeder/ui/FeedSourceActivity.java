@@ -56,6 +56,7 @@ public class FeedSourceActivity extends BaseActivity implements View.OnClickList
         EventBus.getDefault().register(this);
 
         mTabToolBar.setMode(App.getInstance().mCurrentMode);
+        mFeedAdapter.notifyDataSetChanged();
     }
 
     @Override

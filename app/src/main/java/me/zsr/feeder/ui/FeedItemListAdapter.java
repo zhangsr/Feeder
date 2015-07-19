@@ -69,6 +69,13 @@ public class FeedItemListAdapter extends BaseAdapter implements StickyListHeader
         }
         viewHolder.imageView.setImageUrl(mFaviconUrl, VolleySingleton.getInstance().getImageLoader());
         viewHolder.titleTextView.setText(feedItem.getTitle());
+        if (feedItem.getRead() == true) {
+            viewHolder.titleTextView.setAlpha(0.54f);
+            viewHolder.titleTextView.setTextColor(App.getInstance().getResources().getColor(R.color.main_grey_light));
+        } else {
+            viewHolder.titleTextView.setAlpha(0.87f);
+            viewHolder.titleTextView.setTextColor(App.getInstance().getResources().getColor(R.color.main_grey_dark));
+        }
         viewHolder.descriptionTextView.setText(Jsoup.parse(feedItem.getDescription()).text());
         viewHolder.timeTextView.setText(DateUtil.formatTime(feedItem.getDate()));
 

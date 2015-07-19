@@ -38,6 +38,15 @@ public class FeedItemActivity extends BaseActivity {
         setListener();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        mStarAdapter.notifyDataSetChanged();
+        mUnreadAdapter.notifyDataSetChanged();
+        mAllAdapter.notifyDataSetChanged();
+    }
+
     private void initData() {
         long feedSourceId = getIntent().getExtras().getLong(App.KEY_BUNDLE_SOURCE_ID);
         mFeedSource = FeedDBUtil.getInstance().getFeedSourceById(feedSourceId);

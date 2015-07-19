@@ -30,7 +30,7 @@
                 android:layout_gravity="end"
                 android:alpha="0.54"
                 android:fontFamily="sans-serif"
-                android:textColor="@android:color/black"
+                android:textColor="@color/main_grey_light"
                 android:textSize="12sp"/>
 
             <TextView
@@ -43,7 +43,7 @@
                 android:ellipsize="end"
                 android:fontFamily="sans-serif"
                 android:lines="2"
-                android:textColor="@android:color/black"
+                android:textColor="@color/main_grey_dark"
                 android:textSize="16sp"/>
 
             <TextView
@@ -56,7 +56,7 @@
                 android:ellipsize="end"
                 android:fontFamily="sans-serif"
                 android:singleLine="true"
-                android:textColor="@android:color/black"
+                android:textColor="@color/main_grey_light"
                 android:textSize="14sp"/>
         </LinearLayout>
     </LinearLayout>

@@ -21,7 +21,7 @@
             android:singleLine="true"
             android:ellipsize="end"
             android:textSize="16sp"
-            android:textColor="@android:color/black"
+            android:textColor="@color/main_grey_dark"
             android:alpha="0.87"
             android:layout_marginLeft="56dp"
             android:layout_marginRight="56dp"
@@ -32,8 +32,7 @@
         <TextView
             android:id="@+id/main_list_item_num_txt"
             android:text="32"
-            android:textColor="@android:color/black"
-            android:alpha="0.54"
+            android:textColor="@color/main_grey_light"
             android:layout_alignParentRight="true"
             android:fontFamily="sans-serif"
             android:layout_width="wrap_content"
