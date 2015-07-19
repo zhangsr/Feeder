@@ -35,12 +35,10 @@ import me.zsr.feeder.util.VolleySingleton;
 public class FeedSourceActivity extends BaseActivity implements View.OnClickListener {
     private ImageButton mAddFeedButton;
     private ListView mFeedListView;
-    private ImageButton mFavorButton;
-    private ImageButton mUnreadButton;
-    private ImageButton mAllButton;
     private List<FeedSource> mFeedSourceList = new ArrayList<>();
     private FeedAdapter mFeedAdapter;
     private PullRefreshLayout mPullRefreshLayout;
+    private FeedTabToolBar mTabToolBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +54,8 @@ public class FeedSourceActivity extends BaseActivity implements View.OnClickList
     protected void onResume() {
         super.onResume();
         EventBus.getDefault().register(this);
+
+        mTabToolBar.setMode(App.getInstance().mCurrentMode);
     }
 
     @Override
@@ -73,19 +73,13 @@ public class FeedSourceActivity extends BaseActivity implements View.OnClickList
         mFeedListView = (ListView) findViewById(R.id.feed_lv);
         mFeedAdapter = new FeedAdapter();
         mFeedListView.setAdapter(mFeedAdapter);
-        mFavorButton = (ImageButton) findViewById(R.id.favor_btn);
-        mUnreadButton = (ImageButton) findViewById(R.id.unread_btn);
-        mUnreadButton.setImageResource(R.drawable.ic_brightness_1_white_24dp);
-        mAllButton = (ImageButton) findViewById(R.id.all_btn);
         mPullRefreshLayout = (PullRefreshLayout) findViewById(R.id.feed_pull_to_refresh_layout);
         mPullRefreshLayout.setRefreshStyle(PullRefreshLayout.STYLE_RING);
+        mTabToolBar = (FeedTabToolBar) findViewById(R.id.feed_source_toolbar);
     }
 
     private void setListener() {
         mAddFeedButton.setOnClickListener(this);
-        mFavorButton.setOnClickListener(this);
-        mUnreadButton.setOnClickListener(this);
-        mAllButton.setOnClickListener(this);
         mPullRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -102,6 +96,13 @@ public class FeedSourceActivity extends BaseActivity implements View.OnClickList
                 startActivity(intent);
             }
         });
+        mTabToolBar.setOnTabChangedListener(new FeedTabToolBar.OnTabChangedListener() {
+            @Override
+            public void onTabChanged(App.Mode mode) {
+                App.getInstance().mCurrentMode = mode;
+                mFeedAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
@@ -109,30 +110,6 @@ public class FeedSourceActivity extends BaseActivity implements View.OnClickList
         switch (v.getId()) {
             case R.id.add_feed_btn:
                 showAddFeedDialog();
-                break;
-            case R.id.favor_btn:
-                // Refresh UI
-                mFavorButton.setImageResource(R.drawable.ic_grade_white_18dp);
-                mUnreadButton.setImageResource(R.drawable.ic_brightness_1_grey600_24dp);
-                mAllButton.setImageResource(R.drawable.ic_subject_grey600_18dp);
-
-                // Do things
-                break;
-            case R.id.unread_btn:
-                // Refresh UI
-                mFavorButton.setImageResource(R.drawable.ic_grade_grey600_18dp);
-                mUnreadButton.setImageResource(R.drawable.ic_brightness_1_white_24dp);
-                mAllButton.setImageResource(R.drawable.ic_subject_grey600_18dp);
-
-                // Do things
-                break;
-            case R.id.all_btn:
-                // Refresh UI
-                mFavorButton.setImageResource(R.drawable.ic_grade_grey600_18dp);
-                mUnreadButton.setImageResource(R.drawable.ic_brightness_1_grey600_24dp);
-                mAllButton.setImageResource(R.drawable.ic_subject_white_18dp);
-
-                // Do things
                 break;
             default:
         }
@@ -207,7 +184,20 @@ public class FeedSourceActivity extends BaseActivity implements View.OnClickList
 
             viewHolder.imageView.setImageUrl(feedSource.getFavicon(), VolleySingleton.getInstance().getImageLoader());
             viewHolder.titleTextView.setText(feedSource.getTitle());
-            viewHolder.numTextView.setText("" + feedSource.getFeedItems().size());
+            switch (App.getInstance().mCurrentMode) {
+                case STAR:
+                    viewHolder.numTextView.setText("" + FeedDBUtil.getInstance().countFeedItemByStar(
+                            feedSource.getId(), true));
+                    break;
+                case UNREAD:
+                    viewHolder.numTextView.setText("" + FeedDBUtil.getInstance().countFeedItemByRead(
+                            feedSource.getId(), false));
+                    break;
+                case ALL:
+                    viewHolder.numTextView.setText("" + feedSource.getFeedItems().size());
+                    break;
+                default:
+            }
             return convertView;
         }
 

@@ -114,7 +114,8 @@ public class FeedNetworkUtil {
                         item.getTitle(),
                         item.getLink().toString(),
                         item.getDescription(),
-                        "unread",
+                        false,
+                        false,
                         item.getPubDate(),
                         feedSourceId);
                 feedItemList.add(feedItem);

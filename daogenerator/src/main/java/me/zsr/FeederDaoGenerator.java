@@ -10,7 +10,7 @@ public class FeederDaoGenerator {
 
     public static void main(String[] args) throws Exception {
         // note : +1 after upgrade schema
-        Schema schema = new Schema(8, "me.zsr.feeder.dao");
+        Schema schema = new Schema(10, "me.zsr.feeder.dao");
 
         addFeed(schema);
 
@@ -34,13 +34,14 @@ public class FeederDaoGenerator {
         feedItem.addStringProperty("title").notNull();
         feedItem.addStringProperty("link");
         feedItem.addStringProperty("description");
-        feedItem.addStringProperty("state");
+        feedItem.addBooleanProperty("read");
+        feedItem.addBooleanProperty("star");
         Property feedItemDate = feedItem.addDateProperty("date").getProperty();
         Property feedSourceId = feedItem.addLongProperty("feedSourceId").notNull().getProperty();
         feedItem.addToOne(feedSource, feedSourceId);
 
         ToMany sourceToItem = feedSource.addToMany(feedItem, feedSourceId);
         sourceToItem.setName("feedItems");
-        sourceToItem.orderAsc(feedItemDate);
+        sourceToItem.orderDesc(feedItemDate);
     }
 }

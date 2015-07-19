@@ -60,6 +60,7 @@ public class FeedItemListAdapter extends BaseAdapter implements StickyListHeader
             viewHolder.imageView = (NetworkImageView) convertView.findViewById(R.id.feed_item_list_item_img);
             viewHolder.titleTextView = (TextView) convertView.findViewById(R.id.feed_item_list_item_title_txt);
             viewHolder.descriptionTextView = (TextView) convertView.findViewById(R.id.feed_item_list_item_description_txt);
+            viewHolder.timeTextView = (TextView) convertView.findViewById(R.id.feed_item_list_item_time);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -67,6 +68,7 @@ public class FeedItemListAdapter extends BaseAdapter implements StickyListHeader
         viewHolder.imageView.setImageUrl(mFeedSource.getFavicon(), VolleySingleton.getInstance().getImageLoader());
         viewHolder.titleTextView.setText(feedItem.getTitle());
         viewHolder.descriptionTextView.setText(Jsoup.parse(feedItem.getDescription()).text());
+        viewHolder.timeTextView.setText(DateUtil.formatTime(feedItem.getDate()));
 
         return convertView;
     }
@@ -104,5 +106,6 @@ public class FeedItemListAdapter extends BaseAdapter implements StickyListHeader
         NetworkImageView imageView;
         TextView titleTextView;
         TextView descriptionTextView;
+        TextView timeTextView;
     }
 }

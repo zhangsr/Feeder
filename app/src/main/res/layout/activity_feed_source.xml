@@ -31,5 +31,8 @@
             android:layout_height="match_parent" />
     </com.baoyz.widget.PullRefreshLayout>
 
-    <include layout="@layout/feed_bottom_tool_bar" />
+    <me.zsr.feeder.ui.FeedTabToolBar
+        android:id="@+id/feed_source_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="45dp" />
 </LinearLayout>

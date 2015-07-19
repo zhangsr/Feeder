@@ -24,12 +24,12 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/feed_item_list_item_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:alpha="0.54"
                 android:fontFamily="sans-serif"
-                android:text="18:39"
                 android:textColor="@android:color/black"
                 android:textSize="12sp"/>
 

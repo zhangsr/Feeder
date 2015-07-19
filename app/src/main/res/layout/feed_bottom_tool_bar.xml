@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
-              android:layout_height="45dp"
+              android:layout_height="match_parent"
               android:background="@color/main_grey"
               android:gravity="center">
 
     <ImageButton
-        android:id="@+id/favor_btn"
+        android:id="@+id/star_btn"
         android:layout_width="60dp"
         android:layout_height="match_parent"
         android:background="@null"

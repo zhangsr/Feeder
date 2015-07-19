@@ -29,11 +29,18 @@
                     android:textSize="12sp"/>
 
                 <TextView
+                    android:id="@+id/feed_body_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.54"
+                    android:textSize="12sp"/>
+
+                <TextView
                     android:id="@+id/feed_body_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:alpha="0.54"
-                    android:text="今天 07:30"
+                    android:layout_marginLeft="8dp"
                     android:textSize="12sp"/>
             </LinearLayout>
 

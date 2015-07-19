@@ -27,6 +27,10 @@ public class App extends Application {
     private static final String DB_NAME = "feed_db";
     private static App sInstance;
     private static DaoSession sDaoSession;
+    public Mode mCurrentMode = Mode.UNREAD;
+    public enum Mode {
+        STAR, UNREAD, ALL
+    }
 
     public static App getInstance() {
         return sInstance;

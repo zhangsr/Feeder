@@ -2,6 +2,7 @@ package me.zsr.feeder.util;
 
 import android.text.format.DateFormat;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -14,6 +15,7 @@ import me.zsr.feeder.R;
  * @date: 15-7-8
  */
 public class DateUtil {
+    private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm");
 
     // TODO: 15-7-9 support en
     public static CharSequence formatDate(Date date) {
@@ -32,6 +34,10 @@ public class DateUtil {
         } else {
             return DateFormat.format("yyyy年MM月dd日 EEEE", date);
         }
+    }
+
+    public static CharSequence formatTime(Date date) {
+        return TIME_FORMAT.format(date);
     }
 
     public static boolean isSameDay(Date date1, Date date2) {

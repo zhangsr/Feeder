@@ -36,8 +36,31 @@ public class FeedDBUtil {
 //        EventBus.getDefault().post(CommonEvent.FEED_DB_UPDATED);
     }
 
-    public void saveFeedItem(List<FeedItem> feedItemList) {
-        mFeedItemDao.insertOrReplaceInTx(feedItemList);
+    public void saveFeedItem(FeedItem feedItem) {
+        mFeedItemDao.insertOrReplace(feedItem);
+    }
+
+    public int countFeedItemByRead(long sourceId, boolean read) {
+        return mFeedItemDao.queryBuilder().where(
+                FeedItemDao.Properties.FeedSourceId.eq(sourceId),
+                FeedItemDao.Properties.Read.eq(read)).list().size();
+    }
+
+    public int countFeedItemByStar(long sourceId, boolean star) {
+        return mFeedItemDao.queryBuilder().where(
+                FeedItemDao.Properties.FeedSourceId.eq(sourceId),
+                FeedItemDao.Properties.Star.eq(star)).list().size();
+    }
+
+    public void saveFeedItem(final List<FeedItem> feedItemList) {
+        App.getDaoSession().runInTx(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = feedItemList.size() - 1; i >= 0; i--) {
+                    mFeedItemDao.insertOrReplace(feedItemList.get(i));
+                }
+            }
+        });
         EventBus.getDefault().post(CommonEvent.FEED_DB_UPDATED);
     }
 
