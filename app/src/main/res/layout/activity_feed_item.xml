@@ -6,8 +6,22 @@
     tools:context="me.zsr.feeder.ui.FeedItemActivity">
 
     <se.emilsjolander.stickylistheaders.StickyListHeadersListView
-        android:id="@+id/feed_item_lv"
+        android:id="@+id/feed_item_star_lv"
         android:layout_weight="1"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="0dp" />
+
+    <se.emilsjolander.stickylistheaders.StickyListHeadersListView
+        android:id="@+id/feed_item_unread_lv"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp" />
+
+    <se.emilsjolander.stickylistheaders.StickyListHeadersListView
+        android:id="@+id/feed_item_all_lv"
+        android:layout_weight="1"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="0dp" />
 

@@ -46,10 +46,27 @@ public class FeedDBUtil {
                 FeedItemDao.Properties.Read.eq(read)).list().size();
     }
 
+    public List<FeedItem> getFeedItemListByRead(long sourceId, boolean read) {
+        return mFeedItemDao.queryBuilder().where(
+                FeedItemDao.Properties.FeedSourceId.eq(sourceId),
+                FeedItemDao.Properties.Read.eq(read)).orderDesc(FeedItemDao.Properties.Date).list();
+    }
+
     public int countFeedItemByStar(long sourceId, boolean star) {
         return mFeedItemDao.queryBuilder().where(
                 FeedItemDao.Properties.FeedSourceId.eq(sourceId),
                 FeedItemDao.Properties.Star.eq(star)).list().size();
+    }
+
+    public List<FeedItem> getFeedItemListByStar(long sourceId, boolean star) {
+        return mFeedItemDao.queryBuilder().where(
+                FeedItemDao.Properties.FeedSourceId.eq(sourceId),
+                FeedItemDao.Properties.Star.eq(star)).orderDesc(FeedItemDao.Properties.Date).list();
+    }
+
+    public List<FeedItem> getAllFeedItemList(long sourceId) {
+        return mFeedItemDao.queryBuilder().where(
+                FeedItemDao.Properties.FeedSourceId.eq(sourceId)).orderDesc(FeedItemDao.Properties.Date).list();
     }
 
     public void saveFeedItem(final List<FeedItem> feedItemList) {

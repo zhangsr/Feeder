@@ -11,11 +11,11 @@ import com.android.volley.toolbox.NetworkImageView;
 import org.jsoup.Jsoup;
 
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 import me.zsr.feeder.App;
 import me.zsr.feeder.R;
 import me.zsr.feeder.dao.FeedItem;
-import me.zsr.feeder.dao.FeedSource;
 import me.zsr.feeder.util.DateUtil;
 import me.zsr.feeder.util.VolleySingleton;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
@@ -26,22 +26,24 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
  * @date: 15-6-12
  */
 public class FeedItemListAdapter extends BaseAdapter implements StickyListHeadersAdapter {
-    private FeedSource mFeedSource;
+    private List<FeedItem> mFeedItemList;
     private LayoutInflater mLayoutInflater;
+    private String mFaviconUrl;
 
-    public FeedItemListAdapter(FeedSource feedSource) {
-        mFeedSource = feedSource;
+    public FeedItemListAdapter(List<FeedItem> list, String faviconUrl) {
+        mFeedItemList = list;
         mLayoutInflater = LayoutInflater.from(App.getInstance());
+        mFaviconUrl = faviconUrl;
     }
 
     @Override
     public int getCount() {
-        return mFeedSource.getFeedItems().size();
+        return mFeedItemList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return mFeedSource.getFeedItems().get(position);
+        return mFeedItemList.get(position);
     }
 
     @Override
@@ -52,7 +54,7 @@ public class FeedItemListAdapter extends BaseAdapter implements StickyListHeader
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
-        FeedItem feedItem = mFeedSource.getFeedItems().get(position);
+        FeedItem feedItem = mFeedItemList.get(position);
 
         if (convertView == null) {
             viewHolder = new ViewHolder();
@@ -65,7 +67,7 @@ public class FeedItemListAdapter extends BaseAdapter implements StickyListHeader
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        viewHolder.imageView.setImageUrl(mFeedSource.getFavicon(), VolleySingleton.getInstance().getImageLoader());
+        viewHolder.imageView.setImageUrl(mFaviconUrl, VolleySingleton.getInstance().getImageLoader());
         viewHolder.titleTextView.setText(feedItem.getTitle());
         viewHolder.descriptionTextView.setText(Jsoup.parse(feedItem.getDescription()).text());
         viewHolder.timeTextView.setText(DateUtil.formatTime(feedItem.getDate()));
@@ -76,7 +78,7 @@ public class FeedItemListAdapter extends BaseAdapter implements StickyListHeader
     @Override
     public View getHeaderView(int position, View convertView, ViewGroup parent) {
         HeaderViewHolder headerViewHolder;
-        FeedItem feedItem = mFeedSource.getFeedItems().get(position);
+        FeedItem feedItem = mFeedItemList.get(position);
         if (convertView == null) {
             headerViewHolder = new HeaderViewHolder();
             convertView = mLayoutInflater.inflate(R.layout.feed_item_list_headers, null);
@@ -94,7 +96,7 @@ public class FeedItemListAdapter extends BaseAdapter implements StickyListHeader
         //return the first character of the country as ID because this is what headers are based upon
         //todo format date
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("DD");
-        long id = Long.valueOf(simpleDateFormat.format(mFeedSource.getFeedItems().get(position).getDate()));
+        long id = Long.valueOf(simpleDateFormat.format(mFeedItemList.get(position).getDate()));
         return id;
     }
 
