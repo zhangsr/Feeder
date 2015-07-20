@@ -40,6 +40,11 @@ public class FeedSourceActivity extends BaseActivity implements View.OnClickList
     private PullRefreshLayout mPullRefreshLayout;
     private FeedTabToolBar mTabToolBar;
 
+    private CharSequence[] mMenuArray = {
+            "标记为已读",
+            "取消订阅",
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,6 +100,29 @@ public class FeedSourceActivity extends BaseActivity implements View.OnClickList
                 Intent intent = new Intent(FeedSourceActivity.this, FeedItemActivity.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
+            }
+        });
+        mFeedListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                final FeedSource feedSource = mFeedSourceList.get(position);
+                new MaterialDialog.Builder(FeedSourceActivity.this)
+                        .title(feedSource.getTitle())
+                        .items(mMenuArray)
+                        .itemsCallback(new MaterialDialog.ListCallback() {
+                            @Override
+                            public void onSelection(MaterialDialog materialDialog, View view, int i,
+                                                    CharSequence charSequence) {
+                                switch (i) {
+                                    case 0:
+                                        FeedDBUtil.getInstance().markAllAsRead(feedSource.getId());
+                                        break;
+                                    case 1:
+                                        break;
+                                }
+                            }
+                        }).show();
+                return true;
             }
         });
         mTabToolBar.setOnTabChangedListener(new FeedTabToolBar.OnTabChangedListener() {

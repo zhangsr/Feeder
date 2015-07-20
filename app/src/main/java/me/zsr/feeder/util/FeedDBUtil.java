@@ -32,12 +32,35 @@ public class FeedDBUtil {
     }
 
     public void saveFeedSource(FeedSource feedSource) {
-        mFeedSourceDao.insertOrReplace(feedSource);
-//        EventBus.getDefault().post(CommonEvent.FEED_DB_UPDATED);
+        if (feedSource.getId() == null) { // new fetch
+            if (mFeedSourceDao.queryBuilder().where(FeedSourceDao.Properties.Title.eq(
+                    feedSource.getTitle())).list().size() == 0) {
+                mFeedSourceDao.insertOrReplace(feedSource);
+            } else { // Has same
+
+            }
+        } else { // already exist
+            mFeedSourceDao.update(feedSource);
+        }
+
+        //TODO really need to post DB_UPDATED ?
+        EventBus.getDefault().post(CommonEvent.FEED_DB_UPDATED);
     }
 
     public void saveFeedItem(FeedItem feedItem) {
-        mFeedItemDao.insertOrReplace(feedItem);
+        if (feedItem.getId() == null) { // new fetch
+            if (mFeedItemDao.queryBuilder().where(FeedItemDao.Properties.Title.eq(
+                    feedItem.getTitle())).list().size() == 0) {
+                mFeedItemDao.insertOrReplace(feedItem);
+            } else { // Has same
+
+            }
+        } else { // already exist
+            mFeedItemDao.update(feedItem);
+        }
+
+        //TODO really need to post DB_UPDATED ?
+        EventBus.getDefault().post(CommonEvent.FEED_DB_UPDATED);
     }
 
     public int countFeedItemByRead(long sourceId, boolean read) {
@@ -74,13 +97,7 @@ public class FeedDBUtil {
             @Override
             public void run() {
                 for (int i = feedItemList.size() - 1; i >= 0; i--) {
-                    FeedItem feedItem = feedItemList.get(i);
-                    if (mFeedItemDao.queryBuilder().where(FeedSourceDao.Properties.Title.eq(
-                            feedItem.getTitle())).list().size() == 0) {
-                        mFeedItemDao.insertOrReplace(feedItem);
-                    } else {
-                        // Already exist
-                    }
+                    saveFeedItem(feedItemList.get(i));
                 }
             }
         });
@@ -122,5 +139,14 @@ public class FeedDBUtil {
     public boolean hasSource(String url) {
         return App.getDaoSession().getFeedSourceDao().queryBuilder()
                 .where(FeedSourceDao.Properties.Url.eq(url)).list().size() > 0;
+    }
+
+    public void markAllAsRead(long sourceId) {
+        List<FeedItem> feedItemList = mFeedItemDao.queryBuilder().where(
+                FeedItemDao.Properties.FeedSourceId.eq(sourceId)).list();
+        for (FeedItem feedItem : feedItemList) {
+            feedItem.setRead(true);
+        }
+        saveFeedItem(feedItemList);
     }
 }
