@@ -118,6 +118,7 @@ public class FeedSourceActivity extends BaseActivity implements View.OnClickList
                                         FeedDBUtil.getInstance().markAllAsRead(feedSource.getId());
                                         break;
                                     case 1:
+                                        FeedDBUtil.getInstance().deleteSource(feedSource.getId());
                                         break;
                                 }
                             }

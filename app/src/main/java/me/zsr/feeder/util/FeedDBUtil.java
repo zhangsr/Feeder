@@ -149,4 +149,10 @@ public class FeedDBUtil {
         }
         saveFeedItem(feedItemList);
     }
+
+    public void deleteSource(long sourceId) {
+        mFeedItemDao.deleteInTx(getAllFeedItemList(sourceId));
+        mFeedSourceDao.deleteByKey(sourceId);
+        EventBus.getDefault().post(CommonEvent.FEED_DB_UPDATED);
+    }
 }
