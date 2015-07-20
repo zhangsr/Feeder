@@ -2,6 +2,7 @@ package me.zsr.feeder.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -30,6 +31,7 @@ import me.zsr.feeder.util.CommonEvent;
 import me.zsr.feeder.util.FeedDBUtil;
 import me.zsr.feeder.util.FeedNetworkUtil;
 import me.zsr.feeder.util.LogUtil;
+import me.zsr.feeder.util.UrlUtil;
 import me.zsr.feeder.util.VolleySingleton;
 
 public class FeedSourceActivity extends BaseActivity implements View.OnClickListener {
@@ -158,18 +160,24 @@ public class FeedSourceActivity extends BaseActivity implements View.OnClickList
                     @Override
                     public void onPositive(MaterialDialog dialog) {
                         super.onPositive(dialog);
-                        final String url = dialog.getInputEditText().getText().toString();
-                        FeedNetworkUtil.verifyFeedSource(url, new FeedNetworkUtil.OnVerifyFeedListener() {
-                                    @Override
-                                    public void onResult(boolean isValid) {
-                                        if (isValid) {
-                                            FeedNetworkUtil.addFeedSource(url);
-                                        } else {
-                                            LogUtil.e("Source invalid");
-                                            Toast.makeText(App.getInstance(), "Source invalid", Toast.LENGTH_SHORT).show();
-                                        }
+                        String input = dialog.getInputEditText().getText().toString();
+                        final String url = UrlUtil.searchForTarget(input);
+                        if (!TextUtils.isEmpty(url)) {
+                            FeedNetworkUtil.verifyFeedSource(url, new FeedNetworkUtil.OnVerifyFeedListener() {
+                                @Override
+                                public void onResult(boolean isValid) {
+                                    if (isValid) {
+                                        FeedNetworkUtil.addFeedSource(url);
+                                    } else {
+                                        LogUtil.e("Source invalid");
+                                        Toast.makeText(App.getInstance(), "Source invalid", Toast.LENGTH_SHORT).show();
                                     }
-                                });
+                                }
+                            });
+                        } else {
+                            LogUtil.e("Source invalid");
+                            Toast.makeText(App.getInstance(), "Source invalid", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 })
                 .input(R.string.abc_search_hint, 0, false, new MaterialDialog.InputCallback() {
