@@ -80,13 +80,13 @@ public class UrlImageGetter implements ImageGetter {
         public UrlDrawable() {
             // Set default
             mmDrawable = mContext.getResources().getDrawable(R.drawable.ic_add_selector);
-            mmDrawable.setBounds(0, 0, mmDrawable.getIntrinsicWidth(), mmDrawable.getIntrinsicHeight());
+            adjustDrawableBounds(mmDrawable, mmDrawable.getIntrinsicWidth(), mmDrawable.getIntrinsicHeight());
         }
 
         public void setDrawable(Drawable drawable) {
-            setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+            adjustDrawableBounds(this, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
             mmDrawable = drawable;
-            drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+            adjustDrawableBounds(drawable, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
         }
 
         @Override
@@ -94,5 +94,20 @@ public class UrlImageGetter implements ImageGetter {
             // override the draw to facilitate refresh function later
             mmDrawable.draw(canvas);
         }
+    }
+
+    private void adjustDrawableBounds(Drawable drawable, int oldWidth, int oldHeight) {
+        int width;
+        int height;
+
+        if (oldWidth * 2 < mContainerTextView.getWidth()) {
+            width = oldWidth * 2;
+            height = oldHeight * 2;
+        } else {
+            width = mContainerTextView.getWidth();
+            height = width * oldHeight / oldWidth;
+        }
+
+        drawable.setBounds(0, 0, width, height);
     }
 } 
