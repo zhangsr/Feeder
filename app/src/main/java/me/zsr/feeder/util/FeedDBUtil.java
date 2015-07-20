@@ -74,7 +74,13 @@ public class FeedDBUtil {
             @Override
             public void run() {
                 for (int i = feedItemList.size() - 1; i >= 0; i--) {
-                    mFeedItemDao.insertOrReplace(feedItemList.get(i));
+                    FeedItem feedItem = feedItemList.get(i);
+                    if (mFeedItemDao.queryBuilder().where(FeedSourceDao.Properties.Title.eq(
+                            feedItem.getTitle())).list().size() == 0) {
+                        mFeedItemDao.insertOrReplace(feedItem);
+                    } else {
+                        // Already exist
+                    }
                 }
             }
         });
