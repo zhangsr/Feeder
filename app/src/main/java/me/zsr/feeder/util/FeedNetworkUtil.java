@@ -1,7 +1,9 @@
 package me.zsr.feeder.util;
 
+import android.text.TextUtils;
 import android.widget.Toast;
 
+import org.jsoup.Jsoup;
 import org.mcsoxford.rss.RSSFeed;
 import org.mcsoxford.rss.RSSItem;
 import org.mcsoxford.rss.RSSReader;
@@ -109,13 +111,35 @@ public class FeedNetworkUtil {
 
         if (rssFeed != null) {
             for (RSSItem item : rssFeed.getItems()) {
+
+                // Shrink string to optimize render time
+                // TODO could be better
+                String description = "";
+                String originStr = item.getDescription();
+                int parseLength = originStr.length() < 200 ? originStr.length() : 200;
+                if (parseLength > 0) {
+                    String parsedStr = Jsoup.parse(originStr.substring(0, parseLength - 1)).text();
+                    int showLength = parsedStr.length() < 50 ? parsedStr.length() : 50;
+                    if (showLength > 0) {
+                        description = parsedStr.substring(0, showLength - 1);
+                    }
+                }
+
+                String content;
+                if (TextUtils.isEmpty(item.getContent())) {
+                    content = item.getDescription();
+                } else {
+                    content = item.getContent();
+                }
+
                 FeedItem feedItem = new FeedItem(
                         null,
                         item.getTitle(),
                         item.getLink().toString(),
-                        item.getDescription(),
+                        description,
                         false,
                         false,
+                        content,
                         item.getPubDate(),
                         feedSourceId);
                 feedItemList.add(feedItem);

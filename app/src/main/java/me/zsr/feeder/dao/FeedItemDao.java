@@ -34,8 +34,9 @@ public class FeedItemDao extends AbstractDao<FeedItem, Long> {
         public final static Property Description = new Property(3, String.class, "description", false, "DESCRIPTION");
         public final static Property Read = new Property(4, Boolean.class, "read", false, "READ");
         public final static Property Star = new Property(5, Boolean.class, "star", false, "STAR");
-        public final static Property Date = new Property(6, java.util.Date.class, "date", false, "DATE");
-        public final static Property FeedSourceId = new Property(7, long.class, "feedSourceId", false, "FEED_SOURCE_ID");
+        public final static Property Content = new Property(6, String.class, "content", false, "CONTENT");
+        public final static Property Date = new Property(7, java.util.Date.class, "date", false, "DATE");
+        public final static Property FeedSourceId = new Property(8, long.class, "feedSourceId", false, "FEED_SOURCE_ID");
     };
 
     private DaoSession daoSession;
@@ -61,8 +62,9 @@ public class FeedItemDao extends AbstractDao<FeedItem, Long> {
                 "'DESCRIPTION' TEXT," + // 3: description
                 "'READ' INTEGER," + // 4: read
                 "'STAR' INTEGER," + // 5: star
-                "'DATE' INTEGER," + // 6: date
-                "'FEED_SOURCE_ID' INTEGER NOT NULL );"); // 7: feedSourceId
+                "'CONTENT' TEXT," + // 6: content
+                "'DATE' INTEGER," + // 7: date
+                "'FEED_SOURCE_ID' INTEGER NOT NULL );"); // 8: feedSourceId
     }
 
     /** Drops the underlying database table. */
@@ -102,11 +104,16 @@ public class FeedItemDao extends AbstractDao<FeedItem, Long> {
             stmt.bindLong(6, star ? 1l: 0l);
         }
  
+        String content = entity.getContent();
+        if (content != null) {
+            stmt.bindString(7, content);
+        }
+ 
         java.util.Date date = entity.getDate();
         if (date != null) {
-            stmt.bindLong(7, date.getTime());
+            stmt.bindLong(8, date.getTime());
         }
-        stmt.bindLong(8, entity.getFeedSourceId());
+        stmt.bindLong(9, entity.getFeedSourceId());
     }
 
     @Override
@@ -131,8 +138,9 @@ public class FeedItemDao extends AbstractDao<FeedItem, Long> {
             cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // description
             cursor.isNull(offset + 4) ? null : cursor.getShort(offset + 4) != 0, // read
             cursor.isNull(offset + 5) ? null : cursor.getShort(offset + 5) != 0, // star
-            cursor.isNull(offset + 6) ? null : new java.util.Date(cursor.getLong(offset + 6)), // date
-            cursor.getLong(offset + 7) // feedSourceId
+            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // content
+            cursor.isNull(offset + 7) ? null : new java.util.Date(cursor.getLong(offset + 7)), // date
+            cursor.getLong(offset + 8) // feedSourceId
         );
         return entity;
     }
@@ -146,8 +154,9 @@ public class FeedItemDao extends AbstractDao<FeedItem, Long> {
         entity.setDescription(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
         entity.setRead(cursor.isNull(offset + 4) ? null : cursor.getShort(offset + 4) != 0);
         entity.setStar(cursor.isNull(offset + 5) ? null : cursor.getShort(offset + 5) != 0);
-        entity.setDate(cursor.isNull(offset + 6) ? null : new java.util.Date(cursor.getLong(offset + 6)));
-        entity.setFeedSourceId(cursor.getLong(offset + 7));
+        entity.setContent(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
+        entity.setDate(cursor.isNull(offset + 7) ? null : new java.util.Date(cursor.getLong(offset + 7)));
+        entity.setFeedSourceId(cursor.getLong(offset + 8));
      }
     
     /** @inheritdoc */

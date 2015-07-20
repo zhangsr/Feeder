@@ -77,19 +77,7 @@ public class FeedItemListAdapter extends BaseAdapter implements StickyListHeader
             viewHolder.titleTextView.setTextColor(App.getInstance().getResources().getColor(R.color.main_grey_dark));
         }
 
-        // Shrink string to optimize render time
-        // TODO not smooth enough yet
-        viewHolder.descriptionTextView.setText("");
-        String originStr = feedItem.getDescription();
-        int parseLength = originStr.length() < 200 ? originStr.length() : 200;
-        if (parseLength > 0) {
-            String parsedStr = Jsoup.parse(originStr.substring(0, parseLength - 1)).text();
-            int showLength = parsedStr.length() < 50 ? parsedStr.length() : 50;
-            if (showLength > 0) {
-                viewHolder.descriptionTextView.setText(parsedStr.substring(0, showLength - 1));
-            }
-        }
-
+        viewHolder.descriptionTextView.setText(feedItem.getDescription());
         viewHolder.timeTextView.setText(DateUtil.formatTime(feedItem.getDate()));
 
         return convertView;
