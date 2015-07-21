@@ -42,11 +42,6 @@ public class FeedSourceActivity extends BaseActivity implements View.OnClickList
     private PullRefreshLayout mPullRefreshLayout;
     private FeedTabToolBar mTabToolBar;
 
-    private CharSequence[] mMenuArray = {
-            "标记为已读",
-            "取消订阅",
-    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,9 +109,14 @@ public class FeedSourceActivity extends BaseActivity implements View.OnClickList
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 final FeedSource feedSource = mFeedSourceList.get(position);
+                List<CharSequence> menuList = new ArrayList<>();
+                if (FeedDBUtil.getInstance().countFeedItemByRead(feedSource.getId(), false) != 0) {
+                    menuList.add(getString(R.string.mark_as_read));
+                }
+                menuList.add(getString(R.string.cancel_feed));
                 new MaterialDialog.Builder(FeedSourceActivity.this)
                         .title(feedSource.getTitle())
-                        .items(mMenuArray)
+                        .items(menuList.toArray(new CharSequence[menuList.size()]))
                         .itemsCallback(new MaterialDialog.ListCallback() {
                             @Override
                             public void onSelection(MaterialDialog materialDialog, View view, int i,

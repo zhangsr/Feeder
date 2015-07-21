@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import me.zsr.feeder.App;
@@ -43,6 +46,10 @@ public class FeedItemActivity extends BaseActivity {
         super.onRestart();
 
         // Refresh data after return from FeedBodyActivity
+        notifyDataSetsChanged();
+    }
+
+    private void notifyDataSetsChanged() {
         mStarFeedItemList = FeedDBUtil.getInstance().getFeedItemListByStar(mFeedSource.getId(), true);
         mUnreadFeedItemList = FeedDBUtil.getInstance().getFeedItemListByRead(mFeedSource.getId(), false);
         mAllFeedItemList = FeedDBUtil.getInstance().getAllFeedItemList(mFeedSource.getId());
@@ -79,19 +86,40 @@ public class FeedItemActivity extends BaseActivity {
         mFeedItemStarListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                showDetail(mStarFeedItemList.get(position));
+                showBodyActivity(mStarFeedItemList.get(position));
+            }
+        });
+        mFeedItemStarListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                showOptionsDialog(mStarFeedItemList.get(position));
+                return true;
             }
         });
         mFeedItemUnreadListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                showDetail(mUnreadFeedItemList.get(position));
+                showBodyActivity(mUnreadFeedItemList.get(position));
+            }
+        });
+        mFeedItemUnreadListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                showOptionsDialog(mUnreadFeedItemList.get(position));
+                return true;
             }
         });
         mFeedItemAllListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                showDetail(mAllFeedItemList.get(position));
+                showBodyActivity(mAllFeedItemList.get(position));
+            }
+        });
+        mFeedItemAllListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                showOptionsDialog(mAllFeedItemList.get(position));
+                return true;
             }
         });
         mTabToolBar.setOnTabChangedListener(new FeedTabToolBar.OnTabChangedListener() {
@@ -103,7 +131,41 @@ public class FeedItemActivity extends BaseActivity {
         });
     }
 
-    private void showDetail(FeedItem feedItem) {
+    private void showOptionsDialog(final FeedItem feedItem) {
+        List<CharSequence> menuList = new ArrayList<>();
+        if (feedItem.getStar()) {
+            menuList.add(getString(R.string.remove_star_mark));
+        } else {
+            menuList.add(getString(R.string.add_star_mark));
+        }
+        if (feedItem.getRead()) {
+            menuList.add(getString(R.string.mark_as_unread));
+        } else {
+            menuList.add(getString(R.string.mark_as_read));
+        }
+        new MaterialDialog.Builder(FeedItemActivity.this)
+                .items(menuList.toArray(new CharSequence[menuList.size()]))
+                .itemsCallback(new MaterialDialog.ListCallback() {
+                    @Override
+                    public void onSelection(MaterialDialog materialDialog, View view, int i,
+                                            CharSequence charSequence) {
+                        switch (i) {
+                            case 0:
+                                feedItem.setStar(!feedItem.getStar());
+                                break;
+                            case 1:
+                                feedItem.setRead(!feedItem.getRead());
+                                break;
+                            default:
+                        }
+
+                        FeedDBUtil.getInstance().saveFeedItem(feedItem);
+                        notifyDataSetsChanged();
+                    }
+                }).show();
+    }
+
+    private void showBodyActivity(FeedItem feedItem) {
         feedItem.setRead(true);
         Bundle bundle = new Bundle();
         FeedDBUtil.getInstance().saveFeedItem(feedItem);
