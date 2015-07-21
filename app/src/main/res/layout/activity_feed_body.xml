@@ -1,13 +1,15 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@android:color/white"
-                tools:context="me.zsr.feeder.ui.FeedBodyActivity">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    tools:context="me.zsr.feeder.ui.FeedBodyActivity">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -27,7 +29,7 @@
                     android:layout_weight="1"
                     android:alpha="0.54"
                     android:textColor="@color/main_grey_light"
-                    android:textSize="12sp"/>
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/feed_body_date"
@@ -35,16 +37,16 @@
                     android:layout_height="wrap_content"
                     android:alpha="0.54"
                     android:textColor="@color/main_grey_light"
-                    android:textSize="12sp"/>
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/feed_body_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
                     android:alpha="0.54"
                     android:textColor="@color/main_grey_light"
-                    android:layout_marginLeft="8dp"
-                    android:textSize="12sp"/>
+                    android:textSize="12sp" />
             </LinearLayout>
 
             <TextView
@@ -54,7 +56,7 @@
                 android:layout_marginTop="32dp"
                 android:gravity="center_horizontal"
                 android:textColor="@color/main_grey_dark"
-                android:textSize="20sp"/>
+                android:textSize="20sp" />
 
             <org.sufficientlysecure.htmltextview.HtmlTextView
                 android:id="@+id/feed_body_content"
@@ -64,7 +66,28 @@
                 android:lineSpacingExtra="4dp"
                 android:textColor="#646464"
                 android:textColorLink="#646464"
-                android:textSize="16sp"/>
+                android:textSize="16sp" />
         </LinearLayout>
     </ScrollView>
-</RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp">
+
+        <ImageButton
+            android:id="@+id/feed_body_star_btn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@null"
+            android:src="@drawable/ic_grade_grey600_18dp" />
+
+        <ImageButton
+            android:id="@+id/feed_body_share_btn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@null"
+            android:src="@drawable/ic_brightness_1_grey600_24dp" />
+    </LinearLayout>
+</LinearLayout>

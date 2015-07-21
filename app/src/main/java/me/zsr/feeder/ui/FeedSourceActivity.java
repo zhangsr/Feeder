@@ -61,8 +61,14 @@ public class FeedSourceActivity extends BaseActivity implements View.OnClickList
     protected void onResume() {
         super.onResume();
         EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
 
         mTabToolBar.setMode(App.getInstance().mCurrentMode);
+        mFeedSourceList = FeedDBUtil.getInstance().loadAll();
         mFeedAdapter.notifyDataSetChanged();
     }
 

@@ -102,10 +102,21 @@ public class FeedItemListAdapter extends BaseAdapter implements StickyListHeader
     @Override
     public long getHeaderId(int position) {
         //return the first character of the country as ID because this is what headers are based upon
-        //todo format date
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("DD");
         long id = Long.valueOf(simpleDateFormat.format(mFeedItemList.get(position).getDate()));
         return id;
+    }
+
+    public void notifyDataSetChanged(List<FeedItem> list) {
+        mFeedItemList = list;
+        notifyDataSetChanged();
+    }
+
+    @Deprecated
+    @Override
+    public void notifyDataSetChanged() {
+        super.notifyDataSetChanged();
+        // Mark : Use notifyDataSetChanged(List<FeedItem>) instead
     }
 
     class HeaderViewHolder {

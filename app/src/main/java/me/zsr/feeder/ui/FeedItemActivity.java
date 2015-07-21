@@ -39,12 +39,16 @@ public class FeedItemActivity extends BaseActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onRestart() {
+        super.onRestart();
 
-        mStarAdapter.notifyDataSetChanged();
-        mUnreadAdapter.notifyDataSetChanged();
-        mAllAdapter.notifyDataSetChanged();
+        // Refresh data after return from FeedBodyActivity
+        mStarFeedItemList = FeedDBUtil.getInstance().getFeedItemListByStar(mFeedSource.getId(), true);
+        mUnreadFeedItemList = FeedDBUtil.getInstance().getFeedItemListByRead(mFeedSource.getId(), false);
+        mAllFeedItemList = FeedDBUtil.getInstance().getAllFeedItemList(mFeedSource.getId());
+        mStarAdapter.notifyDataSetChanged(mStarFeedItemList);
+        mUnreadAdapter.notifyDataSetChanged(mUnreadFeedItemList);
+        mAllAdapter.notifyDataSetChanged(mAllFeedItemList);
     }
 
     private void initData() {
