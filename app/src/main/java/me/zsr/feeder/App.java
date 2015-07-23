@@ -1,20 +1,16 @@
 package me.zsr.feeder;
 
 import android.app.Application;
-import android.content.Context;
+import android.content.Intent;
 
 import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 
-import org.mcsoxford.rss.RSSFeed;
-import org.mcsoxford.rss.RSSReader;
-import org.mcsoxford.rss.RSSReaderException;
-
 import me.zsr.feeder.dao.DaoMaster;
 import me.zsr.feeder.dao.DaoSession;
-import me.zsr.feeder.util.LogUtil;
+import me.zsr.feeder.service.BackgroundRefreshService;
 
 /**
  * @description: Global init, context.
@@ -43,6 +39,7 @@ public class App extends Application {
         sInstance = this;
 
         initUniversalImageLoader();
+        initBackgroundRefreshService();
     }
 
     public static DaoSession getDaoSession() {
@@ -63,5 +60,9 @@ public class App extends Application {
                         .tasksProcessingOrder(QueueProcessingType.FIFO)
                         .build();
         ImageLoader.getInstance().init(config);
+    }
+
+    private void initBackgroundRefreshService() {
+        startService(new Intent(this, BackgroundRefreshService.class));
     }
 }

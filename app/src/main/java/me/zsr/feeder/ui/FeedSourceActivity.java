@@ -31,6 +31,7 @@ import me.zsr.feeder.util.CommonEvent;
 import me.zsr.feeder.util.FeedDBUtil;
 import me.zsr.feeder.util.FeedNetworkUtil;
 import me.zsr.feeder.util.LogUtil;
+import me.zsr.feeder.util.NetworkUtil;
 import me.zsr.feeder.util.UrlUtil;
 import me.zsr.feeder.util.VolleySingleton;
 
@@ -50,6 +51,11 @@ public class FeedSourceActivity extends BaseActivity implements View.OnClickList
         initData();
         initView();
         setListener();
+
+        // Auto refresh while wifi is enabled
+        if (NetworkUtil.isWifiEnabled(this)) {
+            FeedNetworkUtil.fetchAll();
+        }
     }
 
     @Override

@@ -3,6 +3,8 @@
     package="me.zsr.feeder" >
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <application
         android:name=".App"
@@ -27,9 +29,15 @@
         </activity>
         <activity
             android:name=".ui.FeedBodyActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_feed_body" >
+            android:label="@string/title_activity_feed_body"
+            android:screenOrientation="portrait" >
         </activity>
+
+        <service
+            android:name=".service.BackgroundRefreshService"
+            android:enabled="true"
+            android:exported="true" >
+        </service>
     </application>
 
 </manifest>
