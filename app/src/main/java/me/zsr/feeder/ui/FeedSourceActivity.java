@@ -167,23 +167,34 @@ public class FeedSourceActivity extends BaseActivity implements View.OnClickList
                     public void onPositive(MaterialDialog dialog) {
                         super.onPositive(dialog);
                         String input = dialog.getInputEditText().getText().toString();
-                        final String url = UrlUtil.searchForTarget(input);
-                        if (!TextUtils.isEmpty(url)) {
-                            FeedNetworkUtil.verifyFeedSource(url, new FeedNetworkUtil.OnVerifyFeedListener() {
-                                @Override
-                                public void onResult(boolean isValid) {
-                                    if (isValid) {
-                                        FeedNetworkUtil.addFeedSource(url);
-                                    } else {
-                                        LogUtil.e("Source invalid");
-                                        Toast.makeText(App.getInstance(), "Source invalid", Toast.LENGTH_SHORT).show();
-                                    }
+                        UrlUtil.searchForTarget(input, new UrlUtil.OnSearchResultListener() {
+                            @Override
+                            public void onFound(final String result) {
+                                if (!TextUtils.isEmpty(result)) {
+                                    FeedNetworkUtil.verifyFeedSource(result, new FeedNetworkUtil.OnVerifyFeedListener() {
+                                        @Override
+                                        public void onResult(boolean isValid) {
+                                            if (isValid) {
+                                                FeedNetworkUtil.addFeedSource(result);
+                                            } else {
+                                                LogUtil.e("Source invalid");
+                                                Toast.makeText(App.getInstance(), "Source invalid", Toast.LENGTH_SHORT).show();
+                                                //TODO Add suffix and try again
+                                            }
+                                        }
+                                    });
+                                } else {
+                                    LogUtil.e("Source invalid");
+                                    Toast.makeText(App.getInstance(), "Source invalid", Toast.LENGTH_SHORT).show();
                                 }
-                            });
-                        } else {
-                            LogUtil.e("Source invalid");
-                            Toast.makeText(App.getInstance(), "Source invalid", Toast.LENGTH_SHORT).show();
-                        }
+                            }
+
+                            @Override
+                            public void onNotFound() {
+                                LogUtil.e("Source not found");
+                                Toast.makeText(App.getInstance(), "Source not found", Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
                 })
                 .input(R.string.abc_search_hint, 0, false, new MaterialDialog.InputCallback() {
