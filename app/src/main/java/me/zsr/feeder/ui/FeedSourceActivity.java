@@ -29,6 +29,7 @@ import de.greenrobot.event.EventBus;
 import me.zsr.feeder.App;
 import me.zsr.feeder.R;
 import me.zsr.feeder.dao.FeedSource;
+import me.zsr.feeder.util.AnalysisEvent;
 import me.zsr.feeder.util.CommonEvent;
 import me.zsr.feeder.util.FeedDBUtil;
 import me.zsr.feeder.util.FeedNetworkUtil;
@@ -176,6 +177,9 @@ public class FeedSourceActivity extends BaseActivity implements View.OnClickList
                     public void onPositive(MaterialDialog dialog) {
                         super.onPositive(dialog);
                         String input = dialog.getInputEditText().getText().toString();
+
+                        AVAnalytics.onEvent(FeedSourceActivity.this, AnalysisEvent.ADD_SOURCE, input);
+
                         UrlUtil.searchForTarget(input, new UrlUtil.OnSearchResultListener() {
                             @Override
                             public void onFound(final String result) {
