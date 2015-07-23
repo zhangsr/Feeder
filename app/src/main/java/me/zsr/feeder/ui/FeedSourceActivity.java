@@ -2,6 +2,7 @@ package me.zsr.feeder.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.text.InputType;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.toolbox.NetworkImageView;
+import com.avos.avoscloud.AVAnalytics;
 import com.baoyz.widget.PullRefreshLayout;
 
 import java.util.ArrayList;
@@ -46,6 +48,7 @@ public class FeedSourceActivity extends BaseActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AVAnalytics.trackAppOpened(getIntent());
         setContentView(R.layout.activity_feed_source);
 
         initData();
@@ -177,7 +180,7 @@ public class FeedSourceActivity extends BaseActivity implements View.OnClickList
                             @Override
                             public void onFound(final String result) {
                                 if (!TextUtils.isEmpty(result)) {
-                                    FeedNetworkUtil.verifyFeedSource(result, new FeedNetworkUtil.OnVerifyFeedListener() {
+                                    FeedNetworkUtil.verifyFeedSource(new Handler(), result, new FeedNetworkUtil.OnVerifyFeedListener() {
                                         @Override
                                         public void onResult(boolean isValid) {
                                             if (isValid) {

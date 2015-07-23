@@ -3,6 +3,8 @@ package me.zsr.feeder.ui;
 import android.app.Activity;
 import android.view.KeyEvent;
 
+import com.avos.avoscloud.AVAnalytics;
+
 /**
  * @description:
  * @author: Saul
@@ -10,6 +12,18 @@ import android.view.KeyEvent;
  * @version: 1.0
  */
 public class BaseActivity extends Activity {
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AVAnalytics.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        AVAnalytics.onPause(this);
+    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

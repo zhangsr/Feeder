@@ -22,10 +22,12 @@ public class UrlUtil {
         UrlValidator urlValidator = new UrlValidator(schemes);
         if (urlValidator.isValid(input)) {
             listener.onFound(input);
+            return;
         }
         String inputWithPrefix = "http://" + input;
         if (urlValidator.isValid(inputWithPrefix)) {
             listener.onFound(inputWithPrefix);
+            return;
         }
 
         //TODO Search in server

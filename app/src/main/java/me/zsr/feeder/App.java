@@ -3,6 +3,8 @@ package me.zsr.feeder;
 import android.app.Application;
 import android.content.Intent;
 
+import com.avos.avoscloud.AVAnalytics;
+import com.avos.avoscloud.AVOSCloud;
 import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -40,6 +42,7 @@ public class App extends Application {
 
         initUniversalImageLoader();
         initBackgroundRefreshService();
+        initLeanCloud();
     }
 
     public static DaoSession getDaoSession() {
@@ -64,5 +67,10 @@ public class App extends Application {
 
     private void initBackgroundRefreshService() {
         startService(new Intent(this, BackgroundRefreshService.class));
+    }
+
+    private void initLeanCloud() {
+        AVOSCloud.initialize(this, "ms2lsbjilfbqjeb5fitysvm0lkt38nnw2bvwe60sy7j5g50t", "84gf4pv73s99zme304ks1e5f5qwdpls1exgg5cx7c2rah0u4");
+        AVAnalytics.enableCrashReport(this, true);
     }
 }

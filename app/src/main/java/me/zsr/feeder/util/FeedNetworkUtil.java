@@ -1,7 +1,10 @@
 package me.zsr.feeder.util;
 
+import android.os.Handler;
 import android.text.TextUtils;
 import android.widget.Toast;
+
+import com.avos.avoscloud.AVObject;
 
 import org.jsoup.Jsoup;
 import org.mcsoxford.rss.RSSFeed;
@@ -49,21 +52,38 @@ public class FeedNetworkUtil {
         }).start();
     }
 
-    public static void verifyFeedSource(final String url, final OnVerifyFeedListener listener) {
+    public static void verifyFeedSource(final Handler handler, final String url, final OnVerifyFeedListener listener) {
         // TODO
         String regex = "^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
-        
+
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    new RSSReader().load(url);
+                    RSSFeed rssFeed = new RSSReader().load(url);
+
+                    AVObject feedSourceObj = new AVObject("FeedSource");
+                    feedSourceObj.put("title", rssFeed.getTitle());
+                    feedSourceObj.put("url", url);
+                    feedSourceObj.put("link", rssFeed.getLink().toString());
+                    feedSourceObj.saveInBackground();
+
                     if (listener != null) {
-                        listener.onResult(true);
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                listener.onResult(true);
+                            }
+                        });
                     }
                 } catch (RSSReaderException e) {
                     if (listener != null) {
-                        listener.onResult(false);
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                listener.onResult(false);
+                            }
+                        });
                     }
                     e.printStackTrace();
                 }
