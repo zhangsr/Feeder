@@ -1,11 +1,12 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.Holo.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/material_indigo_500</item>
-        <item name="colorPrimaryDark">@color/material_indigo_600</item>
-        <item name="colorAccent">@color/material_teal_500</item>
+        <item name="colorAccent">@color/main_grey_dark</item>
+        <item name="colorControlNormal">@color/main_grey_dark</item>
+        <item name="colorControlActivated">@color/main_grey_dark</item>
+        <item name="colorControlHighlight">@color/main_grey_dark</item>
     </style>
 
 </resources>

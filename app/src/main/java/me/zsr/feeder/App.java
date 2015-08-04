@@ -9,6 +9,9 @@ import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.tencent.mm.sdk.modelmsg.SendMessageToWX;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
 import me.zsr.feeder.dao.DaoMaster;
 import me.zsr.feeder.dao.DaoSession;
@@ -22,8 +25,12 @@ import me.zsr.feeder.service.BackgroundRefreshService;
 public class App extends Application {
     public static final String KEY_BUNDLE_SOURCE_ID = "source_id";
     public static final String KEY_BUNDLE_ITEM_ID = "item_id";
+    private static final String WX_APP_ID = "wxf0b102ba70e9fae2";
     private static final String DB_NAME = "feed_db";
+    private static final String AVOS_APP_ID = "ms2lsbjilfbqjeb5fitysvm0lkt38nnw2bvwe60sy7j5g50t";
+    private static final String AVOS_CLIENT_KEY = "84gf4pv73s99zme304ks1e5f5qwdpls1exgg5cx7c2rah0u4";
     private static App sInstance;
+    private static IWXAPI mIWXApi;
     private static DaoSession sDaoSession;
     public Mode mCurrentMode = Mode.UNREAD;
     public enum Mode {
@@ -43,6 +50,7 @@ public class App extends Application {
         initUniversalImageLoader();
         initBackgroundRefreshService();
         initLeanCloud();
+        initWeiXin();
     }
 
     public static DaoSession getDaoSession() {
@@ -70,7 +78,16 @@ public class App extends Application {
     }
 
     private void initLeanCloud() {
-        AVOSCloud.initialize(this, "ms2lsbjilfbqjeb5fitysvm0lkt38nnw2bvwe60sy7j5g50t", "84gf4pv73s99zme304ks1e5f5qwdpls1exgg5cx7c2rah0u4");
+        AVOSCloud.initialize(this, AVOS_APP_ID, AVOS_CLIENT_KEY);
         AVAnalytics.enableCrashReport(this, true);
+    }
+
+    private void initWeiXin() {
+        mIWXApi = WXAPIFactory.createWXAPI(this, WX_APP_ID, true);
+        mIWXApi.registerApp(WX_APP_ID);
+    }
+
+    public static IWXAPI getWXAPI() {
+        return mIWXApi;
     }
 }

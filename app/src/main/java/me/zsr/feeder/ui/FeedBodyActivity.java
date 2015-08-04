@@ -1,12 +1,23 @@
 package me.zsr.feeder.ui;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.tencent.mm.sdk.modelmsg.SendMessageToWX;
+import com.tencent.mm.sdk.modelmsg.WXMediaMessage;
+import com.tencent.mm.sdk.modelmsg.WXWebpageObject;
+
 import org.sufficientlysecure.htmltextview.HtmlTextView;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
 import me.zsr.feeder.App;
 import me.zsr.feeder.R;
@@ -72,8 +83,45 @@ public class FeedBodyActivity extends BaseActivity implements View.OnClickListen
                 FeedDBUtil.getInstance().saveFeedItem(mFeedItem);
                 break;
             case R.id.feed_body_share_btn:
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        WXWebpageObject webpageObject = new WXWebpageObject();
+                        webpageObject.webpageUrl = mFeedItem.getLink();
+                        WXMediaMessage msg = new WXMediaMessage(webpageObject);
+                        msg.title = mFeedItem.getTitle();
+                        msg.description = mFeedItem.getDescription();
+                        try {
+                            msg.thumbData = getBytes((new URL(mFeedItem.getFeedSource().getFavicon()))
+                                    .openStream());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        SendMessageToWX.Req req = new SendMessageToWX.Req();
+                        req.transaction = buildTransaction("webpage");
+                        req.message = msg;
+                        req.scene = SendMessageToWX.Req.WXSceneSession;
+                        App.getWXAPI().sendReq(req);
+                    }
+                }).start();
                 break;
             default:
         }
+    }
+
+    private static byte[] getBytes(InputStream is) throws IOException {
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+        int len = -1;
+        while ((len = is.read(buffer)) != -1) {
+            os.write(buffer, 0, len);
+        }
+        os.close();
+        return os.toByteArray();
+    }
+
+    private String buildTransaction(final String type) {
+        return (type == null) ? String.valueOf(System.currentTimeMillis()) : type + System.currentTimeMillis();
     }
 }

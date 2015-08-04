@@ -1,6 +1,6 @@
 package me.zsr.feeder.ui;
 
-import android.app.Activity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 
 import com.avos.avoscloud.AVAnalytics;
@@ -11,7 +11,7 @@ import com.avos.avoscloud.AVAnalytics;
  * @date: 15-7-5
  * @version: 1.0
  */
-public class BaseActivity extends Activity {
+public class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
