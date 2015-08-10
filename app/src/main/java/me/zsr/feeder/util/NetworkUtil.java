@@ -13,12 +13,16 @@ import android.net.wifi.WifiManager;
 public class NetworkUtil {
 
     public static boolean isWifiEnabled(Context context) {
-        ConnectivityManager mConnectivityManager =
-                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
-        if (mNetworkInfo == null || !mNetworkInfo.isAvailable()) {
+        if (!isNetworkEnabled(context)) {
             return false;
         }
         return ((WifiManager) context.getSystemService(Context.WIFI_SERVICE)).isWifiEnabled();
+    }
+
+    public static boolean isNetworkEnabled(Context context) {
+        ConnectivityManager cm =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 }

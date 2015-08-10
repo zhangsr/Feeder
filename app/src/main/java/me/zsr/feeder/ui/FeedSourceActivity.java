@@ -289,14 +289,14 @@ public class FeedSourceActivity extends BaseActivity implements View.OnClickList
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        switch (keyCode) {
-            case KeyEvent.KEYCODE_VOLUME_UP:
-                // Test add source
+//        switch (keyCode) {
+//            case KeyEvent.KEYCODE_VOLUME_UP:
+//                // Test add source
 //                FeedNetworkUtil.addFeedSource("http://www.coolshell.cn/feed");
-                FeedNetworkUtil.addFeedSource("http://www.zhihu.com/rss");
-                return true;
-            default:
-        }
+//                FeedNetworkUtil.addFeedSource("http://www.ixiqi.com/feed");
+//                return true;
+//            default:
+//        }
         return super.onKeyDown(keyCode, event);
     }
 }

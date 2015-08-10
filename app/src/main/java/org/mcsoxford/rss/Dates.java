@@ -18,6 +18,9 @@ package org.mcsoxford.rss;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import me.zsr.feeder.util.LogUtil;
 
 /**
  * Internal helper class for date conversions.
@@ -44,7 +47,9 @@ final class Dates {
     try {
       return RFC822.parse(date);
     } catch (ParseException e) {
-      throw new RSSFault(e);
+      // TODO: 8/6/15 Handle other date format !
+      LogUtil.e(new RSSFault(e).getMessage());
+      return new Date();
     }
   }
 

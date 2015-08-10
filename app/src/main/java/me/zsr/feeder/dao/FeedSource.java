@@ -161,6 +161,20 @@ public class FeedSource {
     }
 
     // KEEP METHODS - put your custom methods here
+
+    @Override
+    public String toString() {
+        return "FeedSource{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", url='" + url + '\'' +
+                ", date=" + date +
+                ", site='" + site + '\'' +
+                ", favicon='" + favicon + '\'' +
+                ", description='" + description + '\'' +
+                '}';
+    }
+
     // KEEP METHODS END
 
 }

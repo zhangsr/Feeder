@@ -2,6 +2,8 @@ package me.zsr.feeder;
 
 import android.app.Application;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import com.avos.avoscloud.AVAnalytics;
 import com.avos.avoscloud.AVOSCloud;
@@ -9,13 +11,14 @@ import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
-import com.tencent.mm.sdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
 import me.zsr.feeder.dao.DaoMaster;
 import me.zsr.feeder.dao.DaoSession;
+import me.zsr.feeder.dao.FeedSource;
 import me.zsr.feeder.service.BackgroundRefreshService;
+import me.zsr.feeder.util.NetworkUtil;
 
 /**
  * @description: Global init, context.
@@ -25,12 +28,14 @@ import me.zsr.feeder.service.BackgroundRefreshService;
 public class App extends Application {
     public static final String KEY_BUNDLE_SOURCE_ID = "source_id";
     public static final String KEY_BUNDLE_ITEM_ID = "item_id";
+    private static final String SP_ADD_DEFAULT = "add_default";
     private static final String WX_APP_ID = "wxf0b102ba70e9fae2";
     private static final String DB_NAME = "feed_db";
     private static final String AVOS_APP_ID = "ms2lsbjilfbqjeb5fitysvm0lkt38nnw2bvwe60sy7j5g50t";
     private static final String AVOS_CLIENT_KEY = "84gf4pv73s99zme304ks1e5f5qwdpls1exgg5cx7c2rah0u4";
     private static App sInstance;
-    private static IWXAPI mIWXApi;
+    private static IWXAPI sIWXApi;
+    private static SharedPreferences sSharePreferences;
     private static DaoSession sDaoSession;
     public Mode mCurrentMode = Mode.UNREAD;
     public enum Mode {
@@ -51,6 +56,7 @@ public class App extends Application {
         initBackgroundRefreshService();
         initLeanCloud();
         initWeiXin();
+        initDB();
     }
 
     public static DaoSession getDaoSession() {
@@ -83,11 +89,44 @@ public class App extends Application {
     }
 
     private void initWeiXin() {
-        mIWXApi = WXAPIFactory.createWXAPI(this, WX_APP_ID, true);
-        mIWXApi.registerApp(WX_APP_ID);
+        sIWXApi = WXAPIFactory.createWXAPI(this, WX_APP_ID, true);
+        sIWXApi.registerApp(WX_APP_ID);
     }
 
     public static IWXAPI getWXAPI() {
-        return mIWXApi;
+        return sIWXApi;
+    }
+
+    public static SharedPreferences getSharePreferences() {
+        if (sSharePreferences == null) {
+            sSharePreferences = PreferenceManager.getDefaultSharedPreferences(getInstance());
+        }
+        return sSharePreferences;
+    }
+
+    public void initDB() {
+        if (NetworkUtil.isNetworkEnabled(getInstance())
+                && !getSharePreferences().getBoolean(SP_ADD_DEFAULT, false)) {
+            getDaoSession().getFeedSourceDao().insertOrReplace(new FeedSource(
+                    null,
+                    "知乎每日精选",
+                    "http://www.zhihu.com/rss",
+                    null,
+                    "http://www.zhihu.com",
+                    "http://www.zhihu.com/favicon.ico",
+                    "一个真实的网络问答社区，帮助你寻找答案，分享知识"));
+            getDaoSession().getFeedSourceDao().insertOrReplace(new FeedSource(
+                    null,
+                    "36氪",
+                    "http://www.36kr.com/feed",
+                    null,
+                    "http://36kr.com",
+                    "http://36kr.com/favicon.ico",
+                    "36氪，让创业更简单"));
+
+            SharedPreferences.Editor editor = getSharePreferences().edit();
+            editor.putBoolean(SP_ADD_DEFAULT, true);
+            editor.apply();
+        }
     }
 }

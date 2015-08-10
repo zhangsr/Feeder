@@ -5,6 +5,10 @@ import android.view.KeyEvent;
 
 import com.avos.avoscloud.AVAnalytics;
 
+import me.zsr.feeder.dao.FeedSource;
+import me.zsr.feeder.util.FeedDBUtil;
+import me.zsr.feeder.util.LogUtil;
+
 /**
  * @description:
  * @author: Saul
@@ -27,10 +31,13 @@ public class BaseActivity extends AppCompatActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-            // Dump db
-            return true;
-        }
+//        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+//            // Dump db
+//            for (FeedSource feedSource : FeedDBUtil.getInstance().loadAll()) {
+//                LogUtil.e("FeedSource=" + feedSource.toString());
+//            }
+//            return true;
+//        }
         return super.onKeyDown(keyCode, event);
     }
 }
