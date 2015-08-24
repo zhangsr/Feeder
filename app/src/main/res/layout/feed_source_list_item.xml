@@ -12,7 +12,7 @@
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/main_list_item_img"
-            android:background="@android:color/darker_gray"
+            android:background="@android:color/transparent"
             android:layout_width="24dp"
             android:layout_height="24dp"/>
 

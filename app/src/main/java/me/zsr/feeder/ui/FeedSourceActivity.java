@@ -46,6 +46,8 @@ public class FeedSourceActivity extends BaseActivity implements View.OnClickList
     private PullRefreshLayout mPullRefreshLayout;
     private FeedTabToolBar mTabToolBar;
 
+    private Handler mHandler = new Handler();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -171,24 +173,27 @@ public class FeedSourceActivity extends BaseActivity implements View.OnClickList
                         InputType.TYPE_TEXT_VARIATION_PERSON_NAME |
                         InputType.TYPE_TEXT_FLAG_CAP_WORDS)
                 .positiveText("添加")
+                .negativeText("取消")
+                .autoDismiss(false)
                 .alwaysCallInputCallback() // this forces the callback to be invoked with every input change
                 .callback(new MaterialDialog.ButtonCallback() {
                     @Override
-                    public void onPositive(MaterialDialog dialog) {
+                    public void onPositive(final MaterialDialog dialog) {
                         super.onPositive(dialog);
                         String input = dialog.getInputEditText().getText().toString();
 
                         AVAnalytics.onEvent(FeedSourceActivity.this, AnalysisEvent.ADD_SOURCE, input);
 
-                        UrlUtil.searchForTarget(input, new UrlUtil.OnSearchResultListener() {
+                        UrlUtil.searchForTarget(mHandler, input, new UrlUtil.OnSearchResultListener() {
                             @Override
                             public void onFound(final String result) {
                                 if (!TextUtils.isEmpty(result)) {
-                                    FeedNetworkUtil.verifyFeedSource(new Handler(), result, new FeedNetworkUtil.OnVerifyFeedListener() {
+                                    FeedNetworkUtil.verifyFeedSource(mHandler, result, new FeedNetworkUtil.OnVerifyFeedListener() {
                                         @Override
                                         public void onResult(boolean isValid) {
                                             if (isValid) {
                                                 FeedNetworkUtil.addFeedSource(result);
+                                                dialog.dismiss();
                                             } else {
                                                 LogUtil.e("Source invalid");
                                                 Toast.makeText(App.getInstance(), "Source invalid", Toast.LENGTH_SHORT).show();
@@ -208,6 +213,12 @@ public class FeedSourceActivity extends BaseActivity implements View.OnClickList
                                 Toast.makeText(App.getInstance(), "Source not found", Toast.LENGTH_SHORT).show();
                             }
                         });
+                    }
+
+                    @Override
+                    public void onNegative(MaterialDialog dialog) {
+                        super.onNegative(dialog);
+                        dialog.dismiss();
                     }
                 })
                 .input(R.string.abc_search_hint, 0, false, new MaterialDialog.InputCallback() {
