@@ -196,21 +196,21 @@ public class FeedSourceActivity extends BaseActivity implements View.OnClickList
                                                 dialog.dismiss();
                                             } else {
                                                 LogUtil.e("Source invalid");
-                                                Toast.makeText(App.getInstance(), "Source invalid", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(App.getInstance(), "无效的源", Toast.LENGTH_SHORT).show();
                                                 //TODO Add suffix and try again
                                             }
                                         }
                                     });
                                 } else {
                                     LogUtil.e("Source invalid");
-                                    Toast.makeText(App.getInstance(), "Source invalid", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(App.getInstance(), "无效的源", Toast.LENGTH_SHORT).show();
                                 }
                             }
 
                             @Override
                             public void onNotFound() {
                                 LogUtil.e("Source not found");
-                                Toast.makeText(App.getInstance(), "Source not found", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(App.getInstance(), "没有找到相关的源", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -221,7 +221,7 @@ public class FeedSourceActivity extends BaseActivity implements View.OnClickList
                         dialog.dismiss();
                     }
                 })
-                .input(R.string.abc_search_hint, 0, false, new MaterialDialog.InputCallback() {
+                .input("例如输入：酷", "", false, new MaterialDialog.InputCallback() {
                     @Override
                     public void onInput(MaterialDialog dialog, CharSequence input) {
                         dialog.getActionButton(DialogAction.POSITIVE).setEnabled(true);

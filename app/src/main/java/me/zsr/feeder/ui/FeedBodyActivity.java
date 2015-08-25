@@ -75,9 +75,9 @@ public class FeedBodyActivity extends BaseActivity implements View.OnClickListen
         switch (v.getId()) {
             case R.id.feed_body_star_btn:
                 if (mFeedItem.getStar()) {
-                    Toast.makeText(this, "Unstarred", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "已取消星标", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(this, "Starred", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "已添加星标", Toast.LENGTH_SHORT).show();
                 }
                 mFeedItem.setStar(!mFeedItem.getStar());
                 FeedDBUtil.getInstance().saveFeedItem(mFeedItem);
