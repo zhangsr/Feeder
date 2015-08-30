@@ -1,7 +1,5 @@
 package me.zsr.feeder.ui;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -23,9 +21,9 @@ import me.zsr.feeder.App;
 import me.zsr.feeder.R;
 import me.zsr.feeder.dao.FeedItem;
 import me.zsr.feeder.util.DateUtil;
-import me.zsr.feeder.util.FeedDBUtil;
+import me.zsr.feeder.data.FeedDB;
 
-public class FeedBodyActivity extends BaseActivity implements View.OnClickListener {
+public class FeedBodyActivity extends BaseActivity {
     private FeedItem mFeedItem;
     private HtmlTextView mContentTextView;
     private TextView mTitleTextView;
@@ -46,7 +44,7 @@ public class FeedBodyActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void initData() {
-        mFeedItem = FeedDBUtil.getInstance().getFeedItemById(
+        mFeedItem = FeedDB.getInstance().getFeedItemById(
                 getIntent().getExtras().getLong(App.KEY_BUNDLE_ITEM_ID));
     }
 
@@ -80,7 +78,7 @@ public class FeedBodyActivity extends BaseActivity implements View.OnClickListen
                     Toast.makeText(this, "已添加星标", Toast.LENGTH_SHORT).show();
                 }
                 mFeedItem.setStar(!mFeedItem.getStar());
-                FeedDBUtil.getInstance().saveFeedItem(mFeedItem);
+                FeedDB.getInstance().saveFeedItem(mFeedItem, mFeedItem.getFeedSourceId());
                 break;
             case R.id.feed_body_share_btn:
                 new Thread(new Runnable() {

@@ -8,8 +8,6 @@ import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
 
-import org.jsoup.Jsoup;
-
 import java.text.SimpleDateFormat;
 import java.util.List;
 

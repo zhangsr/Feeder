@@ -10,7 +10,7 @@ public class FeederDaoGenerator {
 
     public static void main(String[] args) throws Exception {
         // note : +1 after upgrade schema
-        Schema schema = new Schema(11, "me.zsr.feeder.dao");
+        Schema schema = new Schema(13, "me.zsr.feeder.dao");
 
         addFeed(schema);
 
@@ -24,7 +24,7 @@ public class FeederDaoGenerator {
         feedSource.addStringProperty("title").notNull();
         feedSource.addStringProperty("url");
         feedSource.addDateProperty("date");
-        feedSource.addStringProperty("site");
+        feedSource.addStringProperty("link");
         feedSource.addStringProperty("favicon");
         feedSource.addStringProperty("description");
 

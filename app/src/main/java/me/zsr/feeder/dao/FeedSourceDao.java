@@ -27,7 +27,7 @@ public class FeedSourceDao extends AbstractDao<FeedSource, Long> {
         public final static Property Title = new Property(1, String.class, "title", false, "TITLE");
         public final static Property Url = new Property(2, String.class, "url", false, "URL");
         public final static Property Date = new Property(3, java.util.Date.class, "date", false, "DATE");
-        public final static Property Site = new Property(4, String.class, "site", false, "SITE");
+        public final static Property Link = new Property(4, String.class, "link", false, "LINK");
         public final static Property Favicon = new Property(5, String.class, "favicon", false, "FAVICON");
         public final static Property Description = new Property(6, String.class, "description", false, "DESCRIPTION");
     };
@@ -52,7 +52,7 @@ public class FeedSourceDao extends AbstractDao<FeedSource, Long> {
                 "'TITLE' TEXT NOT NULL ," + // 1: title
                 "'URL' TEXT," + // 2: url
                 "'DATE' INTEGER," + // 3: date
-                "'SITE' TEXT," + // 4: site
+                "'LINK' TEXT," + // 4: link
                 "'FAVICON' TEXT," + // 5: favicon
                 "'DESCRIPTION' TEXT);"); // 6: description
     }
@@ -84,9 +84,9 @@ public class FeedSourceDao extends AbstractDao<FeedSource, Long> {
             stmt.bindLong(4, date.getTime());
         }
  
-        String site = entity.getSite();
-        if (site != null) {
-            stmt.bindString(5, site);
+        String link = entity.getLink();
+        if (link != null) {
+            stmt.bindString(5, link);
         }
  
         String favicon = entity.getFavicon();
@@ -120,7 +120,7 @@ public class FeedSourceDao extends AbstractDao<FeedSource, Long> {
             cursor.getString(offset + 1), // title
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // url
             cursor.isNull(offset + 3) ? null : new java.util.Date(cursor.getLong(offset + 3)), // date
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // site
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // link
             cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // favicon
             cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6) // description
         );
@@ -134,7 +134,7 @@ public class FeedSourceDao extends AbstractDao<FeedSource, Long> {
         entity.setTitle(cursor.getString(offset + 1));
         entity.setUrl(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setDate(cursor.isNull(offset + 3) ? null : new java.util.Date(cursor.getLong(offset + 3)));
-        entity.setSite(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setLink(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
         entity.setFavicon(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
         entity.setDescription(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
      }

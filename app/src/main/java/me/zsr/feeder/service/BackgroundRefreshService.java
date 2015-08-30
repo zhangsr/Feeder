@@ -10,12 +10,12 @@ import java.lang.ref.WeakReference;
 
 import de.greenrobot.event.EventBus;
 import me.zsr.feeder.App;
+import me.zsr.feeder.data.FeedNetwork;
 import me.zsr.feeder.util.CommonEvent;
-import me.zsr.feeder.util.FeedNetworkUtil;
 import me.zsr.feeder.util.NetworkUtil;
 
 public class BackgroundRefreshService extends Service {
-    private static final int TIME_REFRE_DELAY = 5 * 60 * 1000;
+    private static final int TIME_REFRESH_DELAY = 5 * 60 * 1000;
     private static final int MSG_REFRESH = 0;
     private Handler mHandler = new MyHandler(this);
 
@@ -33,7 +33,7 @@ public class BackgroundRefreshService extends Service {
         super.onCreate();
         EventBus.getDefault().register(this);
 
-        mHandler.sendEmptyMessageDelayed(MSG_REFRESH, TIME_REFRE_DELAY);
+        mHandler.sendEmptyMessageDelayed(MSG_REFRESH, TIME_REFRESH_DELAY);
     }
 
     @Override
@@ -56,7 +56,7 @@ public class BackgroundRefreshService extends Service {
                 switch (msg.what) {
                     case MSG_REFRESH:
                         if (NetworkUtil.isWifiEnabled(App.getInstance())) {
-                            FeedNetworkUtil.fetchAll();
+                            FeedNetwork.getInstance().refreshAll();
                         }
                         break;
                     default:
@@ -69,7 +69,7 @@ public class BackgroundRefreshService extends Service {
         switch (commonEvent) {
             case FEED_DB_UPDATED:
                 if (!mHandler.hasMessages(MSG_REFRESH)) {
-                    mHandler.sendEmptyMessageDelayed(MSG_REFRESH, TIME_REFRE_DELAY);
+                    mHandler.sendEmptyMessageDelayed(MSG_REFRESH, TIME_REFRESH_DELAY);
                 }
                 break;
             default:

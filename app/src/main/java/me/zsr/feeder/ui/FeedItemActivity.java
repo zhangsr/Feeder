@@ -14,7 +14,7 @@ import me.zsr.feeder.App;
 import me.zsr.feeder.R;
 import me.zsr.feeder.dao.FeedItem;
 import me.zsr.feeder.dao.FeedSource;
-import me.zsr.feeder.util.FeedDBUtil;
+import me.zsr.feeder.data.FeedDB;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 public class FeedItemActivity extends BaseActivity {
@@ -50,9 +50,9 @@ public class FeedItemActivity extends BaseActivity {
     }
 
     private void notifyDataSetsChanged() {
-        mStarFeedItemList = FeedDBUtil.getInstance().getFeedItemListByStar(mFeedSource.getId(), true);
-        mUnreadFeedItemList = FeedDBUtil.getInstance().getFeedItemListByRead(mFeedSource.getId(), false);
-        mAllFeedItemList = FeedDBUtil.getInstance().getAllFeedItemList(mFeedSource.getId());
+        mStarFeedItemList = FeedDB.getInstance().getFeedItemListByStar(mFeedSource.getId(), true);
+        mUnreadFeedItemList = FeedDB.getInstance().getFeedItemListByRead(mFeedSource.getId(), false);
+        mAllFeedItemList = FeedDB.getInstance().getAllFeedItemList(mFeedSource.getId());
         mStarAdapter.notifyDataSetChanged(mStarFeedItemList);
         mUnreadAdapter.notifyDataSetChanged(mUnreadFeedItemList);
         mAllAdapter.notifyDataSetChanged(mAllFeedItemList);
@@ -60,10 +60,10 @@ public class FeedItemActivity extends BaseActivity {
 
     private void initData() {
         long feedSourceId = getIntent().getExtras().getLong(App.KEY_BUNDLE_SOURCE_ID);
-        mFeedSource = FeedDBUtil.getInstance().getFeedSourceById(feedSourceId);
-        mStarFeedItemList = FeedDBUtil.getInstance().getFeedItemListByStar(feedSourceId, true);
-        mUnreadFeedItemList = FeedDBUtil.getInstance().getFeedItemListByRead(feedSourceId, false);
-        mAllFeedItemList = FeedDBUtil.getInstance().getAllFeedItemList(feedSourceId);
+        mFeedSource = FeedDB.getInstance().getFeedSourceById(feedSourceId);
+        mStarFeedItemList = FeedDB.getInstance().getFeedItemListByStar(feedSourceId, true);
+        mUnreadFeedItemList = FeedDB.getInstance().getFeedItemListByRead(feedSourceId, false);
+        mAllFeedItemList = FeedDB.getInstance().getAllFeedItemList(feedSourceId);
     }
 
     private void initView() {
@@ -159,7 +159,7 @@ public class FeedItemActivity extends BaseActivity {
                             default:
                         }
 
-                        FeedDBUtil.getInstance().saveFeedItem(feedItem);
+                        FeedDB.getInstance().saveFeedItem(feedItem, mFeedSource.getId());
                         notifyDataSetsChanged();
                     }
                 }).show();
@@ -168,7 +168,7 @@ public class FeedItemActivity extends BaseActivity {
     private void showBodyActivity(FeedItem feedItem) {
         feedItem.setRead(true);
         Bundle bundle = new Bundle();
-        FeedDBUtil.getInstance().saveFeedItem(feedItem);
+        FeedDB.getInstance().saveFeedItem(feedItem, mFeedSource.getId());
         bundle.putLong(App.KEY_BUNDLE_ITEM_ID, feedItem.getId());
         Intent intent = new Intent(FeedItemActivity.this, FeedBodyActivity.class);
         intent.putExtras(bundle);
@@ -194,5 +194,10 @@ public class FeedItemActivity extends BaseActivity {
                 break;
             default:
         }
+    }
+
+    @Override
+    public void onClick(View v) {
+
     }
 }

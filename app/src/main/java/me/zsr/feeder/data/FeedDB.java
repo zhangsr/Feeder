@@ -1,34 +1,34 @@
-package me.zsr.feeder.util;
+package me.zsr.feeder.data;
 
 import java.util.List;
 
-import de.greenrobot.event.EventBus;
 import me.zsr.feeder.App;
 import me.zsr.feeder.dao.FeedItem;
 import me.zsr.feeder.dao.FeedItemDao;
 import me.zsr.feeder.dao.FeedSource;
 import me.zsr.feeder.dao.FeedSourceDao;
+import me.zsr.feeder.util.LogUtil;
 
 /**
  * @description: Save data to db and send event broadcast.
  * @author: Zhangshaoru
  * @date: 15-6-11
  */
-public class FeedDBUtil {
-    private static FeedDBUtil sFeedDBUtil;
+public class FeedDB {
+    private static FeedDB sFeedDB;
     private FeedSourceDao mFeedSourceDao;
     private FeedItemDao mFeedItemDao;
 
-    private FeedDBUtil() {}
+    private FeedDB() {}
 
-    public static FeedDBUtil getInstance() {
-        if (sFeedDBUtil == null) {
+    public static FeedDB getInstance() {
+        if (sFeedDB == null) {
             // All init here
-            sFeedDBUtil = new FeedDBUtil();
-            sFeedDBUtil.mFeedSourceDao = App.getDaoSession().getFeedSourceDao();
-            sFeedDBUtil.mFeedItemDao = App.getDaoSession().getFeedItemDao();
+            sFeedDB = new FeedDB();
+            sFeedDB.mFeedSourceDao = App.getDaoSession().getFeedSourceDao();
+            sFeedDB.mFeedItemDao = App.getDaoSession().getFeedItemDao();
         }
-        return sFeedDBUtil;
+        return sFeedDB;
     }
 
     public void saveFeedSource(FeedSource feedSource) {
@@ -43,11 +43,12 @@ public class FeedDBUtil {
             mFeedSourceDao.update(feedSource);
         }
 
-        //TODO really need to post DB_UPDATED ?
-        EventBus.getDefault().post(CommonEvent.FEED_DB_UPDATED);
+//        //TODO really need to post DB_UPDATED ?
+//        EventBus.getDefault().post(CommonEvent.FEED_DB_UPDATED);
     }
 
-    public void saveFeedItem(FeedItem feedItem) {
+    public void saveFeedItem(FeedItem feedItem, long sourceId) {
+        feedItem.setFeedSourceId(sourceId);
         if (feedItem.getId() == null) { // new fetch
             if (mFeedItemDao.queryBuilder().where(FeedItemDao.Properties.Title.eq(
                     feedItem.getTitle())).list().size() == 0) {
@@ -59,8 +60,8 @@ public class FeedDBUtil {
             mFeedItemDao.update(feedItem);
         }
 
-        //TODO really need to post DB_UPDATED ?
-        EventBus.getDefault().post(CommonEvent.FEED_DB_UPDATED);
+//        //TODO really need to post DB_UPDATED ?
+//        EventBus.getDefault().post(CommonEvent.FEED_DB_UPDATED);
     }
 
     public int countFeedItemByRead(long sourceId, boolean read) {
@@ -92,16 +93,16 @@ public class FeedDBUtil {
                 FeedItemDao.Properties.FeedSourceId.eq(sourceId)).orderDesc(FeedItemDao.Properties.Date).list();
     }
 
-    public void saveFeedItem(final List<FeedItem> feedItemList) {
+    public void saveFeedItem(final List<FeedItem> feedItemList, final long sourceId) {
         App.getDaoSession().runInTx(new Runnable() {
             @Override
             public void run() {
                 for (int i = feedItemList.size() - 1; i >= 0; i--) {
-                    saveFeedItem(feedItemList.get(i));
+                    saveFeedItem(feedItemList.get(i), sourceId);
                 }
             }
         });
-        EventBus.getDefault().post(CommonEvent.FEED_DB_UPDATED);
+//        EventBus.getDefault().post(CommonEvent.FEED_DB_UPDATED);
     }
 
     public FeedSource getFeedSourceById(long id) {
@@ -147,12 +148,12 @@ public class FeedDBUtil {
         for (FeedItem feedItem : feedItemList) {
             feedItem.setRead(true);
         }
-        saveFeedItem(feedItemList);
+        saveFeedItem(feedItemList, sourceId);
     }
 
     public void deleteSource(long sourceId) {
         mFeedItemDao.deleteInTx(getAllFeedItemList(sourceId));
         mFeedSourceDao.deleteByKey(sourceId);
-        EventBus.getDefault().post(CommonEvent.FEED_DB_UPDATED);
+//        EventBus.getDefault().post(CommonEvent.FEED_DB_UPDATED);
     }
 }

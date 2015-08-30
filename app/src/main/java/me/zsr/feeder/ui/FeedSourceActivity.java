@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.view.KeyEvent;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,16 +28,16 @@ import de.greenrobot.event.EventBus;
 import me.zsr.feeder.App;
 import me.zsr.feeder.R;
 import me.zsr.feeder.dao.FeedSource;
+import me.zsr.feeder.data.FeedDB;
+import me.zsr.feeder.data.FeedNetwork;
 import me.zsr.feeder.util.AnalysisEvent;
 import me.zsr.feeder.util.CommonEvent;
-import me.zsr.feeder.util.FeedDBUtil;
-import me.zsr.feeder.util.FeedNetworkUtil;
 import me.zsr.feeder.util.LogUtil;
 import me.zsr.feeder.util.NetworkUtil;
 import me.zsr.feeder.util.UrlUtil;
 import me.zsr.feeder.util.VolleySingleton;
 
-public class FeedSourceActivity extends BaseActivity implements View.OnClickListener {
+public class FeedSourceActivity extends BaseActivity {
     private ImageButton mAddFeedButton;
     private ListView mFeedListView;
     private List<FeedSource> mFeedSourceList = new ArrayList<>();
@@ -60,7 +59,7 @@ public class FeedSourceActivity extends BaseActivity implements View.OnClickList
 
         // Auto refresh while wifi is enabled
         if (NetworkUtil.isWifiEnabled(this)) {
-            FeedNetworkUtil.fetchAll();
+            FeedNetwork.getInstance().refreshAll();
         }
     }
 
@@ -75,7 +74,7 @@ public class FeedSourceActivity extends BaseActivity implements View.OnClickList
         super.onRestart();
 
         mTabToolBar.setMode(App.getInstance().mCurrentMode);
-        mFeedSourceList = FeedDBUtil.getInstance().loadAll();
+        mFeedSourceList = FeedDB.getInstance().loadAll();
         mFeedAdapter.notifyDataSetChanged();
     }
 
@@ -86,7 +85,7 @@ public class FeedSourceActivity extends BaseActivity implements View.OnClickList
     }
 
     private void initData() {
-        mFeedSourceList = FeedDBUtil.getInstance().loadAll();
+        mFeedSourceList = FeedDB.getInstance().loadAll();
     }
 
     private void initView() {
@@ -104,7 +103,7 @@ public class FeedSourceActivity extends BaseActivity implements View.OnClickList
         mPullRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                FeedNetworkUtil.fetchAll();
+                FeedNetwork.getInstance().refreshAll();
             }
         });
         mFeedListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -122,7 +121,7 @@ public class FeedSourceActivity extends BaseActivity implements View.OnClickList
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 final FeedSource feedSource = mFeedSourceList.get(position);
                 List<CharSequence> menuList = new ArrayList<>();
-                if (FeedDBUtil.getInstance().countFeedItemByRead(feedSource.getId(), false) != 0) {
+                if (FeedDB.getInstance().countFeedItemByRead(feedSource.getId(), false) != 0) {
                     menuList.add(getString(R.string.mark_as_read));
                 }
                 menuList.add(getString(R.string.cancel_feed));
@@ -135,10 +134,10 @@ public class FeedSourceActivity extends BaseActivity implements View.OnClickList
                                                     CharSequence charSequence) {
                                 switch (i) {
                                     case 0:
-                                        FeedDBUtil.getInstance().markAllAsRead(feedSource.getId());
+                                        FeedDB.getInstance().markAllAsRead(feedSource.getId());
                                         break;
                                     case 1:
-                                        FeedDBUtil.getInstance().deleteSource(feedSource.getId());
+                                        FeedDB.getInstance().deleteSource(feedSource.getId());
                                         break;
                                 }
                             }
@@ -188,29 +187,31 @@ public class FeedSourceActivity extends BaseActivity implements View.OnClickList
                             @Override
                             public void onFound(final String result) {
                                 if (!TextUtils.isEmpty(result)) {
-                                    FeedNetworkUtil.verifyFeedSource(mHandler, result, new FeedNetworkUtil.OnVerifyFeedListener() {
+                                    FeedNetwork.getInstance().verifySource(result, new FeedNetwork.OnVerifyListener() {
                                         @Override
                                         public void onResult(boolean isValid) {
                                             if (isValid) {
-                                                FeedNetworkUtil.addFeedSource(result);
+                                                FeedNetwork.getInstance().addSource(result, new FeedNetwork.OnAddListener() {
+                                                    @Override
+                                                    public void onError(String msg) {
+                                                        showError(msg);
+                                                    }
+                                                });
                                                 dialog.dismiss();
                                             } else {
-                                                LogUtil.e("Source invalid");
-                                                Toast.makeText(App.getInstance(), "无效的源", Toast.LENGTH_SHORT).show();
+                                                showError("无效的源");
                                                 //TODO Add suffix and try again
                                             }
                                         }
                                     });
                                 } else {
-                                    LogUtil.e("Source invalid");
-                                    Toast.makeText(App.getInstance(), "无效的源", Toast.LENGTH_SHORT).show();
+                                    showError("无效的源");
                                 }
                             }
 
                             @Override
                             public void onNotFound() {
-                                LogUtil.e("Source not found");
-                                Toast.makeText(App.getInstance(), "没有找到相关的源", Toast.LENGTH_SHORT).show();
+                                showError("没有找到相关的源");
                             }
                         });
                     }
@@ -265,11 +266,11 @@ public class FeedSourceActivity extends BaseActivity implements View.OnClickList
             viewHolder.titleTextView.setText(feedSource.getTitle());
             switch (App.getInstance().mCurrentMode) {
                 case STAR:
-                    viewHolder.numTextView.setText("" + FeedDBUtil.getInstance().countFeedItemByStar(
+                    viewHolder.numTextView.setText("" + FeedDB.getInstance().countFeedItemByStar(
                             feedSource.getId(), true));
                     break;
                 case UNREAD:
-                    viewHolder.numTextView.setText("" + FeedDBUtil.getInstance().countFeedItemByRead(
+                    viewHolder.numTextView.setText("" + FeedDB.getInstance().countFeedItemByRead(
                             feedSource.getId(), false));
                     break;
                 case ALL:
@@ -290,24 +291,16 @@ public class FeedSourceActivity extends BaseActivity implements View.OnClickList
     public void onEventMainThread(CommonEvent commonEvent) {
         switch (commonEvent) {
             case FEED_DB_UPDATED:
+                LogUtil.e("feed db updated");
                 mPullRefreshLayout.setRefreshing(false);
-                mFeedSourceList = FeedDBUtil.getInstance().loadAll();
+                mFeedSourceList = FeedDB.getInstance().loadAll();
                 mFeedAdapter.notifyDataSetChanged();
                 break;
             default:
         }
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-//        switch (keyCode) {
-//            case KeyEvent.KEYCODE_VOLUME_UP:
-//                // Test add source
-//                FeedNetworkUtil.addFeedSource("http://www.coolshell.cn/feed");
-//                FeedNetworkUtil.addFeedSource("http://www.ixiqi.com/feed");
-//                return true;
-//            default:
-//        }
-        return super.onKeyDown(keyCode, event);
+    private void showError(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 }

@@ -12,8 +12,8 @@ adb shell "run-as $PKG chmod 666 /data/data/$PKG/databases/$DB"
 adb shell "rm /sdcard/$DB"
 adb shell "cp /data/data/$PKG/databases/$DB /sdcard/$DB"
  
-rm -f /tmp/${DB}
-adb pull /sdcard/${DB} /tmp/${DB}
+rm -f ~/Temp/${DB}
+adb pull /sdcard/${DB} ~/Temp/${DB}
  
-sqlitebrowser /tmp/${DB}
+# sqlitebrowser ~/Temp/${DB}
 
