@@ -119,10 +119,14 @@ public class FeedHandler extends DefaultHandler {
     private final Setter SET_LINK = new ContentSetter() {
         @Override
         public void set(String link) {
+            if (link.endsWith("/")) {
+                link = link.substring(0, link.length() - 1);
+            }
             if (item != null) {
                 item.setLink(link);
             } else {
                 source.setLink(link);
+                source.setFavicon(link + "/favicon.ico");
             }
         }
     };
