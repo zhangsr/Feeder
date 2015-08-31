@@ -27,12 +27,12 @@ public class UrlUtil {
         String[] schemes = {"http", "https"};
         UrlValidator urlValidator = new UrlValidator(schemes);
         if (urlValidator.isValid(input)) {
-            listener.onFound(input);
+            listener.onFound(input, false);
             return;
         }
         String inputWithPrefix = "http://" + input;
         if (urlValidator.isValid(inputWithPrefix)) {
-            listener.onFound(inputWithPrefix);
+            listener.onFound(inputWithPrefix, false);
             return;
         }
 
@@ -59,7 +59,7 @@ public class UrlUtil {
                         @Override
                         public void run() {
                             if (!TextUtils.isEmpty(result)) {
-                                listener.onFound(result);
+                                listener.onFound(result, true);
                             } else {
                                 listener.onNotFound();
                             }
@@ -79,7 +79,7 @@ public class UrlUtil {
     }
 
     public interface OnSearchResultListener {
-        void onFound(String result);
+        void onFound(String result, boolean isUploaded);
         void onNotFound();
     }
 }

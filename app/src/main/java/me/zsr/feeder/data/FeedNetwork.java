@@ -3,6 +3,7 @@ package me.zsr.feeder.data;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 
 import com.avos.avoscloud.AVObject;
 
@@ -69,35 +70,31 @@ public class FeedNetwork {
     }
 
     public interface OnVerifyListener {
-        void onResult(boolean isValid);
+        void onResult(boolean isValid, FeedSource feedSource);
     }
 
-    // TODO: 8/29/15 Add to avos in caller
     public void verifySource(final String url, final OnVerifyListener listener) {
-        new AsyncTask<Void, Void, Boolean>() {
+        new AsyncTask<Void, Void, FeedSource>() {
             @Override
-            protected Boolean doInBackground(Void... params) {
+            protected FeedSource doInBackground(Void... params) {
                 try {
                     FeedSource newFeedSource = mFeedReader.load(url);
-
-                    AVObject feedSourceObj = new AVObject("FeedSource");
-                    feedSourceObj.put("title", newFeedSource.getTitle());
-                    feedSourceObj.put("url", url);
-                    feedSourceObj.put("link", newFeedSource.getLink());
-                    feedSourceObj.saveInBackground();
+                    if (TextUtils.isEmpty(newFeedSource.getTitle())) {
+                        return null;
+                    }
                     // TODO: 8/29/15 need more verify ?
-                    return true;
+                    return newFeedSource;
                 } catch (FeedReadException e) {
                     e.printStackTrace();
-                    return false;
+                    return null;
                 }
             }
 
             @Override
-            protected void onPostExecute(Boolean isValid) {
-                super.onPostExecute(isValid);
+            protected void onPostExecute(FeedSource feedSource) {
+                super.onPostExecute(feedSource);
                 if (listener != null) {
-                    listener.onResult(isValid);
+                    listener.onResult(feedSource != null, feedSource);
                 }
             }
         }.execute();
@@ -126,6 +123,25 @@ public class FeedNetwork {
                 } catch (FeedReadException e) {
                     e.printStackTrace();
                 }
+                return null;
+            }
+        }.execute();
+    }
+
+    public void addSource(final FeedSource feedSource, OnAddListener listener) {
+        if (FeedDB.getInstance().hasSource(feedSource.getUrl())) {
+            if (listener != null) {
+                listener.onError("Source reduplicated");
+            }
+            return;
+        }
+
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                FeedDB.getInstance().saveFeedSource(feedSource);
+                FeedDB.getInstance().saveFeedItem(feedSource.getFeedItems(), feedSource.getId());
+                notifyUI();
                 return null;
             }
         }.execute();

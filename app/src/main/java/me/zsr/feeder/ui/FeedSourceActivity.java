@@ -19,6 +19,7 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.toolbox.NetworkImageView;
 import com.avos.avoscloud.AVAnalytics;
+import com.avos.avoscloud.AVObject;
 import com.baoyz.widget.PullRefreshLayout;
 
 import java.util.ArrayList;
@@ -185,13 +186,28 @@ public class FeedSourceActivity extends BaseActivity {
 
                         UrlUtil.searchForTarget(mHandler, input, new UrlUtil.OnSearchResultListener() {
                             @Override
-                            public void onFound(final String result) {
-                                if (!TextUtils.isEmpty(result)) {
+                            public void onFound(final String result, boolean isUploaded) {
+                                if (isUploaded) {
+                                    FeedNetwork.getInstance().addSource(result, new FeedNetwork.OnAddListener() {
+                                        @Override
+                                        public void onError(String msg) {
+                                            showError(msg);
+                                        }
+                                    });
+                                    dialog.dismiss();
+                                } else {
                                     FeedNetwork.getInstance().verifySource(result, new FeedNetwork.OnVerifyListener() {
                                         @Override
-                                        public void onResult(boolean isValid) {
+                                        public void onResult(boolean isValid, FeedSource feedSource) {
                                             if (isValid) {
-                                                FeedNetwork.getInstance().addSource(result, new FeedNetwork.OnAddListener() {
+                                                // Upload
+                                                AVObject feedSourceObj = new AVObject("FeedSource");
+                                                feedSourceObj.put("title", feedSource.getTitle());
+                                                feedSourceObj.put("url", feedSource.getUrl());
+                                                feedSourceObj.put("link", feedSource.getLink());
+                                                feedSourceObj.saveInBackground();
+
+                                                FeedNetwork.getInstance().addSource(feedSource, new FeedNetwork.OnAddListener() {
                                                     @Override
                                                     public void onError(String msg) {
                                                         showError(msg);
@@ -204,8 +220,6 @@ public class FeedSourceActivity extends BaseActivity {
                                             }
                                         }
                                     });
-                                } else {
-                                    showError("无效的源");
                                 }
                             }
 
