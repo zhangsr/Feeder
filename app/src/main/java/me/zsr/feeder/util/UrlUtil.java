@@ -27,16 +27,18 @@ public class UrlUtil {
         String[] schemes = {"http", "https"};
         UrlValidator urlValidator = new UrlValidator(schemes);
         if (urlValidator.isValid(input)) {
-            listener.onFound(input, false);
+            listener.onFound(input, false, "");
             return;
         }
         String inputWithPrefix = "http://" + input;
         if (urlValidator.isValid(inputWithPrefix)) {
-            listener.onFound(inputWithPrefix, false);
+            listener.onFound(inputWithPrefix, false, "");
             return;
         }
 
         //TODO Use async task ?
+        // TODO: 9/1/15 do search server in another place ?
+        // TODO: 9/1/15 return FeedSource would be better ?
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -44,6 +46,7 @@ public class UrlUtil {
                 try {
                     List<AVObject> avObjectList = query.find();
                     String target = "";
+                    String reTitle = "";
                     double max = 0.5;
                     for (AVObject avObject : avObjectList) {
                         double similarity = StringUtil.getJaroWinklerDistance(
@@ -51,15 +54,17 @@ public class UrlUtil {
                         if (similarity > max) {
                             max = similarity;
                             target = avObject.getString("url");
+                            reTitle = avObject.getString("title");
                         }
                     }
 
-                    final String result = target;
+                    final String resultUrl = target;
+                    final String resultTitle = reTitle;
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            if (!TextUtils.isEmpty(result)) {
-                                listener.onFound(result, true);
+                            if (!TextUtils.isEmpty(resultUrl)) {
+                                listener.onFound(resultUrl, true, resultTitle);
                             } else {
                                 listener.onNotFound();
                             }
@@ -79,7 +84,7 @@ public class UrlUtil {
     }
 
     public interface OnSearchResultListener {
-        void onFound(String result, boolean isUploaded);
+        void onFound(String result, boolean isUploaded, String reTitle);
         void onNotFound();
     }
 }

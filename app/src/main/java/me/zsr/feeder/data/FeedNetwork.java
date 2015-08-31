@@ -5,8 +5,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 
-import com.avos.avoscloud.AVObject;
-
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
@@ -104,10 +102,10 @@ public class FeedNetwork {
         void onError(String msg);
     }
 
-    public void addSource(final String url, OnAddListener listener) {
+    public void addSource(final String url, final String reTitle, OnAddListener listener) {
         if (FeedDB.getInstance().hasSource(url)) {
             if (listener != null) {
-                listener.onError("Source reduplicated");
+                listener.onError("源已经添加过了");
             }
             return;
         }
@@ -117,6 +115,7 @@ public class FeedNetwork {
             protected Void doInBackground(Void... params) {
                 try {
                     FeedSource feedSource = mFeedReader.load(url);
+                    feedSource.setTitle(reTitle);
                     FeedDB.getInstance().saveFeedSource(feedSource);
                     FeedDB.getInstance().saveFeedItem(feedSource.getFeedItems(), feedSource.getId());
                     notifyUI();
@@ -131,7 +130,7 @@ public class FeedNetwork {
     public void addSource(final FeedSource feedSource, OnAddListener listener) {
         if (FeedDB.getInstance().hasSource(feedSource.getUrl())) {
             if (listener != null) {
-                listener.onError("Source reduplicated");
+                listener.onError("该源已经添加过了");
             }
             return;
         }

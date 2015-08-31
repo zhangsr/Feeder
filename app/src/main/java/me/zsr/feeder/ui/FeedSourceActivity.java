@@ -3,7 +3,6 @@ package me.zsr.feeder.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.TextUtils;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -186,9 +185,9 @@ public class FeedSourceActivity extends BaseActivity {
 
                         UrlUtil.searchForTarget(mHandler, input, new UrlUtil.OnSearchResultListener() {
                             @Override
-                            public void onFound(final String result, boolean isUploaded) {
+                            public void onFound(final String result, boolean isUploaded, String reTitle) {
                                 if (isUploaded) {
-                                    FeedNetwork.getInstance().addSource(result, new FeedNetwork.OnAddListener() {
+                                    FeedNetwork.getInstance().addSource(result, reTitle, new FeedNetwork.OnAddListener() {
                                         @Override
                                         public void onError(String msg) {
                                             showError(msg);
