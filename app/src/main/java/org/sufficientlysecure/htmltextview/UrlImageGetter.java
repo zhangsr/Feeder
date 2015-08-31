@@ -96,11 +96,12 @@ public class UrlImageGetter implements ImageGetter {
         }
     }
 
+    // TODO: 8/31/15 Fix oldwidth == 0
     private void adjustDrawableBounds(Drawable drawable, int oldWidth, int oldHeight) {
         int width;
         int height;
 
-        if (oldWidth * 2 < mContainerTextView.getWidth()) {
+        if (oldWidth * 2 <= mContainerTextView.getWidth()) {
             width = oldWidth * 2;
             height = oldHeight * 2;
         } else {
