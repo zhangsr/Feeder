@@ -33,16 +33,14 @@ dependencies {
     }
     compile 'info.hoang8f:android-segmented:1.0.5'
     compile 'com.baoyz.pullrefreshlayout:library:1.0.1'
-    compile 'commons-io:commons-io:2.4'
-    compile 'de.greenrobot:greendao:1.3.7'
-    compile 'de.greenrobot:eventbus:2.4.0'
     compile 'se.emilsjolander:stickylistheaders:2.7.0'
     compile 'com.afollestad:material-dialogs:0.7.6.0'
     compile 'org.jsoup:jsoup:1.8.2'
     compile 'org.apache.commons:commons-lang3:3.4'
-
     //avoscloud-sdk 为 LeanCloud基础包
     compile 'cn.leancloud.android:avoscloud-sdk:v3.3+'
     //avoscloud-statistics 为 LeanCloud 统计包
     compile 'cn.leancloud.android:avoscloud-statistics:v3.3+@aar'
+    compile project(':library')
+    compile project(':library_rss')
 }

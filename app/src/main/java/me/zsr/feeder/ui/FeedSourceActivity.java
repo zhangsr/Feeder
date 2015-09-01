@@ -3,6 +3,7 @@ package me.zsr.feeder.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +20,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.toolbox.NetworkImageView;
 import com.avos.avoscloud.AVAnalytics;
 import com.avos.avoscloud.AVObject;
-import com.baoyz.widget.PullRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +42,7 @@ public class FeedSourceActivity extends BaseActivity {
     private ListView mFeedListView;
     private List<FeedSource> mFeedSourceList = new ArrayList<>();
     private FeedAdapter mFeedAdapter;
-    private PullRefreshLayout mPullRefreshLayout;
+    private SwipeRefreshLayout mPullRefreshLayout;
     private FeedTabToolBar mTabToolBar;
 
     private Handler mHandler = new Handler();
@@ -93,14 +93,13 @@ public class FeedSourceActivity extends BaseActivity {
         mFeedListView = (ListView) findViewById(R.id.feed_lv);
         mFeedAdapter = new FeedAdapter();
         mFeedListView.setAdapter(mFeedAdapter);
-        mPullRefreshLayout = (PullRefreshLayout) findViewById(R.id.feed_pull_to_refresh_layout);
-        mPullRefreshLayout.setRefreshStyle(PullRefreshLayout.STYLE_RING);
+        mPullRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.feed_pull_to_refresh_layout);
         mTabToolBar = (FeedTabToolBar) findViewById(R.id.feed_source_toolbar);
     }
 
     private void setListener() {
         mAddFeedButton.setOnClickListener(this);
-        mPullRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
+        mPullRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 FeedNetwork.getInstance().refreshAll();

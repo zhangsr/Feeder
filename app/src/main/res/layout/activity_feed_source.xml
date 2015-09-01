@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"/>
     </LinearLayout>
 
-    <com.baoyz.widget.PullRefreshLayout
+    <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/feed_pull_to_refresh_layout"
         android:background="@android:color/white"
         android:layout_width="match_parent"
@@ -30,7 +30,7 @@
             android:divider="@null"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-    </com.baoyz.widget.PullRefreshLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <me.zsr.feeder.ui.FeedTabToolBar
         android:id="@+id/feed_source_toolbar"
