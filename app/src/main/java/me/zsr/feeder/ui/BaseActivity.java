@@ -1,8 +1,10 @@
 package me.zsr.feeder.ui;
 
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import com.avos.avoscloud.AVAnalytics;
 
@@ -40,5 +42,13 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    protected void showError(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    protected void showTip(String msg) {
+        Snackbar.make(getWindow().getDecorView(), msg, Snackbar.LENGTH_SHORT).show();
     }
 }

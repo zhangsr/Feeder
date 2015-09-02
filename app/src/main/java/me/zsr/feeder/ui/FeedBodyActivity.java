@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.tencent.mm.sdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.sdk.modelmsg.WXMediaMessage;
@@ -73,9 +72,9 @@ public class FeedBodyActivity extends BaseActivity {
         switch (v.getId()) {
             case R.id.feed_body_star_btn:
                 if (mFeedItem.getStar()) {
-                    Toast.makeText(this, "已取消星标", Toast.LENGTH_SHORT).show();
+                    showTip("已取消星标");
                 } else {
-                    Toast.makeText(this, "已添加星标", Toast.LENGTH_SHORT).show();
+                    showTip("已添加星标");
                 }
                 mFeedItem.setStar(!mFeedItem.getStar());
                 FeedDB.getInstance().saveFeedItem(mFeedItem, mFeedItem.getFeedSourceId());
