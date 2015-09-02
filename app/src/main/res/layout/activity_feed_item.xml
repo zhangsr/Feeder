@@ -5,25 +5,43 @@
     android:layout_height="match_parent"
     tools:context="me.zsr.feeder.ui.FeedItemActivity">
 
-    <se.emilsjolander.stickylistheaders.StickyListHeadersListView
-        android:id="@+id/feed_item_star_lv"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/feed_item_star_layout"
         android:layout_weight="1"
         android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="0dp" />
+        android:layout_height="0dp">
 
-    <se.emilsjolander.stickylistheaders.StickyListHeadersListView
-        android:id="@+id/feed_item_unread_lv"
+        <se.emilsjolander.stickylistheaders.StickyListHeadersListView
+            android:id="@+id/feed_item_star_lv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/feed_item_unread_layout"
         android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="0dp" />
+        android:layout_height="0dp">
 
-    <se.emilsjolander.stickylistheaders.StickyListHeadersListView
-        android:id="@+id/feed_item_all_lv"
-        android:layout_weight="1"
+        <se.emilsjolander.stickylistheaders.StickyListHeadersListView
+            android:id="@+id/feed_item_unread_lv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/feed_item_all_layout"
         android:visibility="gone"
+        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="0dp" />
+        android:layout_height="0dp">
+
+        <se.emilsjolander.stickylistheaders.StickyListHeadersListView
+            android:id="@+id/feed_item_all_lv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <me.zsr.feeder.ui.FeedTabToolBar
         android:id="@+id/feed_item_toolbar"

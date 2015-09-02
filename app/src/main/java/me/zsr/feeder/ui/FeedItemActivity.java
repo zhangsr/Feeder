@@ -1,7 +1,9 @@
 package me.zsr.feeder.ui;
 
+import android.animation.LayoutTransition;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.AdapterView;
 
@@ -10,14 +12,20 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
 import me.zsr.feeder.App;
 import me.zsr.feeder.R;
 import me.zsr.feeder.dao.FeedItem;
 import me.zsr.feeder.dao.FeedSource;
 import me.zsr.feeder.data.FeedDB;
+import me.zsr.feeder.data.FeedNetwork;
+import me.zsr.feeder.util.CommonEvent;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 public class FeedItemActivity extends BaseActivity {
+    private SwipeRefreshLayout mStarLayout;
+    private SwipeRefreshLayout mUnreadLayout;
+    private SwipeRefreshLayout mAllLayout;
     private StickyListHeadersListView mFeedItemStarListView;
     private StickyListHeadersListView mFeedItemUnreadListView;
     private StickyListHeadersListView mFeedItemAllListView;
@@ -44,9 +52,20 @@ public class FeedItemActivity extends BaseActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-
         // Refresh data after return from FeedBodyActivity
         notifyDataSetsChanged();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        EventBus.getDefault().unregister(this);
     }
 
     private void notifyDataSetsChanged() {
@@ -67,12 +86,16 @@ public class FeedItemActivity extends BaseActivity {
     }
 
     private void initView() {
+        mStarLayout = (SwipeRefreshLayout) findViewById(R.id.feed_item_star_layout);
+        mUnreadLayout = (SwipeRefreshLayout) findViewById(R.id.feed_item_unread_layout);
+        mAllLayout = (SwipeRefreshLayout) findViewById(R.id.feed_item_all_layout);
         mStarAdapter = new FeedItemListAdapter(mStarFeedItemList, mFeedSource.getFavicon());
         mUnreadAdapter = new FeedItemListAdapter(mUnreadFeedItemList, mFeedSource.getFavicon());
         mAllAdapter = new FeedItemListAdapter(mAllFeedItemList, mFeedSource.getFavicon());
         mFeedItemStarListView = (StickyListHeadersListView) findViewById(R.id.feed_item_star_lv);
         mFeedItemStarListView.setAdapter(mStarAdapter);
         mFeedItemUnreadListView = (StickyListHeadersListView) findViewById(R.id.feed_item_unread_lv);
+        mFeedItemUnreadListView.setLayoutTransition(new LayoutTransition());
         mFeedItemUnreadListView.setAdapter(mUnreadAdapter);
         mFeedItemAllListView = (StickyListHeadersListView) findViewById(R.id.feed_item_all_lv);
         mFeedItemAllListView.setAdapter(mAllAdapter);
@@ -83,6 +106,24 @@ public class FeedItemActivity extends BaseActivity {
     }
 
     private void setListener() {
+        mStarLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                FeedNetwork.getInstance().refresh(mFeedSource);
+            }
+        });
+        mUnreadLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                FeedNetwork.getInstance().refresh(mFeedSource);
+            }
+        });
+        mAllLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                FeedNetwork.getInstance().refresh(mFeedSource);
+            }
+        });
         mFeedItemStarListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -178,19 +219,25 @@ public class FeedItemActivity extends BaseActivity {
     private void showListViewByMode(App.Mode mode) {
         switch (mode) {
             case STAR:
-                mFeedItemStarListView.setVisibility(View.VISIBLE);
-                mFeedItemUnreadListView.setVisibility(View.GONE);
-                mFeedItemAllListView.setVisibility(View.GONE);
+                mStarLayout.setVisibility(View.VISIBLE);
+                mUnreadLayout.setVisibility(View.GONE);
+                mUnreadLayout.setRefreshing(false);
+                mAllLayout.setVisibility(View.GONE);
+                mAllLayout.setRefreshing(false);
                 break;
             case UNREAD:
-                mFeedItemStarListView.setVisibility(View.GONE);
-                mFeedItemUnreadListView.setVisibility(View.VISIBLE);
-                mFeedItemAllListView.setVisibility(View.GONE);
+                mStarLayout.setVisibility(View.GONE);
+                mStarLayout.setRefreshing(false);
+                mUnreadLayout.setVisibility(View.VISIBLE);
+                mAllLayout.setVisibility(View.GONE);
+                mAllLayout.setRefreshing(false);
                 break;
             case ALL:
-                mFeedItemStarListView.setVisibility(View.GONE);
-                mFeedItemUnreadListView.setVisibility(View.GONE);
-                mFeedItemAllListView.setVisibility(View.VISIBLE);
+                mStarLayout.setVisibility(View.GONE);
+                mStarLayout.setRefreshing(false);
+                mUnreadLayout.setVisibility(View.GONE);
+                mUnreadLayout.setRefreshing(false);
+                mAllLayout.setVisibility(View.VISIBLE);
                 break;
             default:
         }
@@ -199,5 +246,17 @@ public class FeedItemActivity extends BaseActivity {
     @Override
     public void onClick(View v) {
 
+    }
+
+    public void onEventMainThread(CommonEvent commonEvent) {
+        switch (commonEvent) {
+            case FEED_DB_UPDATED:
+                mStarLayout.setRefreshing(false);
+                mUnreadLayout.setRefreshing(false);
+                mAllLayout.setRefreshing(false);
+                notifyDataSetsChanged();
+                break;
+            default:
+        }
     }
 }
