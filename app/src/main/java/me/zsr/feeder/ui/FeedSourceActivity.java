@@ -152,6 +152,9 @@ public class FeedSourceActivity extends BaseActivity {
                                         FeedDB.getInstance().deleteSource(feedSource.getId());
                                         break;
                                 }
+
+                                mFeedSourceList = FeedDB.getInstance().loadAll();
+                                mFeedAdapter.notifyDataSetChanged();
                             }
                         }).show();
                 return true;
