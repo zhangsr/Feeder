@@ -49,6 +49,13 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     }
 
     protected void showTip(String msg) {
-        Snackbar.make(getWindow().getDecorView(), msg, Snackbar.LENGTH_SHORT).show();
+        final Snackbar snackbar = Snackbar.make(getWindow().getDecorView(), msg, Snackbar.LENGTH_INDEFINITE);
+        snackbar.setAction("知道了", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                snackbar.dismiss();
+            }
+        });
+        snackbar.show();
     }
 }

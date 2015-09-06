@@ -15,7 +15,7 @@ import me.zsr.feeder.util.CommonEvent;
 import me.zsr.feeder.util.NetworkUtil;
 
 public class BackgroundRefreshService extends Service {
-    private static final int TIME_REFRESH_DELAY = 5 * 60 * 1000;
+    private static final int TIME_REFRESH_DELAY = 10 * 60 * 1000;
     private static final int MSG_REFRESH = 0;
     private Handler mHandler = new MyHandler(this);
 

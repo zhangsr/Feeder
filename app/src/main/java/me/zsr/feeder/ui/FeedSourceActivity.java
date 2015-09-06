@@ -1,8 +1,10 @@
 package me.zsr.feeder.ui;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -25,6 +27,7 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 import me.zsr.feeder.App;
+import me.zsr.feeder.BuildConfig;
 import me.zsr.feeder.R;
 import me.zsr.feeder.dao.FeedSource;
 import me.zsr.feeder.data.FeedDB;
@@ -35,8 +38,10 @@ import me.zsr.feeder.util.LogUtil;
 import me.zsr.feeder.util.NetworkUtil;
 import me.zsr.feeder.util.UrlUtil;
 import me.zsr.feeder.util.VolleySingleton;
+import me.zsr.library.FileUtil;
 
 public class FeedSourceActivity extends BaseActivity {
+    private static final String SP_KEY_VERSION_CODE = "sp_key_version_code";
     private ImageButton mAddFeedButton;
     private ListView mFeedListView;
     private List<FeedSource> mFeedSourceList = new ArrayList<>();
@@ -51,6 +56,15 @@ public class FeedSourceActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         AVAnalytics.trackAppOpened(getIntent());
         setContentView(R.layout.activity_feed_source);
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        if (sp.getInt(SP_KEY_VERSION_CODE, 0) < BuildConfig.VERSION_CODE) {
+            // Show newest version info
+            showTip("升级成功：" + FileUtil.readAssetFie(this, "version_info"));
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putInt(SP_KEY_VERSION_CODE, BuildConfig.VERSION_CODE);
+            editor.apply();
+        }
 
         initData();
         initView();
