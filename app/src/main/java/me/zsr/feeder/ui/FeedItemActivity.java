@@ -3,12 +3,16 @@ package me.zsr.feeder.ui;
 import android.animation.LayoutTransition;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.widget.AdapterView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +27,7 @@ import me.zsr.feeder.util.CommonEvent;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 public class FeedItemActivity extends BaseActivity {
+    private static final int MSG_DOUBLE_TAP = 0;
     private SwipeRefreshLayout mStarLayout;
     private SwipeRefreshLayout mUnreadLayout;
     private SwipeRefreshLayout mAllLayout;
@@ -38,6 +43,39 @@ public class FeedItemActivity extends BaseActivity {
     private List<FeedItem> mStarFeedItemList;
     private List<FeedItem> mUnreadFeedItemList;
     private List<FeedItem> mAllFeedItemList;
+
+    private MyHandler mHandler = new MyHandler(this);
+    private StickyListHeadersListView.OnHeaderClickListener mOnHeaderClickListener
+            = new StickyListHeadersListView.OnHeaderClickListener() {
+        @Override
+        public void onHeaderClick(StickyListHeadersListView stickyListHeadersListView, View view,
+                                  int i, long l, boolean b) {
+            if (mHandler.hasMessages(MSG_DOUBLE_TAP)) {
+                mHandler.removeMessages(MSG_DOUBLE_TAP);
+                stickyListHeadersListView.smoothScrollToPosition(0);
+            } else {
+                mHandler.sendEmptyMessageDelayed(MSG_DOUBLE_TAP, ViewConfiguration.getDoubleTapTimeout());
+            }
+        }
+    };
+
+    private static class MyHandler extends Handler {
+        WeakReference<FeedItemActivity> mActivity;
+
+        MyHandler(FeedItemActivity activity) {
+            mActivity = new WeakReference<>(activity);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (mActivity.get() != null) {
+                switch (msg.what) {
+
+                }
+            }
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,6 +175,7 @@ public class FeedItemActivity extends BaseActivity {
                 return true;
             }
         });
+        mFeedItemStarListView.setOnHeaderClickListener(mOnHeaderClickListener);
         mFeedItemUnreadListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -150,6 +189,7 @@ public class FeedItemActivity extends BaseActivity {
                 return true;
             }
         });
+        mFeedItemUnreadListView.setOnHeaderClickListener(mOnHeaderClickListener);
         mFeedItemAllListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -163,6 +203,7 @@ public class FeedItemActivity extends BaseActivity {
                 return true;
             }
         });
+        mFeedItemAllListView.setOnHeaderClickListener(mOnHeaderClickListener);
         mTabToolBar.setOnTabChangedListener(new FeedTabToolBar.OnTabChangedListener() {
             @Override
             public void onTabChanged(App.Mode mode) {
