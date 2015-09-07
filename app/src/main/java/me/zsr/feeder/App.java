@@ -53,7 +53,7 @@ public class App extends Application {
         sInstance = this;
 
         initUniversalImageLoader();
-        initBackgroundRefreshService();
+//        initBackgroundRefreshService();
         initLeanCloud();
         initWeiXin();
         initDB();
