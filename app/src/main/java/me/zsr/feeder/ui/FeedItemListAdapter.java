@@ -58,6 +58,8 @@ public class FeedItemListAdapter extends BaseAdapter implements StickyListHeader
             viewHolder = new ViewHolder();
             convertView = mLayoutInflater.inflate(R.layout.feed_item_list_item, null);
             viewHolder.imageView = (NetworkImageView) convertView.findViewById(R.id.feed_item_list_item_img);
+            viewHolder.imageView.setDefaultImageResId(R.drawable.ic_rss);
+            viewHolder.imageView.setErrorImageResId(R.drawable.ic_rss);
             viewHolder.titleTextView = (TextView) convertView.findViewById(R.id.feed_item_list_item_title_txt);
             viewHolder.descriptionTextView = (TextView) convertView.findViewById(R.id.feed_item_list_item_description_txt);
             viewHolder.timeTextView = (TextView) convertView.findViewById(R.id.feed_item_list_item_time);

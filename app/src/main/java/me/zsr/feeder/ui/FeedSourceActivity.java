@@ -283,6 +283,8 @@ public class FeedSourceActivity extends BaseActivity {
                 convertView = LayoutInflater.from(FeedSourceActivity.this).inflate(R.layout.feed_source_list_item, null);
                 viewHolder = new ViewHolder();
                 viewHolder.imageView = (NetworkImageView) convertView.findViewById(R.id.main_list_item_img);
+                viewHolder.imageView.setErrorImageResId(R.drawable.ic_rss);
+                viewHolder.imageView.setDefaultImageResId(R.drawable.ic_rss);
                 viewHolder.titleTextView = (TextView) convertView.findViewById(R.id.main_list_item_title_txt);
                 viewHolder.numTextView = (TextView) convertView.findViewById(R.id.main_list_item_num_txt);
                 convertView.setTag(viewHolder);
