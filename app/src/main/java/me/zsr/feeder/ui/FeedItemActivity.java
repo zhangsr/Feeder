@@ -31,9 +31,9 @@ public class FeedItemActivity extends BaseActivity {
     private SwipeRefreshLayout mStarLayout;
     private SwipeRefreshLayout mUnreadLayout;
     private SwipeRefreshLayout mAllLayout;
-    private StickyListHeadersListView mFeedItemStarListView;
-    private StickyListHeadersListView mFeedItemUnreadListView;
-    private StickyListHeadersListView mFeedItemAllListView;
+    private LoadMoreHeaderListView mFeedItemStarListView;
+    private LoadMoreHeaderListView mFeedItemUnreadListView;
+    private LoadMoreHeaderListView mFeedItemAllListView;
     private FeedItemListAdapter mStarAdapter;
     private FeedItemListAdapter mUnreadAdapter;
     private FeedItemListAdapter mAllAdapter;
@@ -56,6 +56,51 @@ public class FeedItemActivity extends BaseActivity {
             } else {
                 mHandler.sendEmptyMessageDelayed(MSG_DOUBLE_TAP, ViewConfiguration.getDoubleTapTimeout());
             }
+        }
+    };
+    private LoadMoreHeaderListView.OnLoadMoreListener mStarLoadMoreListener
+            = new LoadMoreHeaderListView.OnLoadMoreListener() {
+        @Override
+        public void onLoadMore() {
+            List<FeedItem> newItemList = FeedDB.getInstance().getFeedItemListByRead(
+                    mFeedSource.getId(), false, mStarFeedItemList.size());
+            if (newItemList.size() > 0) {
+                mStarFeedItemList.addAll(newItemList);
+                mStarAdapter.notifyDataSetChanged(mStarFeedItemList);
+            } else {
+                mFeedItemStarListView.setOnLoadMoreListener(null);
+            }
+            mFeedItemStarListView.completeLoadMore();
+        }
+    };
+    private LoadMoreHeaderListView.OnLoadMoreListener mUnreadLoadMoreListener
+            = new LoadMoreHeaderListView.OnLoadMoreListener() {
+        @Override
+        public void onLoadMore() {
+            List<FeedItem> newItemList = FeedDB.getInstance().getFeedItemListByRead(
+                    mFeedSource.getId(), false, mUnreadFeedItemList.size());
+            if (newItemList.size() > 0) {
+                mUnreadFeedItemList.addAll(newItemList);
+                mUnreadAdapter.notifyDataSetChanged(mUnreadFeedItemList);
+            } else {
+                mFeedItemUnreadListView.setOnLoadMoreListener(null);
+            }
+            mFeedItemUnreadListView.completeLoadMore();
+        }
+    };
+    private LoadMoreHeaderListView.OnLoadMoreListener mAllLoadMoreListener
+            = new LoadMoreHeaderListView.OnLoadMoreListener() {
+        @Override
+        public void onLoadMore() {
+            List<FeedItem> newItemList = FeedDB.getInstance().getFeedItemListByRead(
+                    mFeedSource.getId(), false, mAllFeedItemList.size());
+            if (newItemList.size() > 0) {
+                mAllFeedItemList.addAll(newItemList);
+                mAllAdapter.notifyDataSetChanged(mAllFeedItemList);
+            } else {
+                mFeedItemAllListView.setOnLoadMoreListener(null);
+            }
+            mFeedItemAllListView.completeLoadMore();
         }
     };
 
@@ -107,9 +152,9 @@ public class FeedItemActivity extends BaseActivity {
     }
 
     private void notifyDataSetsChanged() {
-        mStarFeedItemList = FeedDB.getInstance().getFeedItemListByStar(mFeedSource.getId(), true);
-        mUnreadFeedItemList = FeedDB.getInstance().getFeedItemListByRead(mFeedSource.getId(), false);
-        mAllFeedItemList = FeedDB.getInstance().getAllFeedItemList(mFeedSource.getId());
+        mStarFeedItemList = FeedDB.getInstance().getFeedItemListByStar(mFeedSource.getId(), true, 0);
+        mUnreadFeedItemList = FeedDB.getInstance().getFeedItemListByRead(mFeedSource.getId(), false, 0);
+        mAllFeedItemList = FeedDB.getInstance().getAllFeedItemList(mFeedSource.getId(), 0);
         mStarAdapter.notifyDataSetChanged(mStarFeedItemList);
         mUnreadAdapter.notifyDataSetChanged(mUnreadFeedItemList);
         mAllAdapter.notifyDataSetChanged(mAllFeedItemList);
@@ -118,9 +163,9 @@ public class FeedItemActivity extends BaseActivity {
     private void initData() {
         long feedSourceId = getIntent().getExtras().getLong(App.KEY_BUNDLE_SOURCE_ID);
         mFeedSource = FeedDB.getInstance().getFeedSourceById(feedSourceId);
-        mStarFeedItemList = FeedDB.getInstance().getFeedItemListByStar(feedSourceId, true);
-        mUnreadFeedItemList = FeedDB.getInstance().getFeedItemListByRead(feedSourceId, false);
-        mAllFeedItemList = FeedDB.getInstance().getAllFeedItemList(feedSourceId);
+        mStarFeedItemList = FeedDB.getInstance().getFeedItemListByStar(feedSourceId, true, 0);
+        mUnreadFeedItemList = FeedDB.getInstance().getFeedItemListByRead(feedSourceId, false, 0);
+        mAllFeedItemList = FeedDB.getInstance().getAllFeedItemList(feedSourceId, 0);
     }
 
     private void initView() {
@@ -130,12 +175,12 @@ public class FeedItemActivity extends BaseActivity {
         mStarAdapter = new FeedItemListAdapter(mStarFeedItemList, mFeedSource.getFavicon());
         mUnreadAdapter = new FeedItemListAdapter(mUnreadFeedItemList, mFeedSource.getFavicon());
         mAllAdapter = new FeedItemListAdapter(mAllFeedItemList, mFeedSource.getFavicon());
-        mFeedItemStarListView = (StickyListHeadersListView) findViewById(R.id.feed_item_star_lv);
+        mFeedItemStarListView = (LoadMoreHeaderListView) findViewById(R.id.feed_item_star_lv);
         mFeedItemStarListView.setAdapter(mStarAdapter);
-        mFeedItemUnreadListView = (StickyListHeadersListView) findViewById(R.id.feed_item_unread_lv);
+        mFeedItemUnreadListView = (LoadMoreHeaderListView) findViewById(R.id.feed_item_unread_lv);
         mFeedItemUnreadListView.setLayoutTransition(new LayoutTransition());
         mFeedItemUnreadListView.setAdapter(mUnreadAdapter);
-        mFeedItemAllListView = (StickyListHeadersListView) findViewById(R.id.feed_item_all_lv);
+        mFeedItemAllListView = (LoadMoreHeaderListView) findViewById(R.id.feed_item_all_lv);
         mFeedItemAllListView.setAdapter(mAllAdapter);
         showListViewByMode(App.getInstance().mCurrentMode);
 
@@ -176,6 +221,7 @@ public class FeedItemActivity extends BaseActivity {
             }
         });
         mFeedItemStarListView.setOnHeaderClickListener(mOnHeaderClickListener);
+        mFeedItemStarListView.setOnLoadMoreListener(mStarLoadMoreListener);
         mFeedItemUnreadListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -190,6 +236,7 @@ public class FeedItemActivity extends BaseActivity {
             }
         });
         mFeedItemUnreadListView.setOnHeaderClickListener(mOnHeaderClickListener);
+        mFeedItemUnreadListView.setOnLoadMoreListener(mUnreadLoadMoreListener);
         mFeedItemAllListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -204,6 +251,7 @@ public class FeedItemActivity extends BaseActivity {
             }
         });
         mFeedItemAllListView.setOnHeaderClickListener(mOnHeaderClickListener);
+        mFeedItemAllListView.setOnLoadMoreListener(mAllLoadMoreListener);
         mTabToolBar.setOnTabChangedListener(new FeedTabToolBar.OnTabChangedListener() {
             @Override
             public void onTabChanged(App.Mode mode) {
@@ -295,6 +343,9 @@ public class FeedItemActivity extends BaseActivity {
                 mStarLayout.setRefreshing(false);
                 mUnreadLayout.setRefreshing(false);
                 mAllLayout.setRefreshing(false);
+                mFeedItemStarListView.setOnLoadMoreListener(mStarLoadMoreListener);
+                mFeedItemUnreadListView.setOnLoadMoreListener(mUnreadLoadMoreListener);
+                mFeedItemAllListView.setOnLoadMoreListener(mAllLoadMoreListener);
                 notifyDataSetsChanged();
                 break;
             default:

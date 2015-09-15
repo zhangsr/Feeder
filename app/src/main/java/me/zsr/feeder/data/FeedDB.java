@@ -15,6 +15,7 @@ import me.zsr.feeder.util.LogUtil;
  * @date: 15-6-11
  */
 public class FeedDB {
+    private static final int LIMITE_LOAD_ONCE = 20;
     private static FeedDB sFeedDB;
     private FeedSourceDao mFeedSourceDao;
     private FeedItemDao mFeedItemDao;
@@ -70,8 +71,8 @@ public class FeedDB {
                 FeedItemDao.Properties.Read.eq(read)).list().size();
     }
 
-    public List<FeedItem> getFeedItemListByRead(long sourceId, boolean read) {
-        return mFeedItemDao.queryBuilder().where(
+    public List<FeedItem> getFeedItemListByRead(long sourceId, boolean read, int offset) {
+        return mFeedItemDao.queryBuilder().offset(offset).limit(LIMITE_LOAD_ONCE).where(
                 FeedItemDao.Properties.FeedSourceId.eq(sourceId),
                 FeedItemDao.Properties.Read.eq(read)).orderDesc(FeedItemDao.Properties.Date).list();
     }
@@ -82,14 +83,14 @@ public class FeedDB {
                 FeedItemDao.Properties.Star.eq(star)).list().size();
     }
 
-    public List<FeedItem> getFeedItemListByStar(long sourceId, boolean star) {
-        return mFeedItemDao.queryBuilder().where(
+    public List<FeedItem> getFeedItemListByStar(long sourceId, boolean star, int offset) {
+        return mFeedItemDao.queryBuilder().offset(offset).limit(LIMITE_LOAD_ONCE).where(
                 FeedItemDao.Properties.FeedSourceId.eq(sourceId),
                 FeedItemDao.Properties.Star.eq(star)).orderDesc(FeedItemDao.Properties.Date).list();
     }
 
-    public List<FeedItem> getAllFeedItemList(long sourceId) {
-        return mFeedItemDao.queryBuilder().where(
+    public List<FeedItem> getAllFeedItemList(long sourceId, int offset) {
+        return mFeedItemDao.queryBuilder().offset(offset).limit(LIMITE_LOAD_ONCE).where(
                 FeedItemDao.Properties.FeedSourceId.eq(sourceId)).orderDesc(FeedItemDao.Properties.Date).list();
     }
 
@@ -152,7 +153,8 @@ public class FeedDB {
     }
 
     public void deleteSource(long sourceId) {
-        mFeedItemDao.deleteInTx(getAllFeedItemList(sourceId));
+        mFeedItemDao.deleteInTx(mFeedItemDao.queryBuilder().where(
+                FeedItemDao.Properties.FeedSourceId.eq(sourceId)).list());
         mFeedSourceDao.deleteByKey(sourceId);
 //        EventBus.getDefault().post(CommonEvent.FEED_DB_UPDATED);
     }
