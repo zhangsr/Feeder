@@ -42,4 +42,5 @@ dependencies {
     //avoscloud-statistics 为 LeanCloud 统计包
     compile 'cn.leancloud.android:avoscloud-statistics:v3.3+@aar'
     compile project(':library_common')
+    compile project(':rss')
 }

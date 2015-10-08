@@ -1,3 +1,6 @@
 [submodule "library_common"]
 	path = library_common
 	url = git@github.com:zhangsr/match_library_common.git
+[submodule "rss"]
+	path = rss
+	url = git@github.com:zhangsr/match_library_rss.git
