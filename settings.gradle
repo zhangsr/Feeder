@@ -1,1 +1,1 @@
-include ':app', ':library_common', ':library_for_rss'
+include ':app', ':library_common'
