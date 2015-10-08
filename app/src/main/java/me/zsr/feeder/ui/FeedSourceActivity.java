@@ -38,7 +38,7 @@ import me.zsr.feeder.util.LogUtil;
 import me.zsr.feeder.util.NetworkUtil;
 import me.zsr.feeder.util.UrlUtil;
 import me.zsr.feeder.util.VolleySingleton;
-import me.zsr.library.FileUtil;
+import me.zsr.library_common.FileUtil;
 
 public class FeedSourceActivity extends BaseActivity {
     private static final String SP_KEY_VERSION_CODE = "sp_key_version_code";
