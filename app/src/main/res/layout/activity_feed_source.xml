@@ -1,39 +1,48 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:id="@+id/root"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
     <LinearLayout
-        android:background="@color/main_grey_dark"
-        android:gravity="center_vertical|end"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="45dp">
+        android:layout_height="match_parent">
 
-        <ImageButton
-            android:id="@+id/add_feed_btn"
-            android:background="@null"
-            android:padding="10dp"
-            android:src="@drawable/ic_add_selector"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            app:contentInsetStart="0dp"
+            style="@style/Toolbar">
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/feed_pull_to_refresh_layout"
-        android:background="@android:color/white"
-        android:layout_width="match_parent"
-        android:layout_weight="1"
-        android:layout_height="0dp">
+            <ImageView
+                android:id="@+id/content_hamburger"
+                style="@style/ImageView.Hamburger"
+                android:src="@drawable/ic_menu_90" />
 
-        <ListView
-            android:id="@+id/feed_lv"
-            android:divider="@null"
+            <ImageView
+                android:id="@+id/add_feed_btn"
+                android:layout_gravity="end"
+                style="@style/ImageView.Hamburger"
+                android:src="@drawable/ic_add_white_24dp"/>
+        </android.support.v7.widget.Toolbar>
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/feed_pull_to_refresh_layout"
+            android:background="@android:color/white"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </android.support.v4.widget.SwipeRefreshLayout>
+            android:layout_weight="1"
+            android:layout_height="0dp">
 
-    <me.zsr.feeder.ui.FeedTabToolBar
-        android:id="@+id/feed_source_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="45dp" />
-</LinearLayout>
+            <ListView
+                android:id="@+id/feed_lv"
+                android:divider="@null"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+        <me.zsr.feeder.ui.FeedTabToolBar
+            android:id="@+id/feed_source_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize" />
+    </LinearLayout>
+</FrameLayout>

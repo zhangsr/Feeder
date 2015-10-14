@@ -15,8 +15,8 @@
     <string name="remove_star_mark">去除星标</string>
     <string name="mark_as_read">标记为已读</string>
     <string name="mark_as_unread">标记为未读</string>
-    <string name="about">ABOUT</string>
-    <string name="main">MAIN</string>
-    <string name="feedback">FEEDBACK</string>
-    <string name="settings">SETTINGS</string>
+    <string name="about">关于</string>
+    <string name="main">主页</string>
+    <string name="feedback">反馈</string>
+    <string name="settings">设置</string>
 </resources>

@@ -4,3 +4,6 @@
 [submodule "rss"]
 	path = rss
 	url = git@github.com:zhangsr/match_library_rss.git
+[submodule "GuillotineMenu-Android"]
+	path = GuillotineMenu-Android
+	url = https://github.com/Yalantis/GuillotineMenu-Android.git

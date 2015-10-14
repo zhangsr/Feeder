@@ -1,1 +1,1 @@
-include ':app', ':library_common', ':rss'
+include ':app', ':library_common', ':rss', ':GuillotineMenu-Android:library'

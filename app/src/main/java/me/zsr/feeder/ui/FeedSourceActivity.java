@@ -6,13 +6,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.ImageButton;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -21,6 +23,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.toolbox.NetworkImageView;
 import com.avos.avoscloud.AVAnalytics;
 import com.avos.avoscloud.AVObject;
+import com.yalantis.guillotine.animation.GuillotineAnimation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,12 +45,15 @@ import me.zsr.library_common.FileUtil;
 
 public class FeedSourceActivity extends BaseActivity {
     private static final String SP_KEY_VERSION_CODE = "sp_key_version_code";
-    private ImageButton mAddFeedButton;
+    private ImageView mAddFeedButton;
     private ListView mFeedListView;
     private List<FeedSource> mFeedSourceList = new ArrayList<>();
     private FeedAdapter mFeedAdapter;
     private SwipeRefreshLayout mPullRefreshLayout;
     private FeedTabToolBar mTabToolBar;
+    private Toolbar mTopToolbar;
+    private FrameLayout mRootView;
+    private View mHamburgerView;
 
     private Handler mHandler = new Handler();
 
@@ -102,12 +108,27 @@ public class FeedSourceActivity extends BaseActivity {
     }
 
     private void initView() {
-        mAddFeedButton = (ImageButton) findViewById(R.id.add_feed_btn);
+        mAddFeedButton = (ImageView) findViewById(R.id.add_feed_btn);
         mFeedListView = (ListView) findViewById(R.id.feed_lv);
         mFeedAdapter = new FeedAdapter();
         mFeedListView.setAdapter(mFeedAdapter);
         mPullRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.feed_pull_to_refresh_layout);
         mTabToolBar = (FeedTabToolBar) findViewById(R.id.feed_source_toolbar);
+        mTopToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mRootView = (FrameLayout) findViewById(R.id.root);
+        mHamburgerView = findViewById(R.id.content_hamburger);
+
+        if (mTopToolbar != null) {
+            setSupportActionBar(mTopToolbar);
+            getSupportActionBar().setTitle(null);
+        }
+
+        View guillotineMenu = LayoutInflater.from(this).inflate(R.layout.menu_guillotine, null);
+        mRootView.addView(guillotineMenu);
+
+        new GuillotineAnimation.GuillotineBuilder(guillotineMenu, guillotineMenu.findViewById(R.id.guillotine_hamburger), mHamburgerView)
+                .setActionBarViewForAnimation(mTopToolbar)
+                .build();
     }
 
     private void setListener() {
