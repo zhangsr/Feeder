@@ -128,6 +128,7 @@ public class FeedSourceActivity extends BaseActivity {
 
         new GuillotineAnimation.GuillotineBuilder(guillotineMenu, guillotineMenu.findViewById(R.id.guillotine_hamburger), mHamburgerView)
                 .setActionBarViewForAnimation(mTopToolbar)
+                .setClosedOnStart(true)
                 .build();
     }
 
@@ -157,7 +158,7 @@ public class FeedSourceActivity extends BaseActivity {
                 if (FeedDB.getInstance().countFeedItemByRead(feedSource.getId(), false) != 0) {
                     menuList.add(getString(R.string.mark_as_read));
                 }
-                menuList.add(getString(R.string.cancel_feed));
+                menuList.add(getString(R.string.remove_subscription));
                 new MaterialDialog.Builder(FeedSourceActivity.this)
                         .title(feedSource.getTitle())
                         .items(menuList.toArray(new CharSequence[menuList.size()]))

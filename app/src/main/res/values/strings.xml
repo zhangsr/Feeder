@@ -1,20 +1,14 @@
 <resources>
     <string name="app_name">Feeder</string>
 
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
-    <string name="title_activity_add_source">AddSourceActivity</string>
-    <string name="title_activity_feed_item">FeedItemActivity</string>
-    <string name="title_activity_feed_body">FeedBodyActivity</string>
-    <string name="add_feed">添加订阅</string>
-    <string name="cancel_feed">取消订阅</string>
-    <string name="today">今天</string>
-    <string name="yestoday">昨天</string>
-    <string name="before_yestoday">前天</string>
-    <string name="add_star_mark">加上星标</string>
-    <string name="remove_star_mark">去除星标</string>
-    <string name="mark_as_read">标记为已读</string>
-    <string name="mark_as_unread">标记为未读</string>
+    <string name="remove_subscription">Remove Subscription</string>
+    <string name="today">Today</string>
+    <string name="yestoday">Yestoday</string>
+    <string name="before_yestoday">Day before Yestoday</string>
+    <string name="add_star_mark">Star</string>
+    <string name="remove_star_mark">Unstar</string>
+    <string name="mark_as_read">Mark as Read</string>
+    <string name="mark_as_unread">Mark as Unread</string>
     <string name="about">ABOUT</string>
     <string name="main">MAIN</string>
     <string name="feedback">FEEDBACK</string>

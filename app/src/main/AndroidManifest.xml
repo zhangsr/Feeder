@@ -26,12 +26,10 @@
         </activity>
         <activity
             android:name=".ui.FeedItemActivity"
-            android:label="@string/title_activity_feed_item"
             android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".ui.FeedBodyActivity"
-            android:label="@string/title_activity_feed_body"
             android:screenOrientation="portrait" >
         </activity>
 
