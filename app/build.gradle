@@ -24,6 +24,12 @@ android {
     }
 }
 
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'me.drakeet.materialdialog:library:1.2.2'
@@ -44,4 +50,5 @@ dependencies {
     compile project(':library_common')
     compile project(':rss')
     compile project(':GuillotineMenu-Android:library')
+    compile 'com.yalantis:contextmenu:1.0.4@aar'
 }

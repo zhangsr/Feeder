@@ -113,7 +113,7 @@ public class App extends Application {
                     "http://www.zhihu.com/rss",
                     null,
                     "http://www.zhihu.com",
-                    "http://statics.dnspod.cn/proxy_favicon/_/favicon?domain=" + "www.zhihu.com",
+                    "http://img.wdjimg.com/mms/icon/v1/f/a6/c713050654880cef2d1b579448893a6f_256_256.png",
                     "一个真实的网络问答社区，帮助你寻找答案，分享知识"));
             getDaoSession().getFeedSourceDao().insertOrReplace(new FeedSource(
                     null,
@@ -121,7 +121,7 @@ public class App extends Application {
                     "http://www.36kr.com/feed",
                     null,
                     "http://36kr.com",
-                    "http://statics.dnspod.cn/proxy_favicon/_/favicon?domain=" + "36kr.com",
+                    "http://krplus-cdn.b0.upaiyun.com/common-module/common-header/images/logo.png",
                     "36氪，让创业更简单"));
 
             SharedPreferences.Editor editor = getSharePreferences().edit();
