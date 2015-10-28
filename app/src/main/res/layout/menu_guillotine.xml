@@ -17,13 +17,13 @@
     </android.support.v7.widget.Toolbar>
 
     <LinearLayout
-        android:id="@+id/main_group"
+        android:id="@+id/source_group"
         style="@style/LinearLayout.GuillotineItem"
         android:layout_marginTop="@dimen/guillotine_medium_margin">
 
         <ImageView
             style="@style/ImageView.GuillotineItem"
-            android:src="@drawable/ic_main" />
+            android:src="@drawable/ic_source" />
 
         <TextView
             style="@style/TextView.GuillotineItem"
