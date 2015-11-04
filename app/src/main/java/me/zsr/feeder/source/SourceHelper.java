@@ -10,6 +10,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.avos.avoscloud.AVAnalytics;
 import com.avos.avoscloud.AVObject;
 
+import me.zsr.feeder.R;
 import me.zsr.feeder.dao.FeedSource;
 import me.zsr.feeder.data.FeedNetwork;
 import me.zsr.feeder.util.AnalysisEvent;
@@ -23,13 +24,13 @@ import me.zsr.feeder.util.UrlUtil;
 class SourceHelper {
     public static void showAddSourceDialog(final Context context, final Handler handler) {
         new MaterialDialog.Builder(context)
-                .title("添加订阅")
-                .content("RSS地址、网址或名称")
+                .title(R.string.add_subscription)
+                .content(R.string.add_subscription_content)
                 .inputType(InputType.TYPE_CLASS_TEXT |
                         InputType.TYPE_TEXT_VARIATION_PERSON_NAME |
                         InputType.TYPE_TEXT_FLAG_CAP_WORDS)
-                .positiveText("添加")
-                .negativeText("取消")
+                .positiveText(R.string.add)
+                .negativeText(R.string.cancel)
                 .autoDismiss(false)
                 .alwaysCallInputCallback() // this forces the callback to be invoked with every input change
                 .callback(new MaterialDialog.ButtonCallback() {
@@ -71,7 +72,7 @@ class SourceHelper {
                                                 });
                                                 dialog.dismiss();
                                             } else {
-                                                Toast.makeText(context, "无效的源", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(context, R.string.invalid_input, Toast.LENGTH_SHORT).show();
                                                 //TODO Add suffix and try again
                                             }
                                         }
@@ -81,7 +82,7 @@ class SourceHelper {
 
                             @Override
                             public void onNotFound() {
-                                Toast.makeText(context, "没有找到相关的源", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, R.string.no_subscription_found, Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -92,7 +93,7 @@ class SourceHelper {
                         dialog.dismiss();
                     }
                 })
-                .input("例如输入：酷", "", false, new MaterialDialog.InputCallback() {
+                .input(R.string.add_subscription_hint, R.string.none, false, new MaterialDialog.InputCallback() {
                     @Override
                     public void onInput(MaterialDialog dialog, CharSequence input) {
                         dialog.getActionButton(DialogAction.POSITIVE).setEnabled(true);

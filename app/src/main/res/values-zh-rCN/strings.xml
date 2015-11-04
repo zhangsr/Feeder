@@ -9,4 +9,13 @@
     <string name="remove_star_mark">取消星标</string>
     <string name="mark_as_read">标记为已读</string>
     <string name="mark_as_unread">标记为未读</string>
+    <string name="add_subscription">添加订阅</string>
+    <string name="add">添加</string>
+    <string name="cancel">取消</string>
+    <string name="invalid_input">无效的输入</string>
+    <string name="no_subscription_found">没有找到订阅</string>
+    <string name="add_subscription_content">RSS地址、网站或名称</string>
+    <string name="add_subscription_hint">例如输入：酷</string>
+    <string name="none"/>
+    <string name="got_it">知道了</string>
 </resources>

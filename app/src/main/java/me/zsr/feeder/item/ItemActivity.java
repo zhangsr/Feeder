@@ -187,9 +187,9 @@ public class ItemActivity extends BaseActivity implements OnMenuItemClickListene
                 break;
             case 4:
                 if (mFeedItem.getStar()) {
-                    showTip("已取消星标");
+                    showTip(R.string.remove_star_mark);
                 } else {
-                    showTip("已添加星标");
+                    showTip(R.string.add_star_mark);
                 }
                 mFeedItem.setStar(!mFeedItem.getStar());
                 FeedDB.getInstance().saveFeedItem(mFeedItem, mFeedItem.getFeedSourceId());

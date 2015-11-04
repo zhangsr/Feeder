@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.avos.avoscloud.AVAnalytics;
 
+import me.zsr.feeder.R;
 import me.zsr.feeder.dao.FeedSource;
 import me.zsr.feeder.data.FeedDB;
 import me.zsr.feeder.util.LogUtil;
@@ -48,9 +49,20 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
+    protected void showTip(int msgRes) {
+        final Snackbar snackbar = Snackbar.make(getWindow().getDecorView(), msgRes, Snackbar.LENGTH_INDEFINITE);
+        snackbar.setAction(R.string.got_it, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                snackbar.dismiss();
+            }
+        });
+        snackbar.show();
+    }
+
     protected void showTip(String msg) {
         final Snackbar snackbar = Snackbar.make(getWindow().getDecorView(), msg, Snackbar.LENGTH_INDEFINITE);
-        snackbar.setAction("知道了", new View.OnClickListener() {
+        snackbar.setAction(R.string.got_it, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 snackbar.dismiss();
