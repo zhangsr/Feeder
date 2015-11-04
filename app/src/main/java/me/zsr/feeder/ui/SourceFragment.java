@@ -1,6 +1,6 @@
 package me.zsr.feeder.ui;
 
-import android.content.Intent;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -42,7 +42,6 @@ public class SourceFragment extends FragmentBase {
     private ListView mFeedListView;
     private FeedAdapter mFeedAdapter;
     private SwipeRefreshLayout mPullRefreshLayout;
-    private FeedTabToolBar mTabToolBar;
 
     public static SourceFragment getInstance() {
         if (sInstance == null) {
@@ -87,8 +86,6 @@ public class SourceFragment extends FragmentBase {
         mFeedAdapter = new FeedAdapter();
         mFeedListView.setAdapter(mFeedAdapter);
         mPullRefreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.feed_pull_to_refresh_layout);
-        mTabToolBar = (FeedTabToolBar) mRootView.findViewById(R.id.feed_source_toolbar);
-        mTabToolBar.setMode(App.getInstance().mCurrentMode);
     }
 
     private void setListener() {
@@ -101,11 +98,8 @@ public class SourceFragment extends FragmentBase {
         mFeedListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Bundle bundle = new Bundle();
-                bundle.putLong(App.KEY_BUNDLE_SOURCE_ID, mFeedSourceList.get(position).getId());
-                Intent intent = new Intent(getActivity(), FeedItemActivity.class);
-                intent.putExtras(bundle);
-                startActivity(intent);
+                showItemList(mFeedSourceList.get(position).getId());
+                // TODO: 11/3/15 close drawer
             }
         });
         mFeedListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -138,13 +132,6 @@ public class SourceFragment extends FragmentBase {
                             }
                         }).show();
                 return true;
-            }
-        });
-        mTabToolBar.setOnTabChangedListener(new FeedTabToolBar.OnTabChangedListener() {
-            @Override
-            public void onTabChanged(App.Mode mode) {
-                App.getInstance().mCurrentMode = mode;
-                mFeedAdapter.notifyDataSetChanged();
             }
         });
     }
@@ -218,6 +205,17 @@ public class SourceFragment extends FragmentBase {
                 mFeedAdapter.notifyDataSetChanged();
                 break;
             default:
+        }
+    }
+
+    private void showItemList(long sourceId) {
+        ItemListFragment fragment = (ItemListFragment) getFragmentManager().findFragmentById(R.id.details_frame);
+        if (fragment == null || fragment.getShownSourceId() != sourceId) {
+            fragment = ItemListFragment.newInstance(sourceId);
+
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.replace(R.id.details_frame, fragment);
+            ft.commit();
         }
     }
 }

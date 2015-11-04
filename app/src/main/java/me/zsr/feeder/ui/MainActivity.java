@@ -1,24 +1,26 @@
 package me.zsr.feeder.ui;
 
-import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
-import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.avos.avoscloud.AVAnalytics;
 import com.avos.avoscloud.AVObject;
-import com.yalantis.guillotine.animation.GuillotineAnimation;
 
 import me.zsr.feeder.BuildConfig;
 import me.zsr.feeder.R;
@@ -30,14 +32,7 @@ import me.zsr.library_common.FileUtil;
 
 public class MainActivity extends BaseActivity {
     private static final String SP_KEY_VERSION_CODE = "sp_key_version_code";
-    private ImageView mAddFeedButton;
-    private Toolbar mTopToolbar;
-    private FrameLayout mRootView;
-    private View mHamburgerView;
-    private LinearLayout mSourceMenuItem;
-    private LinearLayout mAboutMenuItem;
-    private LinearLayout mSettingsMenuItem;
-    private GuillotineAnimation mGuillotineAnimation;
+    private DrawerLayout mDrawerLayout;
 
     private Handler mHandler = new Handler();
 
@@ -60,70 +55,32 @@ public class MainActivity extends BaseActivity {
         setListener();
     }
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-
-        // TODO: 10/28/15 refresh SourceFragment
-//        mTabToolBar.setMode(App.getInstance().mCurrentMode);
-//        mFeedSourceList = FeedDB.getInstance().loadAll();
-//        mFeedAdapter.notifyDataSetChanged();
-    }
-
     private void initView() {
-        mAddFeedButton = (ImageView) findViewById(R.id.add_feed_btn);
-        mTopToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mRootView = (FrameLayout) findViewById(R.id.root);
-        mHamburgerView = findViewById(R.id.content_hamburger);
+        initToolbar();
+        initDrawer();
 
-        if (mTopToolbar != null) {
-            setSupportActionBar(mTopToolbar);
-            getSupportActionBar().setTitle(null);
-        }
-
-        View guillotineMenu = LayoutInflater.from(this).inflate(R.layout.menu_guillotine, null);
-        mSourceMenuItem = (LinearLayout) guillotineMenu.findViewById(R.id.source_group);
-        mAboutMenuItem = (LinearLayout) guillotineMenu.findViewById(R.id.about_group);
-        mSettingsMenuItem = (LinearLayout) guillotineMenu.findViewById(R.id.settings_group);
-        mRootView.addView(guillotineMenu);
-
-        mGuillotineAnimation = new GuillotineAnimation.GuillotineBuilder(guillotineMenu,
-                guillotineMenu.findViewById(R.id.guillotine_hamburger), mHamburgerView)
-                .setActionBarViewForAnimation(mTopToolbar)
-                .setClosedOnStart(true)
-                .build();
-
-        switchDetailFragment(SourceFragment.getInstance());
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
     }
 
     private void setListener() {
-        mAddFeedButton.setOnClickListener(this);
-        mSourceMenuItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switchDetailFragment(SourceFragment.getInstance());
-                mGuillotineAnimation.close();
-            }
-        });
-        mAboutMenuItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switchDetailFragment(AboutFragment.getInstance());
-                mGuillotineAnimation.close();
-            }
-        });
-        mSettingsMenuItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switchDetailFragment(SettingsFragment.getInstance());
-                mGuillotineAnimation.close();
-            }
-        });
     }
 
-    private void switchDetailFragment(Fragment detailFragment) {
+    private void initToolbar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        // Make arrow color white
+        Drawable upArrow = getResources().getDrawable(R.drawable.ic_ab_drawer);
+        upArrow.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+        getSupportActionBar().setHomeAsUpIndicator(upArrow);
+    }
+
+    private void initDrawer() {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.replace(R.id.main_detail_framelayout, detailFragment);
+        ft.replace(R.id.drawer_frame, SourceFragment.getInstance());
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         ft.commit();
     }
@@ -131,10 +88,36 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.add_feed_btn:
+            default:
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.context_menu:
                 showAddFeedDialog();
                 break;
-            default:
+            case android.R.id.home:
+                mDrawerLayout.openDrawer(GravityCompat.START);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
         }
     }
 

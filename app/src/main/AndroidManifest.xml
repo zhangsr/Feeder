@@ -25,10 +25,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.FeedItemActivity"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
             android:name=".ui.FeedBodyActivity"
             android:screenOrientation="portrait" >
         </activity>

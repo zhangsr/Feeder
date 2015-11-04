@@ -4,13 +4,11 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/feed_pull_to_refresh_layout"
         android:background="@android:color/white"
         android:layout_width="match_parent"
-        android:layout_weight="1"
-        android:layout_height="0dp">
+        android:layout_height="match_parent">
 
         <ListView
             android:id="@+id/feed_lv"
@@ -18,9 +16,4 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </android.support.v4.widget.SwipeRefreshLayout>
-
-    <me.zsr.feeder.ui.FeedTabToolBar
-        android:id="@+id/feed_source_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize" />
 </LinearLayout>
