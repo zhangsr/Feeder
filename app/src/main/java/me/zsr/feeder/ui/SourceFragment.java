@@ -1,5 +1,6 @@
 package me.zsr.feeder.ui;
 
+import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -37,6 +38,7 @@ import me.zsr.feeder.util.VolleySingleton;
 public class SourceFragment extends FragmentBase {
     private static SourceFragment sInstance;
     private List<FeedSource> mFeedSourceList = new ArrayList<>();
+    private OnSourceSelectedListener mListener;
 
     private View mRootView;
     private ListView mFeedListView;
@@ -63,6 +65,16 @@ public class SourceFragment extends FragmentBase {
             FeedNetwork.getInstance().refreshAll();
         }
         return mRootView;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mListener = (OnSourceSelectedListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement OnSourceSelectedListener");
+        }
     }
 
     @Override
@@ -99,7 +111,7 @@ public class SourceFragment extends FragmentBase {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 showItemList(mFeedSourceList.get(position).getId());
-                // TODO: 11/3/15 close drawer
+                mListener.onSourceSelected(position);
             }
         });
         mFeedListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {

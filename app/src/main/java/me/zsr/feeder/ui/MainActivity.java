@@ -30,7 +30,7 @@ import me.zsr.feeder.util.AnalysisEvent;
 import me.zsr.feeder.util.UrlUtil;
 import me.zsr.library_common.FileUtil;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements OnSourceSelectedListener {
     private static final String SP_KEY_VERSION_CODE = "sp_key_version_code";
     private DrawerLayout mDrawerLayout;
 
@@ -198,5 +198,10 @@ public class MainActivity extends BaseActivity {
                         dialog.getActionButton(DialogAction.POSITIVE).setEnabled(true);
                     }
                 }).show();
+    }
+
+    @Override
+    public void onSourceSelected(int index) {
+        mDrawerLayout.closeDrawer(GravityCompat.START);
     }
 }
