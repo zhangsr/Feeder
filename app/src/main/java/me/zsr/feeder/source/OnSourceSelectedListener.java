@@ -1,10 +1,10 @@
-package me.zsr.feeder.ui;
+package me.zsr.feeder.source;
 
 /**
  * @description:
  * @author: Zhangshaoru
  * @date: 11/4/15
  */
-public interface OnSourceSelectedListener {
+interface OnSourceSelectedListener {
     void onSourceSelected(int index);
 }

@@ -9,8 +9,4 @@
     <string name="remove_star_mark">Unstar</string>
     <string name="mark_as_read">Mark as Read</string>
     <string name="mark_as_unread">Mark as Unread</string>
-    <string name="about">ABOUT</string>
-    <string name="main">MAIN</string>
-    <string name="feedback">FEEDBACK</string>
-    <string name="settings">SETTINGS</string>
 </resources>

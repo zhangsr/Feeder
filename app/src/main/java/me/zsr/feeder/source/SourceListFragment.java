@@ -1,4 +1,4 @@
-package me.zsr.feeder.ui;
+package me.zsr.feeder.source;
 
 import android.app.Activity;
 import android.app.FragmentTransaction;
@@ -25,6 +25,7 @@ import me.zsr.feeder.R;
 import me.zsr.feeder.dao.FeedSource;
 import me.zsr.feeder.data.FeedDB;
 import me.zsr.feeder.data.FeedNetwork;
+import me.zsr.feeder.base.BaseFragment;
 import me.zsr.feeder.util.CommonEvent;
 import me.zsr.feeder.util.LogUtil;
 import me.zsr.feeder.util.NetworkUtil;
@@ -35,19 +36,19 @@ import me.zsr.feeder.util.VolleySingleton;
  * @author: Zhangshaoru
  * @date: 10/28/15
  */
-public class SourceFragment extends FragmentBase {
-    private static SourceFragment sInstance;
-    private List<FeedSource> mFeedSourceList = new ArrayList<>();
+public class SourceListFragment extends BaseFragment {
+    private static SourceListFragment sInstance;
+    private List<FeedSource> mSourceList = new ArrayList<>();
     private OnSourceSelectedListener mListener;
 
     private View mRootView;
-    private ListView mFeedListView;
-    private FeedAdapter mFeedAdapter;
+    private ListView mListView;
+    private FeedAdapter mAdapter;
     private SwipeRefreshLayout mPullRefreshLayout;
 
-    public static SourceFragment getInstance() {
+    public static SourceListFragment getInstance() {
         if (sInstance == null) {
-            sInstance = new SourceFragment();
+            sInstance = new SourceListFragment();
         }
         return sInstance;
     }
@@ -55,7 +56,7 @@ public class SourceFragment extends FragmentBase {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mRootView = inflater.inflate(R.layout.fragment_source, container, false);
+        mRootView = inflater.inflate(R.layout.fragment_source_list, container, false);
         initData();
         initView();
         setListener();
@@ -90,13 +91,13 @@ public class SourceFragment extends FragmentBase {
     }
 
     private void initData() {
-        mFeedSourceList = FeedDB.getInstance().loadAll();
+        mSourceList = FeedDB.getInstance().loadAll();
     }
 
     private void initView() {
-        mFeedListView = (ListView) mRootView.findViewById(R.id.feed_lv);
-        mFeedAdapter = new FeedAdapter();
-        mFeedListView.setAdapter(mFeedAdapter);
+        mListView = (ListView) mRootView.findViewById(R.id.feed_lv);
+        mAdapter = new FeedAdapter();
+        mListView.setAdapter(mAdapter);
         mPullRefreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.feed_pull_to_refresh_layout);
     }
 
@@ -107,17 +108,17 @@ public class SourceFragment extends FragmentBase {
                 FeedNetwork.getInstance().refreshAll();
             }
         });
-        mFeedListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                showItemList(mFeedSourceList.get(position).getId());
+                showItemList(mSourceList.get(position).getId());
                 mListener.onSourceSelected(position);
             }
         });
-        mFeedListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                final FeedSource feedSource = mFeedSourceList.get(position);
+                final FeedSource feedSource = mSourceList.get(position);
                 List<CharSequence> menuList = new ArrayList<>();
                 if (FeedDB.getInstance().countFeedItemByRead(feedSource.getId(), false) != 0) {
                     menuList.add(getString(R.string.mark_as_read));
@@ -139,8 +140,8 @@ public class SourceFragment extends FragmentBase {
                                         break;
                                 }
 
-                                mFeedSourceList = FeedDB.getInstance().loadAll();
-                                mFeedAdapter.notifyDataSetChanged();
+                                mSourceList = FeedDB.getInstance().loadAll();
+                                mAdapter.notifyDataSetChanged();
                             }
                         }).show();
                 return true;
@@ -152,12 +153,12 @@ public class SourceFragment extends FragmentBase {
 
         @Override
         public int getCount() {
-            return mFeedSourceList.size();
+            return mSourceList.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return mFeedSourceList.get(position);
+            return mSourceList.get(position);
         }
 
         @Override
@@ -167,10 +168,10 @@ public class SourceFragment extends FragmentBase {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            FeedSource feedSource = mFeedSourceList.get(position);
+            FeedSource feedSource = mSourceList.get(position);
             ViewHolder viewHolder;
             if (convertView == null) {
-                convertView = LayoutInflater.from(getActivity()).inflate(R.layout.feed_source_list_item, null);
+                convertView = LayoutInflater.from(getActivity()).inflate(R.layout.source_list_item, null);
                 viewHolder = new ViewHolder();
                 viewHolder.imageView = (NetworkImageView) convertView.findViewById(R.id.main_list_item_img);
                 viewHolder.imageView.setErrorImageResId(R.drawable.ic_rss);
@@ -213,8 +214,8 @@ public class SourceFragment extends FragmentBase {
             case FEED_DB_UPDATED:
                 LogUtil.e("feed db updated");
                 mPullRefreshLayout.setRefreshing(false);
-                mFeedSourceList = FeedDB.getInstance().loadAll();
-                mFeedAdapter.notifyDataSetChanged();
+                mSourceList = FeedDB.getInstance().loadAll();
+                mAdapter.notifyDataSetChanged();
                 break;
             default:
         }

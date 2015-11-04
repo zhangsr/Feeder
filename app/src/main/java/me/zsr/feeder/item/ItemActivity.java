@@ -1,4 +1,4 @@
-package me.zsr.feeder.ui;
+package me.zsr.feeder.item;
 
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -34,10 +34,11 @@ import java.util.List;
 import me.zsr.feeder.App;
 import me.zsr.feeder.R;
 import me.zsr.feeder.dao.FeedItem;
+import me.zsr.feeder.base.BaseActivity;
 import me.zsr.feeder.util.DateUtil;
 import me.zsr.feeder.data.FeedDB;
 
-public class FeedBodyActivity extends BaseActivity implements OnMenuItemClickListener {
+public class ItemActivity extends BaseActivity implements OnMenuItemClickListener {
     private FeedItem mFeedItem;
     private HtmlTextView mContentTextView;
     private TextView mTitleTextView;
@@ -51,7 +52,7 @@ public class FeedBodyActivity extends BaseActivity implements OnMenuItemClickLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_feed_body);
+        setContentView(R.layout.activity_item);
         mFragmentManager = getSupportFragmentManager();
 
         initData();
@@ -199,7 +200,7 @@ public class FeedBodyActivity extends BaseActivity implements OnMenuItemClickLis
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_body, menu);
+        inflater.inflate(R.menu.menu_item, menu);
         return super.onCreateOptionsMenu(menu);
     }
 

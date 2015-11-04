@@ -1,4 +1,4 @@
-package me.zsr.feeder.ui;
+package me.zsr.feeder.view;
 
 import android.content.Context;
 import android.util.AttributeSet;

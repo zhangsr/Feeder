@@ -1,4 +1,4 @@
-package me.zsr.feeder.ui;
+package me.zsr.feeder.base;
 
 import android.app.Fragment;
 
@@ -7,5 +7,5 @@ import android.app.Fragment;
  * @author: Zhangshaoru
  * @date: 10/28/15
  */
-public class FragmentBase extends Fragment {
+public class BaseFragment extends Fragment {
 }

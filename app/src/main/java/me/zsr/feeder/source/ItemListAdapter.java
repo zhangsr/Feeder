@@ -1,4 +1,4 @@
-package me.zsr.feeder.ui;
+package me.zsr.feeder.source;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,12 +23,12 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
  * @author: Zhangshaoru
  * @date: 15-6-12
  */
-public class FeedItemListAdapter extends BaseAdapter implements StickyListHeadersAdapter {
+public class ItemListAdapter extends BaseAdapter implements StickyListHeadersAdapter {
     private List<FeedItem> mFeedItemList;
     private LayoutInflater mLayoutInflater;
     private String mFaviconUrl;
 
-    public FeedItemListAdapter(List<FeedItem> list, String faviconUrl) {
+    public ItemListAdapter(List<FeedItem> list, String faviconUrl) {
         mFeedItemList = list;
         mLayoutInflater = LayoutInflater.from(App.getInstance());
         mFaviconUrl = faviconUrl;
@@ -56,7 +56,7 @@ public class FeedItemListAdapter extends BaseAdapter implements StickyListHeader
 
         if (convertView == null) {
             viewHolder = new ViewHolder();
-            convertView = mLayoutInflater.inflate(R.layout.feed_item_list_item, null);
+            convertView = mLayoutInflater.inflate(R.layout.item_list_item, null);
             viewHolder.imageView = (NetworkImageView) convertView.findViewById(R.id.feed_item_list_item_img);
             viewHolder.imageView.setDefaultImageResId(R.drawable.ic_rss);
             viewHolder.imageView.setErrorImageResId(R.drawable.ic_rss);
@@ -89,7 +89,7 @@ public class FeedItemListAdapter extends BaseAdapter implements StickyListHeader
         FeedItem feedItem = mFeedItemList.get(position);
         if (convertView == null) {
             headerViewHolder = new HeaderViewHolder();
-            convertView = mLayoutInflater.inflate(R.layout.feed_item_list_headers, null);
+            convertView = mLayoutInflater.inflate(R.layout.item_list_headers, null);
             headerViewHolder.textView = (TextView) convertView.findViewById(R.id.feed_item_list_header_txt);
             convertView.setTag(headerViewHolder);
         } else {

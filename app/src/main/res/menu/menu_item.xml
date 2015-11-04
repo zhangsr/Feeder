@@ -4,7 +4,7 @@
     <item
         android:id="@+id/context_menu"
         android:title="Context Menu"
-        android:icon="@drawable/ic_add_white_24dp"
+        android:icon="@drawable/ic_add"
         android:orderInCategory="100"
         app:showAsAction="always" />
 

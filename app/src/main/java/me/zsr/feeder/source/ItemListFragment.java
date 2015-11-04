@@ -1,4 +1,4 @@
-package me.zsr.feeder.ui;
+package me.zsr.feeder.source;
 
 import android.animation.LayoutTransition;
 import android.app.Fragment;
@@ -27,6 +27,8 @@ import me.zsr.feeder.dao.FeedItem;
 import me.zsr.feeder.dao.FeedSource;
 import me.zsr.feeder.data.FeedDB;
 import me.zsr.feeder.data.FeedNetwork;
+import me.zsr.feeder.item.ItemActivity;
+import me.zsr.feeder.view.LoadMoreHeaderListView;
 import me.zsr.feeder.util.CommonEvent;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
@@ -39,7 +41,7 @@ public class ItemListFragment extends Fragment {
     private static final int MSG_DOUBLE_TAP = 0;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private LoadMoreHeaderListView mListView;
-    private FeedItemListAdapter mAdapter;
+    private ItemListAdapter mAdapter;
     private View mRootView;
 
     private FeedSource mFeedSource;
@@ -114,7 +116,7 @@ public class ItemListFragment extends Fragment {
         // init view
         mRootView = inflater.inflate(R.layout.fragment_item_list, container, false);
         mSwipeRefreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.swipe_refresh_layout);
-        mAdapter = new FeedItemListAdapter(mItemList, mFeedSource.getFavicon());
+        mAdapter = new ItemListAdapter(mItemList, mFeedSource.getFavicon());
         mListView = (LoadMoreHeaderListView) mRootView.findViewById(R.id.item_lv);
         mListView.setLayoutTransition(new LayoutTransition());
         mListView.setAdapter(mAdapter);
@@ -195,7 +197,7 @@ public class ItemListFragment extends Fragment {
         Bundle bundle = new Bundle();
         FeedDB.getInstance().saveFeedItem(feedItem, mFeedSource.getId());
         bundle.putLong(App.KEY_BUNDLE_ITEM_ID, feedItem.getId());
-        Intent intent = new Intent(getActivity(), FeedBodyActivity.class);
+        Intent intent = new Intent(getActivity(), ItemActivity.class);
         intent.putExtras(bundle);
         startActivity(intent);
     }

@@ -2,12 +2,6 @@
 <resources>
     <color name="main_grey_dark">#424242</color>
     <color name="main_grey_light">#9e9e9e</color>
-`
-    <!-- http://www.google.com/design/spec/style/color.html#color-color-palette -->
-    <color name="material_indigo_500">#3F51B5</color>
-    <color name="material_indigo_600">#3949AB</color>
-    <color name="material_teal_500">#009688</color>
-    <color name="material_red_400">#EF5350</color>
 
     <color name="selected_item_color">#30d1d5</color>
 </resources>
