@@ -6,6 +6,7 @@ import android.view.View;
 
 import com.avos.avoscloud.AVAnalytics;
 
+import me.zsr.feeder.BuildConfig;
 import me.zsr.feeder.dao.FeedSource;
 import me.zsr.feeder.data.FeedDB;
 import me.zsr.feeder.util.LogUtil;
@@ -32,12 +33,14 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-            // Dump db
-            for (FeedSource feedSource : FeedDB.getInstance().loadAll()) {
-                LogUtil.e("FeedSource=" + feedSource.toString());
+        if (BuildConfig.DEBUG) {
+            if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+                // Dump db
+                for (FeedSource feedSource : FeedDB.getInstance().loadAll()) {
+                    LogUtil.e("FeedSource=" + feedSource.toString());
+                }
+                return true;
             }
-            return true;
         }
         return super.onKeyDown(keyCode, event);
     }
