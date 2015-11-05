@@ -6,5 +6,5 @@ package me.zsr.feeder.util;
  * @date: 15-6-11
  */
 public enum CommonEvent {
-    FEED_DB_UPDATED,
+    FEED_DB_UPDATED, SOURCE_TOOLBAR_DOUBLE_CLICK
 }

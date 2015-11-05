@@ -15,18 +15,23 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewConfiguration;
 
 import com.avos.avoscloud.AVAnalytics;
 
+import de.greenrobot.event.EventBus;
 import me.zsr.feeder.BuildConfig;
 import me.zsr.feeder.R;
 import me.zsr.feeder.base.BaseActivity;
+import me.zsr.feeder.util.CommonEvent;
 import me.zsr.feeder.util.SnackbarUtil;
 import me.zsr.library_common.FileUtil;
 
 public class SourceActivity extends BaseActivity implements OnSourceSelectedListener {
     private static final String SP_KEY_VERSION_CODE = "sp_key_version_code";
+    private static final int MSG_DOUBLE_TAP = 0;
     private DrawerLayout mDrawerLayout;
+    private Toolbar mToolbar;
 
     private Handler mHandler = new Handler();
 
@@ -57,12 +62,9 @@ public class SourceActivity extends BaseActivity implements OnSourceSelectedList
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
     }
 
-    private void setListener() {
-    }
-
     private void initToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+         mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -80,9 +82,21 @@ public class SourceActivity extends BaseActivity implements OnSourceSelectedList
         ft.commit();
     }
 
+    private void setListener() {
+        mToolbar.setOnClickListener(this);
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.toolbar:
+                if (mHandler.hasMessages(MSG_DOUBLE_TAP)) {
+                    mHandler.removeMessages(MSG_DOUBLE_TAP);
+                    EventBus.getDefault().post(CommonEvent.SOURCE_TOOLBAR_DOUBLE_CLICK);
+                } else {
+                    mHandler.sendEmptyMessageDelayed(MSG_DOUBLE_TAP, ViewConfiguration.getDoubleTapTimeout());
+                }
+                break;
             default:
         }
     }

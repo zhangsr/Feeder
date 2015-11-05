@@ -38,7 +38,6 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
  * @date: 11/3/15
  */
 public class ItemListFragment extends Fragment {
-    private static final int MSG_DOUBLE_TAP = 0;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private LoadMoreHeaderListView mListView;
     private ItemListAdapter mAdapter;
@@ -47,19 +46,6 @@ public class ItemListFragment extends Fragment {
     private FeedSource mFeedSource;
     private List<FeedItem> mItemList;
 
-    private StickyListHeadersListView.OnHeaderClickListener mOnHeaderClickListener
-            = new StickyListHeadersListView.OnHeaderClickListener() {
-        @Override
-        public void onHeaderClick(StickyListHeadersListView stickyListHeadersListView, View view,
-                                  int i, long l, boolean b) {
-            if (mHandler.hasMessages(MSG_DOUBLE_TAP)) {
-                mHandler.removeMessages(MSG_DOUBLE_TAP);
-                stickyListHeadersListView.smoothScrollToPosition(0);
-            } else {
-                mHandler.sendEmptyMessageDelayed(MSG_DOUBLE_TAP, ViewConfiguration.getDoubleTapTimeout());
-            }
-        }
-    };
     private MyHandler mHandler = new MyHandler(this);
     private LoadMoreHeaderListView.OnLoadMoreListener mLoadMoreListener
             = new LoadMoreHeaderListView.OnLoadMoreListener() {
@@ -142,7 +128,6 @@ public class ItemListFragment extends Fragment {
             }
         });
         mListView.setOnLoadMoreListener(mLoadMoreListener);
-        mListView.setOnHeaderClickListener(mOnHeaderClickListener);
         return mRootView;
     }
 
@@ -208,6 +193,9 @@ public class ItemListFragment extends Fragment {
                 mSwipeRefreshLayout.setRefreshing(false);
                 mListView.setOnLoadMoreListener(mLoadMoreListener);
                 notifyDataSetsChanged();
+                break;
+            case SOURCE_TOOLBAR_DOUBLE_CLICK:
+                mListView.smoothScrollToPosition(0);
                 break;
             default:
         }
