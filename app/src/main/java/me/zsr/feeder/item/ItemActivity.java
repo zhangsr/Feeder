@@ -37,6 +37,7 @@ import me.zsr.feeder.dao.FeedItem;
 import me.zsr.feeder.base.BaseActivity;
 import me.zsr.feeder.util.DateUtil;
 import me.zsr.feeder.data.FeedDB;
+import me.zsr.feeder.util.SnackbarUtil;
 
 public class ItemActivity extends BaseActivity implements OnMenuItemClickListener {
     private FeedItem mFeedItem;
@@ -187,9 +188,9 @@ public class ItemActivity extends BaseActivity implements OnMenuItemClickListene
                 break;
             case 4:
                 if (mFeedItem.getStar()) {
-                    showTip(R.string.remove_star_mark);
+                    SnackbarUtil.show(this, R.string.remove_star_mark);
                 } else {
-                    showTip(R.string.add_star_mark);
+                    SnackbarUtil.show(this, R.string.add_star_mark);
                 }
                 mFeedItem.setStar(!mFeedItem.getStar());
                 FeedDB.getInstance().saveFeedItem(mFeedItem, mFeedItem.getFeedSourceId());

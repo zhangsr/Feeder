@@ -21,6 +21,7 @@ import com.avos.avoscloud.AVAnalytics;
 import me.zsr.feeder.BuildConfig;
 import me.zsr.feeder.R;
 import me.zsr.feeder.base.BaseActivity;
+import me.zsr.feeder.util.SnackbarUtil;
 import me.zsr.library_common.FileUtil;
 
 public class SourceActivity extends BaseActivity implements OnSourceSelectedListener {
@@ -39,7 +40,7 @@ public class SourceActivity extends BaseActivity implements OnSourceSelectedList
         if (sp.getInt(SP_KEY_VERSION_CODE, 0) < BuildConfig.VERSION_CODE) {
             // Show newest version info
             // TODO: 11/4/15 Add en version info
-            showTip("升级成功：" + FileUtil.readAssetFie(this, "version_info"));
+            SnackbarUtil.show(this, "升级成功：" + FileUtil.readAssetFie(this, "version_info"));
             SharedPreferences.Editor editor = sp.edit();
             editor.putInt(SP_KEY_VERSION_CODE, BuildConfig.VERSION_CODE);
             editor.apply();
