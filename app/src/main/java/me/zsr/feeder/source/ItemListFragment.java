@@ -106,6 +106,7 @@ public class ItemListFragment extends Fragment {
         mListView = (LoadMoreHeaderListView) mRootView.findViewById(R.id.item_lv);
         mListView.setLayoutTransition(new LayoutTransition());
         mListView.setAdapter(mAdapter);
+        mListView.setEmptyView(new View(getActivity()));
 
         // set listener
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
