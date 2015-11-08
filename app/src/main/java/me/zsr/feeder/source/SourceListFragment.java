@@ -107,6 +107,8 @@ public class SourceListFragment extends BaseFragment {
         mAdapter = new FeedAdapter();
         mListView.setAdapter(mAdapter);
         mPullRefreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.feed_pull_to_refresh_layout);
+
+        showItemList(App.SOURCE_ID_ALL);
     }
 
     private void setListener() {
