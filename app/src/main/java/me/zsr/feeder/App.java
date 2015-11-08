@@ -26,7 +26,7 @@ import me.zsr.feeder.util.NetworkUtil;
  * @date: 15-5-13
  */
 public class App extends Application {
-    public static final String KEY_BUNDLE_SOURCE_ID = "source_id";
+    public static final long SOURCE_ID_ALL = -1;
     public static final String KEY_BUNDLE_ITEM_ID = "item_id";
     private static final String SP_ADD_DEFAULT = "add_default";
     private static final String WX_APP_ID = "wxf0b102ba70e9fae2";

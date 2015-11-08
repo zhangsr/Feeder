@@ -18,4 +18,5 @@
     <string name="add_subscription_hint">e.g. cool</string>
     <string name="none"/>
     <string name="got_it">Got it</string>
+    <string name="all">All</string>
 </resources>

@@ -26,12 +26,10 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 public class ItemListAdapter extends BaseAdapter implements StickyListHeadersAdapter {
     private List<FeedItem> mFeedItemList;
     private LayoutInflater mLayoutInflater;
-    private String mFaviconUrl;
 
-    public ItemListAdapter(List<FeedItem> list, String faviconUrl) {
+    public ItemListAdapter(List<FeedItem> list) {
         mFeedItemList = list;
         mLayoutInflater = LayoutInflater.from(App.getInstance());
-        mFaviconUrl = faviconUrl;
     }
 
     @Override
@@ -67,9 +65,9 @@ public class ItemListAdapter extends BaseAdapter implements StickyListHeadersAda
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        viewHolder.imageView.setImageUrl(mFaviconUrl, VolleySingleton.getInstance().getImageLoader());
+        viewHolder.imageView.setImageUrl(feedItem.getFeedSource().getFavicon(), VolleySingleton.getInstance().getImageLoader());
         viewHolder.titleTextView.setText(feedItem.getTitle());
-        if (feedItem.getRead() == true) {
+        if (feedItem.getRead()) {
             viewHolder.titleTextView.setAlpha(0.54f);
             viewHolder.titleTextView.setTextColor(App.getInstance().getResources().getColor(R.color.main_grey_light));
         } else {

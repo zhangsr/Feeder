@@ -10,7 +10,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
@@ -24,13 +23,11 @@ import de.greenrobot.event.EventBus;
 import me.zsr.feeder.App;
 import me.zsr.feeder.R;
 import me.zsr.feeder.dao.FeedItem;
-import me.zsr.feeder.dao.FeedSource;
 import me.zsr.feeder.data.FeedDB;
 import me.zsr.feeder.data.FeedNetwork;
 import me.zsr.feeder.item.ItemActivity;
 import me.zsr.feeder.view.LoadMoreHeaderListView;
 import me.zsr.feeder.util.CommonEvent;
-import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 /**
  * @description:
@@ -43,7 +40,7 @@ public class ItemListFragment extends Fragment {
     private ItemListAdapter mAdapter;
     private View mRootView;
 
-    private FeedSource mFeedSource;
+    private long mFeedSourceId;
     private List<FeedItem> mItemList;
 
     private MyHandler mHandler = new MyHandler(this);
@@ -51,8 +48,8 @@ public class ItemListFragment extends Fragment {
             = new LoadMoreHeaderListView.OnLoadMoreListener() {
         @Override
         public void onLoadMore() {
-            List<FeedItem> newItemList = FeedDB.getInstance().getFeedItemListByRead(
-                    mFeedSource.getId(), false, mItemList.size());
+            List<FeedItem> newItemList = FeedDB.getInstance().getItemListByRead(
+                    mFeedSourceId, false, mItemList.size());
             if (newItemList.size() > 0) {
                 mItemList.addAll(newItemList);
                 mAdapter.notifyDataSetChanged(mItemList);
@@ -95,14 +92,13 @@ public class ItemListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // init data
-        long feedSourceId = getArguments().getLong("sourceId");
-        mFeedSource = FeedDB.getInstance().getFeedSourceById(feedSourceId);
-        mItemList = FeedDB.getInstance().getFeedItemListByRead(feedSourceId, false, 0);
+        mFeedSourceId = getArguments().getLong("sourceId");
+        mItemList = FeedDB.getInstance().getItemListByRead(mFeedSourceId, false, 0);
 
         // init view
         mRootView = inflater.inflate(R.layout.fragment_item_list, container, false);
         mSwipeRefreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.swipe_refresh_layout);
-        mAdapter = new ItemListAdapter(mItemList, mFeedSource.getFavicon());
+        mAdapter = new ItemListAdapter(mItemList);
         mListView = (LoadMoreHeaderListView) mRootView.findViewById(R.id.item_lv);
         mListView.setLayoutTransition(new LayoutTransition());
         mListView.setAdapter(mAdapter);
@@ -112,7 +108,7 @@ public class ItemListFragment extends Fragment {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                FeedNetwork.getInstance().refresh(mFeedSource);
+                FeedNetwork.getInstance().refresh(mFeedSourceId);
             }
         });
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -172,7 +168,7 @@ public class ItemListFragment extends Fragment {
                             default:
                         }
 
-                        FeedDB.getInstance().saveFeedItem(feedItem, mFeedSource.getId());
+                        FeedDB.getInstance().saveFeedItem(feedItem, mFeedSourceId);
                         notifyDataSetsChanged();
                     }
                 }).show();
@@ -181,7 +177,7 @@ public class ItemListFragment extends Fragment {
     private void showBodyActivity(FeedItem feedItem) {
         feedItem.setRead(true);
         Bundle bundle = new Bundle();
-        FeedDB.getInstance().saveFeedItem(feedItem, mFeedSource.getId());
+        FeedDB.getInstance().saveFeedItem(feedItem, mFeedSourceId);
         bundle.putLong(App.KEY_BUNDLE_ITEM_ID, feedItem.getId());
         Intent intent = new Intent(getActivity(), ItemActivity.class);
         intent.putExtras(bundle);
@@ -203,7 +199,7 @@ public class ItemListFragment extends Fragment {
     }
 
     private void notifyDataSetsChanged() {
-        mItemList = FeedDB.getInstance().getFeedItemListByRead(mFeedSource.getId(), false, 0);
+        mItemList = FeedDB.getInstance().getItemListByRead(mFeedSourceId, false, 0);
         mAdapter.notifyDataSetChanged(mItemList);
     }
 

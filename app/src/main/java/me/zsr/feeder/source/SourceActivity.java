@@ -70,7 +70,7 @@ public class SourceActivity extends BaseActivity implements OnSourceSelectedList
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         // Make arrow color white
-        Drawable upArrow = getResources().getDrawable(R.drawable.ic_ab_drawer);
+        Drawable upArrow = getResources().getDrawable(R.drawable.ic_hamberger);
         upArrow.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
         getSupportActionBar().setHomeAsUpIndicator(upArrow);
     }

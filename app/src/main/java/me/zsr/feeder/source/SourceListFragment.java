@@ -45,6 +45,7 @@ public class SourceListFragment extends BaseFragment {
     private ListView mListView;
     private FeedAdapter mAdapter;
     private SwipeRefreshLayout mPullRefreshLayout;
+    private View mAllHeaderView;
 
     public static SourceListFragment getInstance() {
         if (sInstance == null) {
@@ -96,6 +97,13 @@ public class SourceListFragment extends BaseFragment {
 
     private void initView() {
         mListView = (ListView) mRootView.findViewById(R.id.feed_lv);
+
+        mAllHeaderView = LayoutInflater.from(getActivity()).inflate(R.layout.source_list_item, null);
+        ((NetworkImageView) mAllHeaderView.findViewById(R.id.source_favicon_img)).setDefaultImageResId(R.drawable.ic_all);
+        ((TextView) mAllHeaderView.findViewById(R.id.source_title_txt)).setText(R.string.all);
+        ((TextView) mAllHeaderView.findViewById(R.id.source_item_num_txt)).setText("" + FeedDB.getInstance().countItemByRead(App.SOURCE_ID_ALL, false));
+        mListView.addHeaderView(mAllHeaderView);
+
         mAdapter = new FeedAdapter();
         mListView.setAdapter(mAdapter);
         mPullRefreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.feed_pull_to_refresh_layout);
@@ -111,40 +119,47 @@ public class SourceListFragment extends BaseFragment {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                showItemList(mSourceList.get(position).getId());
+                if (position == 0) {
+                    showItemList(App.SOURCE_ID_ALL);
+                } else {
+                    showItemList(((FeedSource) parent.getAdapter().getItem(position)).getId());
+                }
                 mListener.onSourceSelected(position);
             }
         });
         mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                final FeedSource feedSource = mSourceList.get(position);
-                List<CharSequence> menuList = new ArrayList<>();
-                if (FeedDB.getInstance().countFeedItemByRead(feedSource.getId(), false) != 0) {
-                    menuList.add(getString(R.string.mark_as_read));
-                }
-                menuList.add(getString(R.string.remove_subscription));
-                new MaterialDialog.Builder(getActivity())
-                        .title(feedSource.getTitle())
-                        .items(menuList.toArray(new CharSequence[menuList.size()]))
-                        .itemsCallback(new MaterialDialog.ListCallback() {
-                            @Override
-                            public void onSelection(MaterialDialog materialDialog, View view, int i,
-                                                    CharSequence charSequence) {
-                                switch (i) {
-                                    case 0:
-                                        FeedDB.getInstance().markAllAsRead(feedSource.getId());
-                                        break;
-                                    case 1:
-                                        FeedDB.getInstance().deleteSource(feedSource.getId());
-                                        break;
-                                }
+                if (position == 0) {
+                    return false;
+                } else {
+                    final FeedSource feedSource = (FeedSource) parent.getAdapter().getItem(position);
+                    List<CharSequence> menuList = new ArrayList<>();
+                    if (FeedDB.getInstance().countItemByRead(feedSource.getId(), false) != 0) {
+                        menuList.add(getString(R.string.mark_as_read));
+                    }
+                    menuList.add(getString(R.string.remove_subscription));
+                    new MaterialDialog.Builder(getActivity())
+                            .title(feedSource.getTitle())
+                            .items(menuList.toArray(new CharSequence[menuList.size()]))
+                            .itemsCallback(new MaterialDialog.ListCallback() {
+                                @Override
+                                public void onSelection(MaterialDialog materialDialog, View view, int i,
+                                                        CharSequence charSequence) {
+                                    switch (i) {
+                                        case 0:
+                                            FeedDB.getInstance().markAllAsRead(feedSource.getId());
+                                            break;
+                                        case 1:
+                                            FeedDB.getInstance().deleteSource(feedSource.getId());
+                                            break;
+                                    }
 
-                                mSourceList = FeedDB.getInstance().loadAll();
-                                mAdapter.notifyDataSetChanged();
-                            }
-                        }).show();
-                return true;
+                                    notifyDataSetChanged();
+                                }
+                            }).show();
+                    return true;
+                }
             }
         });
     }
@@ -173,11 +188,11 @@ public class SourceListFragment extends BaseFragment {
             if (convertView == null) {
                 convertView = LayoutInflater.from(getActivity()).inflate(R.layout.source_list_item, null);
                 viewHolder = new ViewHolder();
-                viewHolder.imageView = (NetworkImageView) convertView.findViewById(R.id.main_list_item_img);
+                viewHolder.imageView = (NetworkImageView) convertView.findViewById(R.id.source_favicon_img);
                 viewHolder.imageView.setErrorImageResId(R.drawable.ic_rss);
                 viewHolder.imageView.setDefaultImageResId(R.drawable.ic_rss);
-                viewHolder.titleTextView = (TextView) convertView.findViewById(R.id.main_list_item_title_txt);
-                viewHolder.numTextView = (TextView) convertView.findViewById(R.id.main_list_item_num_txt);
+                viewHolder.titleTextView = (TextView) convertView.findViewById(R.id.source_title_txt);
+                viewHolder.numTextView = (TextView) convertView.findViewById(R.id.source_item_num_txt);
                 convertView.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
@@ -187,11 +202,11 @@ public class SourceListFragment extends BaseFragment {
             viewHolder.titleTextView.setText(feedSource.getTitle());
             switch (App.getInstance().mCurrentMode) {
                 case STAR:
-                    viewHolder.numTextView.setText("" + FeedDB.getInstance().countFeedItemByStar(
+                    viewHolder.numTextView.setText("" + FeedDB.getInstance().countItemByStar(
                             feedSource.getId(), true));
                     break;
                 case UNREAD:
-                    viewHolder.numTextView.setText("" + FeedDB.getInstance().countFeedItemByRead(
+                    viewHolder.numTextView.setText("" + FeedDB.getInstance().countItemByRead(
                             feedSource.getId(), false));
                     break;
                 case ALL:
@@ -212,13 +227,18 @@ public class SourceListFragment extends BaseFragment {
     public void onEventMainThread(CommonEvent commonEvent) {
         switch (commonEvent) {
             case FEED_DB_UPDATED:
-                LogUtil.e("feed db updated");
-                mPullRefreshLayout.setRefreshing(false);
-                mSourceList = FeedDB.getInstance().loadAll();
-                mAdapter.notifyDataSetChanged();
+                LogUtil.i("feed db updated");
+                notifyDataSetChanged();
                 break;
             default:
         }
+    }
+
+    private void notifyDataSetChanged() {
+        mSourceList = FeedDB.getInstance().loadAll();
+        ((TextView) mAllHeaderView.findViewById(R.id.source_item_num_txt)).setText("" + FeedDB.getInstance().countItemByRead(App.SOURCE_ID_ALL, false));
+        mAdapter.notifyDataSetChanged();
+        mPullRefreshLayout.setRefreshing(false);
     }
 
     private void showItemList(long sourceId) {

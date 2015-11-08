@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
+import me.zsr.feeder.App;
 import me.zsr.feeder.dao.FeedSource;
 import me.zsr.feeder.util.CommonEvent;
 
@@ -47,24 +48,29 @@ public class FeedNetwork {
     public void refreshAll() {
         List<FeedSource> feedSourceList = FeedDB.getInstance().loadAll();
         for (FeedSource source : feedSourceList) {
-            refresh(source);
+            refresh(source.getId());
         }
     }
 
-    public void refresh(final FeedSource feedSource) {
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                try {
-                    FeedSource newFeedSource = mFeedReader.load(feedSource.getUrl());
-                    FeedDB.getInstance().saveFeedItem(newFeedSource.getFeedItems(), feedSource.getId());
-                    notifyUI();
-                } catch (FeedReadException e) {
-                    e.printStackTrace();
+    public void refresh(final long sourceId) {
+        if (sourceId == App.SOURCE_ID_ALL) {
+            refreshAll();
+        } else {
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... params) {
+                    try {
+                        FeedSource oldFeedSource = FeedDB.getInstance().getFeedSourceById(sourceId);
+                        FeedSource newFeedSource = mFeedReader.load(oldFeedSource.getUrl());
+                        FeedDB.getInstance().saveFeedItem(newFeedSource.getFeedItems(), sourceId);
+                        notifyUI();
+                    } catch (FeedReadException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
                 }
-                return null;
-            }
-        }.execute();
+            }.execute();
+        }
     }
 
     public interface OnVerifyListener {

@@ -65,19 +65,29 @@ public class FeedDB {
 //        EventBus.getDefault().post(CommonEvent.FEED_DB_UPDATED);
     }
 
-    public int countFeedItemByRead(long sourceId, boolean read) {
-        return mFeedItemDao.queryBuilder().where(
-                FeedItemDao.Properties.FeedSourceId.eq(sourceId),
-                FeedItemDao.Properties.Read.eq(read)).list().size();
+    public int countItemByRead(long sourceId, boolean read) {
+        if (sourceId == App.SOURCE_ID_ALL) {
+            return mFeedItemDao.queryBuilder().where(
+                    FeedItemDao.Properties.Read.eq(read)).list().size();
+        } else {
+            return mFeedItemDao.queryBuilder().where(
+                    FeedItemDao.Properties.FeedSourceId.eq(sourceId),
+                    FeedItemDao.Properties.Read.eq(read)).list().size();
+        }
     }
 
-    public List<FeedItem> getFeedItemListByRead(long sourceId, boolean read, int offset) {
-        return mFeedItemDao.queryBuilder().offset(offset).limit(LIMITE_LOAD_ONCE).where(
-                FeedItemDao.Properties.FeedSourceId.eq(sourceId),
-                FeedItemDao.Properties.Read.eq(read)).orderDesc(FeedItemDao.Properties.Date).list();
+    public List<FeedItem> getItemListByRead(long sourceId, boolean read, int offset) {
+        if (sourceId == App.SOURCE_ID_ALL) {
+            return mFeedItemDao.queryBuilder().offset(offset).limit(LIMITE_LOAD_ONCE).where(
+                    FeedItemDao.Properties.Read.eq(read)).orderDesc(FeedItemDao.Properties.Date).list();
+        } else {
+            return mFeedItemDao.queryBuilder().offset(offset).limit(LIMITE_LOAD_ONCE).where(
+                    FeedItemDao.Properties.FeedSourceId.eq(sourceId),
+                    FeedItemDao.Properties.Read.eq(read)).orderDesc(FeedItemDao.Properties.Date).list();
+        }
     }
 
-    public int countFeedItemByStar(long sourceId, boolean star) {
+    public int countItemByStar(long sourceId, boolean star) {
         return mFeedItemDao.queryBuilder().where(
                 FeedItemDao.Properties.FeedSourceId.eq(sourceId),
                 FeedItemDao.Properties.Star.eq(star)).list().size();

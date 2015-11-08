@@ -18,4 +18,5 @@
     <string name="add_subscription_hint">例如输入：酷</string>
     <string name="none"/>
     <string name="got_it">知道了</string>
+    <string name="all">全部</string>
 </resources>
