@@ -60,6 +60,7 @@ public class SourceActivity extends BaseActivity implements OnSourceSelectedList
         initDrawer();
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
     }
 
     private void initToolbar() {
