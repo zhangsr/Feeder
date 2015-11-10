@@ -117,13 +117,13 @@ public class ItemListFragment extends Fragment {
                 showBodyActivity(mItemList.get(position));
             }
         });
-        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                showOptionsDialog(mItemList.get(position));
-                return true;
-            }
-        });
+//        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+//            @Override
+//            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+//                showOptionsDialog(mItemList.get(position));
+//                return true;
+//            }
+//        });
         mListView.setOnLoadMoreListener(mLoadMoreListener);
         return mRootView;
     }
