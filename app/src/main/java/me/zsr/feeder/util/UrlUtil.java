@@ -43,6 +43,7 @@ public class UrlUtil {
             @Override
             public void run() {
                 AVQuery<AVObject> query = new AVQuery<>("FeedSource");
+                query.setLimit(300);
                 try {
                     List<AVObject> avObjectList = query.find();
                     String target = "";

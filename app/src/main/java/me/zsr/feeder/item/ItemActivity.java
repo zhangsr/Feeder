@@ -76,7 +76,10 @@ public class ItemActivity extends BaseActivity implements OnMenuItemClickListene
         mTimeTextView = (TextView) findViewById(R.id.feed_body_time);
         mTimeTextView.setText(DateUtil.formatTime(mFeedItem.getDate()));
         mSourceTextView = (TextView) findViewById(R.id.feed_body_source);
-        mSourceTextView.setText(mFeedItem.getFeedSource().getTitle());
+        // FIXME: 11/9/15 Why FeedSource become null
+        if (mFeedItem.getFeedSource() != null) {
+            mSourceTextView.setText(mFeedItem.getFeedSource().getTitle());
+        }
         mContentTextView = (HtmlTextView) findViewById(R.id.feed_body_content);
         mContentTextView.setHtmlText(mFeedItem.getContent());
     }

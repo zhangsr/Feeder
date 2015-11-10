@@ -188,6 +188,26 @@ public class FeedItem {
     }
 
     // KEEP METHODS - put your custom methods here
+
+    @Override
+    public String toString() {
+        return "FeedItem{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", link='" + link + '\'' +
+                ", description='" + description + '\'' +
+                ", read=" + read +
+                ", star=" + star +
+                ", content='" + content + '\'' +
+                ", date=" + date +
+                ", feedSourceId=" + feedSourceId +
+                ", daoSession=" + daoSession +
+                ", myDao=" + myDao +
+                ", feedSource=" + feedSource +
+                ", feedSource__resolvedKey=" + feedSource__resolvedKey +
+                '}';
+    }
+
     // KEEP METHODS END
 
 }

@@ -1,5 +1,6 @@
 package me.zsr.feeder.data;
 
+import java.util.Date;
 import java.util.List;
 
 import me.zsr.feeder.App;
@@ -109,7 +110,14 @@ public class FeedDB {
             @Override
             public void run() {
                 for (int i = feedItemList.size() - 1; i >= 0; i--) {
-                    saveFeedItem(feedItemList.get(i), sourceId);
+                    FeedItem item = feedItemList.get(i);
+                    if (item.getDate() == null) {
+                        item.setDate(new Date());
+                    }
+                    if (item.getTitle() == null) {
+                        item.setTitle("");
+                    }
+                    saveFeedItem(item, sourceId);
                 }
             }
         });
