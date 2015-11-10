@@ -1,5 +1,7 @@
 package me.zsr.feeder.item;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -13,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tencent.mm.sdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.sdk.modelmsg.WXMediaMessage;
@@ -37,7 +40,6 @@ import me.zsr.feeder.dao.FeedItem;
 import me.zsr.feeder.base.BaseActivity;
 import me.zsr.feeder.util.DateUtil;
 import me.zsr.feeder.data.FeedDB;
-import me.zsr.feeder.util.SnackbarUtil;
 
 public class ItemActivity extends BaseActivity implements OnMenuItemClickListener {
     private FeedItem mFeedItem;
@@ -165,6 +167,8 @@ public class ItemActivity extends BaseActivity implements OnMenuItemClickListene
     public void onMenuItemClick(View clickedView, int position) {
         // FIXME: 10/26/15 position not connect to init
         switch (position) {
+            case 0:
+                break;
             case 1:
                 new Thread(new Runnable() {
                     @Override
@@ -175,8 +179,16 @@ public class ItemActivity extends BaseActivity implements OnMenuItemClickListene
                         msg.title = mFeedItem.getTitle();
                         msg.description = mFeedItem.getDescription();
                         try {
-                            msg.thumbData = getBytes((new URL(mFeedItem.getFeedSource().getFavicon()))
-                                    .openStream());
+                            // FIXME: 11/10/15
+                            if (mFeedItem.getFeedSource() != null) {
+                                msg.thumbData = getBytes((new URL(mFeedItem.getFeedSource().getFavicon()))
+                                        .openStream());
+                            } else {
+                                Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
+                                ByteArrayOutputStream os = new ByteArrayOutputStream();
+                                bitmap.compress(Bitmap.CompressFormat.PNG, 100, os);
+                                msg.thumbData = os.toByteArray();
+                            }
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -189,15 +201,17 @@ public class ItemActivity extends BaseActivity implements OnMenuItemClickListene
                     }
                 }).start();
                 break;
-            case 4:
-                if (mFeedItem.getStar()) {
-                    SnackbarUtil.show(this, R.string.remove_star_mark);
-                } else {
-                    SnackbarUtil.show(this, R.string.add_star_mark);
-                }
-                mFeedItem.setStar(!mFeedItem.getStar());
-                FeedDB.getInstance().saveFeedItem(mFeedItem, mFeedItem.getFeedSourceId());
-                break;
+//            case 4:
+//                if (mFeedItem.getStar()) {
+//                    SnackbarUtil.show(this, R.string.remove_star_mark);
+//                } else {
+//                    SnackbarUtil.show(this, R.string.add_star_mark);
+//                }
+//                mFeedItem.setStar(!mFeedItem.getStar());
+//                FeedDB.getInstance().saveFeedItem(mFeedItem, mFeedItem.getFeedSourceId());
+//                break;
+            default:
+                Toast.makeText(this, R.string.coming_soon, Toast.LENGTH_SHORT).show();
         }
     }
 
