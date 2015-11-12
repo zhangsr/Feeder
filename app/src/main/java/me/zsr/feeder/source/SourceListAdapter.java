@@ -1,9 +1,7 @@
 package me.zsr.feeder.source;
 
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
@@ -12,6 +10,7 @@ import java.util.List;
 
 import me.zsr.feeder.App;
 import me.zsr.feeder.R;
+import me.zsr.feeder.base.BaseListAdapter;
 import me.zsr.feeder.dao.FeedSource;
 import me.zsr.feeder.data.FeedDB;
 import me.zsr.feeder.util.VolleySingleton;
@@ -21,33 +20,15 @@ import me.zsr.feeder.util.VolleySingleton;
  * @author: Zhangshaoru
  * @date: 11/12/15
  */
-public class SourceListAdapter extends BaseAdapter {
-    private List<FeedSource> mSourceList;
-    private LayoutInflater mLayoutInflater;
+public class SourceListAdapter extends BaseListAdapter {
 
     public SourceListAdapter(List<FeedSource> list) {
-        mSourceList = list;
-        mLayoutInflater = LayoutInflater.from(App.getInstance());
-    }
-
-    @Override
-    public int getCount() {
-        return mSourceList.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return mSourceList.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
+        super(list);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        FeedSource feedSource = mSourceList.get(position);
+        FeedSource feedSource = (FeedSource) mList.get(position);
         ViewHolder viewHolder;
         if (convertView == null) {
             convertView = mLayoutInflater.inflate(R.layout.source_list_item, null);
@@ -79,18 +60,6 @@ public class SourceListAdapter extends BaseAdapter {
             default:
         }
         return convertView;
-    }
-
-    public void notifyDataSetChanged(List<FeedSource> list) {
-        mSourceList = list;
-        notifyDataSetChanged();
-    }
-
-    @Deprecated
-    @Override
-    public void notifyDataSetChanged() {
-        super.notifyDataSetChanged();
-        // Mark : Use notifyDataSetChanged(List<>) instead
     }
 
     private class ViewHolder {

@@ -1,9 +1,7 @@
 package me.zsr.feeder.source;
 
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
@@ -13,6 +11,7 @@ import java.util.List;
 
 import me.zsr.feeder.App;
 import me.zsr.feeder.R;
+import me.zsr.feeder.base.BaseListAdapter;
 import me.zsr.feeder.dao.FeedItem;
 import me.zsr.feeder.util.DateUtil;
 import me.zsr.feeder.util.VolleySingleton;
@@ -23,34 +22,16 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
  * @author: Zhangshaoru
  * @date: 15-6-12
  */
-public class ItemListAdapter extends BaseAdapter implements StickyListHeadersAdapter {
-    private List<FeedItem> mFeedItemList;
-    private LayoutInflater mLayoutInflater;
+public class ItemListAdapter extends BaseListAdapter implements StickyListHeadersAdapter {
 
     public ItemListAdapter(List<FeedItem> list) {
-        mFeedItemList = list;
-        mLayoutInflater = LayoutInflater.from(App.getInstance());
-    }
-
-    @Override
-    public int getCount() {
-        return mFeedItemList.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return mFeedItemList.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
+        super(list);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
-        FeedItem feedItem = mFeedItemList.get(position);
+        FeedItem feedItem = (FeedItem) mList.get(position);
 
         if (convertView == null) {
             viewHolder = new ViewHolder();
@@ -84,7 +65,7 @@ public class ItemListAdapter extends BaseAdapter implements StickyListHeadersAda
     @Override
     public View getHeaderView(int position, View convertView, ViewGroup parent) {
         HeaderViewHolder headerViewHolder;
-        FeedItem feedItem = mFeedItemList.get(position);
+        FeedItem feedItem = (FeedItem) mList.get(position);
         if (convertView == null) {
             headerViewHolder = new HeaderViewHolder();
             convertView = mLayoutInflater.inflate(R.layout.item_list_headers, null);
@@ -101,20 +82,8 @@ public class ItemListAdapter extends BaseAdapter implements StickyListHeadersAda
     public long getHeaderId(int position) {
         //return the first character of the country as ID because this is what headers are based upon
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("DD");
-        long id = Long.valueOf(simpleDateFormat.format(mFeedItemList.get(position).getDate()));
+        long id = Long.valueOf(simpleDateFormat.format(((FeedItem) mList.get(position)).getDate()));
         return id;
-    }
-
-    public void notifyDataSetChanged(List<FeedItem> list) {
-        mFeedItemList = list;
-        notifyDataSetChanged();
-    }
-
-    @Deprecated
-    @Override
-    public void notifyDataSetChanged() {
-        super.notifyDataSetChanged();
-        // Mark : Use notifyDataSetChanged(List<FeedItem>) instead
     }
 
     class HeaderViewHolder {
