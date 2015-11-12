@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -29,7 +28,6 @@ import me.zsr.feeder.base.BaseFragment;
 import me.zsr.feeder.util.CommonEvent;
 import me.zsr.feeder.util.LogUtil;
 import me.zsr.feeder.util.NetworkUtil;
-import me.zsr.feeder.util.VolleySingleton;
 
 /**
  * @description:
@@ -43,7 +41,7 @@ public class SourceListFragment extends BaseFragment {
 
     private View mRootView;
     private ListView mListView;
-    private FeedAdapter mAdapter;
+    private SourceListAdapter mAdapter;
     private SwipeRefreshLayout mPullRefreshLayout;
     private View mAllHeaderView;
 
@@ -104,7 +102,7 @@ public class SourceListFragment extends BaseFragment {
         ((TextView) mAllHeaderView.findViewById(R.id.source_item_num_txt)).setText("" + FeedDB.getInstance().countItemByRead(App.SOURCE_ID_ALL, false));
         mListView.addHeaderView(mAllHeaderView);
 
-        mAdapter = new FeedAdapter();
+        mAdapter = new SourceListAdapter(mSourceList);
         mListView.setAdapter(mAdapter);
         mPullRefreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.feed_pull_to_refresh_layout);
 
@@ -166,66 +164,6 @@ public class SourceListFragment extends BaseFragment {
         });
     }
 
-    private class FeedAdapter extends BaseAdapter {
-
-        @Override
-        public int getCount() {
-            return mSourceList.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return mSourceList.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            FeedSource feedSource = mSourceList.get(position);
-            ViewHolder viewHolder;
-            if (convertView == null) {
-                convertView = LayoutInflater.from(getActivity()).inflate(R.layout.source_list_item, null);
-                viewHolder = new ViewHolder();
-                viewHolder.imageView = (NetworkImageView) convertView.findViewById(R.id.source_favicon_img);
-                viewHolder.imageView.setErrorImageResId(R.drawable.ic_rss);
-                viewHolder.imageView.setDefaultImageResId(R.drawable.ic_rss);
-                viewHolder.titleTextView = (TextView) convertView.findViewById(R.id.source_title_txt);
-                viewHolder.numTextView = (TextView) convertView.findViewById(R.id.source_item_num_txt);
-                convertView.setTag(viewHolder);
-            } else {
-                viewHolder = (ViewHolder) convertView.getTag();
-            }
-
-            viewHolder.imageView.setImageUrl(feedSource.getFavicon(), VolleySingleton.getInstance().getImageLoader());
-            viewHolder.titleTextView.setText(feedSource.getTitle());
-            switch (App.getInstance().mCurrentMode) {
-                case STAR:
-                    viewHolder.numTextView.setText("" + FeedDB.getInstance().countItemByStar(
-                            feedSource.getId(), true));
-                    break;
-                case UNREAD:
-                    viewHolder.numTextView.setText("" + FeedDB.getInstance().countItemByRead(
-                            feedSource.getId(), false));
-                    break;
-                case ALL:
-                    viewHolder.numTextView.setText("" + feedSource.getFeedItems().size());
-                    break;
-                default:
-            }
-            return convertView;
-        }
-
-        private class ViewHolder {
-            NetworkImageView imageView;
-            TextView titleTextView;
-            TextView numTextView;
-        }
-    }
-
     public void onEventMainThread(CommonEvent commonEvent) {
         switch (commonEvent) {
             case FEED_DB_UPDATED:
@@ -239,7 +177,7 @@ public class SourceListFragment extends BaseFragment {
     private void notifyDataSetChanged() {
         mSourceList = FeedDB.getInstance().loadAll();
         ((TextView) mAllHeaderView.findViewById(R.id.source_item_num_txt)).setText("" + FeedDB.getInstance().countItemByRead(App.SOURCE_ID_ALL, false));
-        mAdapter.notifyDataSetChanged();
+        mAdapter.notifyDataSetChanged(mSourceList);
         mPullRefreshLayout.setRefreshing(false);
     }
 
