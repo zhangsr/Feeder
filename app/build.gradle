@@ -49,6 +49,5 @@ dependencies {
     compile 'cn.leancloud.android:avoscloud-statistics:v3.3+@aar'
     compile project(':library_common')
     compile project(':rss')
-    compile project(':GuillotineMenu-Android:library')
     compile 'com.yalantis:contextmenu:1.0.4@aar'
 }
