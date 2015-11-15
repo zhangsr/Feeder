@@ -6,5 +6,5 @@ package me.zsr.feeder.source;
  * @date: 11/4/15
  */
 interface OnSourceSelectedListener {
-    void onSourceSelected(int index);
+    void onSourceSelected(long sourceId);
 }

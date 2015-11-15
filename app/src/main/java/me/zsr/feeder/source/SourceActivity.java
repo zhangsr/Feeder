@@ -20,6 +20,7 @@ import android.view.ViewConfiguration;
 import com.avos.avoscloud.AVAnalytics;
 
 import de.greenrobot.event.EventBus;
+import me.zsr.feeder.App;
 import me.zsr.feeder.BuildConfig;
 import me.zsr.feeder.R;
 import me.zsr.feeder.base.BaseActivity;
@@ -58,6 +59,7 @@ public class SourceActivity extends BaseActivity implements OnSourceSelectedList
     private void initView() {
         initToolbar();
         initDrawer();
+        showItemList(App.SOURCE_ID_ALL);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
@@ -132,7 +134,19 @@ public class SourceActivity extends BaseActivity implements OnSourceSelectedList
     }
 
     @Override
-    public void onSourceSelected(int index) {
+    public void onSourceSelected(long sourceId) {
         mDrawerLayout.closeDrawer(GravityCompat.START);
+        showItemList(sourceId);
+    }
+
+    private void showItemList(long sourceId) {
+        ItemListFragment fragment = (ItemListFragment) getFragmentManager().findFragmentById(R.id.details_frame);
+        if (fragment == null || fragment.getShownSourceId() != sourceId) {
+            fragment = ItemListFragment.newInstance(sourceId);
+
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.replace(R.id.details_frame, fragment);
+            ft.commit();
+        }
     }
 }
