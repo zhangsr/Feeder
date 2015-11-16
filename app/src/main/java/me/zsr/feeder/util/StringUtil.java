@@ -2,7 +2,7 @@ package me.zsr.feeder.util;
 
 /**
  * @description:
- * @author: Zhangshaoru
+ * @author: Match
  * @date: 8/10/15
  */
 public class StringUtil {

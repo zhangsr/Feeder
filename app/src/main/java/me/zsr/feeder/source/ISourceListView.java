@@ -6,7 +6,7 @@ import me.zsr.feeder.dao.FeedSource;
 
 /**
  * @description:
- * @author: Zhangshaoru
+ * @author: Match
  * @date: 11/12/15
  */
 public interface ISourceListView {

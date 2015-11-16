@@ -8,7 +8,7 @@ import me.zsr.feeder.util.NetworkUtil;
 
 /**
  * @description:
- * @author: Zhangshaoru
+ * @author: Match
  * @date: 11/16/15
  */
 public class ItemListPresenter implements IItemListPresenter {

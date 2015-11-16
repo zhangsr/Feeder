@@ -17,7 +17,7 @@ import me.zsr.feeder.util.VolleySingleton;
 
 /**
  * @description:
- * @author: Zhangshaoru
+ * @author: Match
  * @date: 11/12/15
  */
 public class SourceListAdapter extends BaseListAdapter {

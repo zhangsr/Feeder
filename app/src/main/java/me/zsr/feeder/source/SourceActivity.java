@@ -28,6 +28,11 @@ import me.zsr.feeder.util.CommonEvent;
 import me.zsr.feeder.util.SnackbarUtil;
 import me.zsr.library_common.FileUtil;
 
+/**
+ * @description:
+ * @author: Match
+ * @date: 8/29/15
+ */
 public class SourceActivity extends BaseActivity implements OnSourceSelectedListener {
     private static final String SP_KEY_VERSION_CODE = "sp_key_version_code";
     private static final int MSG_DOUBLE_TAP = 0;

@@ -9,7 +9,7 @@ import me.zsr.feeder.App;
 
 /**
  * @description:
- * @author: Zhangshaoru
+ * @author: Match
  * @date: 11/12/15
  */
 public abstract class BaseListAdapter extends BaseAdapter {

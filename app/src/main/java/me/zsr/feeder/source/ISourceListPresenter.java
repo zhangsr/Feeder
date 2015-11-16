@@ -2,7 +2,7 @@ package me.zsr.feeder.source;
 
 /**
  * @description:
- * @author: Zhangshaoru
+ * @author: Match
  * @date: 11/12/15
  */
 public interface ISourceListPresenter {

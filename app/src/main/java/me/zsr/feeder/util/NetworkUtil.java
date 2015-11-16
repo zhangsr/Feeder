@@ -7,7 +7,7 @@ import android.net.wifi.WifiManager;
 
 /**
  * @description:
- * @author: Zhangshaoru
+ * @author: Match
  * @date: 15-7-20
  */
 public class NetworkUtil {

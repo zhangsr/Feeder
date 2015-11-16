@@ -19,7 +19,7 @@ import me.zsr.feeder.util.UrlUtil;
 
 /**
  * @description:
- * @author: Zhangshaoru
+ * @author: Match
  * @date: 11/4/15
  */
 class SourceHelper {

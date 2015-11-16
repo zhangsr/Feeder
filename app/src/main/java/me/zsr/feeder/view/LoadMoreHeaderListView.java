@@ -16,7 +16,7 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 /**
  * @description:
- * @author: Zhangshaoru
+ * @author: Match
  * @date: 9/6/15
  */
 public class LoadMoreHeaderListView extends StickyListHeadersListView implements AbsListView.OnScrollListener {

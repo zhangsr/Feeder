@@ -16,7 +16,7 @@ import me.zsr.feeder.util.LogUtil;
 
 /**
  * @description:
- * @author: Zhangshaoru
+ * @author: Match
  * @date: 11/15/15
  */
 public class DataModel implements IDataModel {

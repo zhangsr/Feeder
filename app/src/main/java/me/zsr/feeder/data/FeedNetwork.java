@@ -14,7 +14,7 @@ import me.zsr.feeder.util.CommonEvent;
 
 /**
  * @description:
- * @author: Zhangshaoru
+ * @author: Match
  * @date: 8/28/15
  */
 public class FeedNetwork {

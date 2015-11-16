@@ -9,7 +9,7 @@ import me.zsr.feeder.util.NetworkUtil;
 
 /**
  * @description:
- * @author: Zhangshaoru
+ * @author: Match
  * @date: 11/12/15
  */
 public class SourceListPresenter implements ISourceListPresenter {

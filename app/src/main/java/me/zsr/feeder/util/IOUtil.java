@@ -4,7 +4,7 @@ import java.io.InputStream;
 
 /**
  * @description:
- * @author: Zhangshaoru
+ * @author: Match
  * @date: 15-7-17
  */
 public class IOUtil {

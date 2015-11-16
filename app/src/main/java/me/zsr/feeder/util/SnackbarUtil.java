@@ -8,7 +8,7 @@ import me.zsr.feeder.R;
 
 /**
  * @description:
- * @author: Zhangshaoru
+ * @author: Match
  * @date: 11/5/15
  */
 public class SnackbarUtil {

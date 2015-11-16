@@ -6,7 +6,7 @@ import me.zsr.feeder.dao.FeedItem;
 
 /**
  * @description:
- * @author: Zhangshaoru
+ * @author: Match
  * @date: 11/16/15
  */
 public interface IItemListView {

@@ -15,7 +15,7 @@ import me.zsr.feeder.dao.FeedSource;
 
 /**
  * @description:
- * @author: Zhangshaoru
+ * @author: Match
  * @date: 8/29/15
  */
 public class FeedParser {

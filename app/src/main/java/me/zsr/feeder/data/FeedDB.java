@@ -12,7 +12,7 @@ import me.zsr.feeder.util.LogUtil;
 
 /**
  * @description: Save data to db and send event broadcast.
- * @author: Zhangshaoru
+ * @author: Match
  * @date: 15-6-11
  */
 public class FeedDB {

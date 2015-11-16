@@ -41,6 +41,11 @@ import me.zsr.feeder.base.BaseActivity;
 import me.zsr.feeder.util.DateUtil;
 import me.zsr.feeder.data.FeedDB;
 
+/**
+ * @description:
+ * @author: Match
+ * @date: 8/29/15
+ */
 public class ItemActivity extends BaseActivity implements OnMenuItemClickListener {
     private FeedItem mFeedItem;
     private HtmlTextView mContentTextView;

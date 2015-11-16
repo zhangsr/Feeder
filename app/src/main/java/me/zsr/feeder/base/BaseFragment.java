@@ -4,7 +4,7 @@ import android.app.Fragment;
 
 /**
  * @description:
- * @author: Zhangshaoru
+ * @author: Match
  * @date: 10/28/15
  */
 public class BaseFragment extends Fragment {

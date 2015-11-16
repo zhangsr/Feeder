@@ -32,7 +32,7 @@ import me.zsr.feeder.util.CommonEvent;
 
 /**
  * @description:
- * @author: Zhangshaoru
+ * @author: Match
  * @date: 11/3/15
  */
 public class ItemListFragment extends Fragment implements IItemListView {

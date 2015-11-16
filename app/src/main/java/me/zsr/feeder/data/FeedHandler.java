@@ -15,7 +15,7 @@ import me.zsr.feeder.util.DateUtil;
 
 /**
  * @description:
- * @author: Zhangshaoru
+ * @author: Match
  * @date: 8/29/15
  */
 public class FeedHandler extends DefaultHandler {

@@ -27,7 +27,7 @@ import me.zsr.feeder.dao.FeedSource;
 
 /**
  * @description:
- * @author: Zhangshaoru
+ * @author: Match
  * @date: 8/28/15
  */
 public class FeedReader implements Closeable {

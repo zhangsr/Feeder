@@ -19,7 +19,7 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 /**
  * @description:
- * @author: Zhangshaoru
+ * @author: Match
  * @date: 15-6-12
  */
 public class ItemListAdapter extends BaseListAdapter implements StickyListHeadersAdapter {

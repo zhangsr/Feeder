@@ -11,7 +11,7 @@ import me.zsr.feeder.base.BaseFragment;
 
 /**
  * @description:
- * @author: Zhangshaoru
+ * @author: Match
  * @date: 10/28/15
  */
 public class SettingsFragment extends BaseFragment {

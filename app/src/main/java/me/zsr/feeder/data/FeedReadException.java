@@ -2,7 +2,7 @@ package me.zsr.feeder.data;
 
 /**
  * @description:
- * @author: Zhangshaoru
+ * @author: Match
  * @date: 8/29/15
  */
 public class FeedReadException extends Exception {

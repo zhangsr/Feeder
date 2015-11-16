@@ -12,7 +12,7 @@ import me.zsr.feeder.R;
 
 /**
  * @description:
- * @author: Zhangshaoru
+ * @author: Match
  * @date: 15-7-8
  */
 public class DateUtil {
