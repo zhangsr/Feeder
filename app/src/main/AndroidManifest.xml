@@ -28,12 +28,6 @@
             android:name=".item.ItemActivity"
             android:screenOrientation="portrait" >
         </activity>
-
-        <service
-            android:name=".service.BackgroundRefreshService"
-            android:enabled="true"
-            android:exported="true" >
-        </service>
     </application>
 
 </manifest>

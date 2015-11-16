@@ -1,7 +1,6 @@
 package me.zsr.feeder;
 
 import android.app.Application;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
@@ -17,7 +16,6 @@ import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import me.zsr.feeder.dao.DaoMaster;
 import me.zsr.feeder.dao.DaoSession;
 import me.zsr.feeder.dao.FeedSource;
-import me.zsr.feeder.service.BackgroundRefreshService;
 import me.zsr.feeder.util.NetworkUtil;
 
 /**
@@ -53,7 +51,6 @@ public class App extends Application {
         sInstance = this;
 
         initUniversalImageLoader();
-//        initBackgroundRefreshService();
         initLeanCloud();
         initWeiXin();
         initDB();
@@ -77,10 +74,6 @@ public class App extends Application {
                         .tasksProcessingOrder(QueueProcessingType.FIFO)
                         .build();
         ImageLoader.getInstance().init(config);
-    }
-
-    private void initBackgroundRefreshService() {
-        startService(new Intent(this, BackgroundRefreshService.class));
     }
 
     private void initLeanCloud() {
