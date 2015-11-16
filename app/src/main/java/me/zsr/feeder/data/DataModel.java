@@ -1,4 +1,4 @@
-package me.zsr.feeder.source;
+package me.zsr.feeder.data;
 
 import android.os.AsyncTask;
 
@@ -10,8 +10,10 @@ import me.zsr.feeder.dao.FeedItem;
 import me.zsr.feeder.dao.FeedItemDao;
 import me.zsr.feeder.dao.FeedSource;
 import me.zsr.feeder.dao.FeedSourceDao;
-import me.zsr.feeder.data.FeedReadException;
-import me.zsr.feeder.data.FeedReader;
+import me.zsr.feeder.item.OnItemLoadListener;
+import me.zsr.feeder.source.OnActionListener;
+import me.zsr.feeder.source.OnItemListLoadListener;
+import me.zsr.feeder.source.OnSourceLoadListener;
 import me.zsr.feeder.util.LogUtil;
 
 /**
@@ -53,7 +55,7 @@ public class DataModel implements IDataModel {
     }
 
     @Override
-    public void loadAllItem(final OnItemLoadListener listener, final int limit) {
+    public void loadAllItem(final OnItemListLoadListener listener, final int limit) {
         new AsyncTask<Void, Void, List<FeedItem>>() {
 
             @Override
@@ -91,7 +93,7 @@ public class DataModel implements IDataModel {
     }
 
     @Override
-    public void loadItem(final long sourceId, final OnItemLoadListener listener, final int limit) {
+    public void loadItemList(final long sourceId, final OnItemListLoadListener listener, final int limit) {
         new AsyncTask<Void, Void, List<FeedItem>>() {
 
             @Override
@@ -114,6 +116,21 @@ public class DataModel implements IDataModel {
                 }
             }
         }.execute();
+    }
+
+    @Override
+    public void loadItem(String itemTitle, OnItemLoadListener listener) {
+        List<FeedItem> list = mItemDao.queryBuilder().where(
+                FeedItemDao.Properties.Title.eq(itemTitle)).list();
+        if (listener != null) {
+            if (list == null || list.size() == 0) {
+                listener.error("No FeedSource found");
+            } else if (list.size() == 1) {
+                listener.success(list.get(0));
+            } else {
+                listener.error("Somethings wrong with DB !!");
+            }
+        }
     }
 
     @Override

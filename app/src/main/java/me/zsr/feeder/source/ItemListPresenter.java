@@ -4,6 +4,8 @@ import java.util.List;
 
 import me.zsr.feeder.App;
 import me.zsr.feeder.dao.FeedItem;
+import me.zsr.feeder.data.DataModel;
+import me.zsr.feeder.data.IDataModel;
 import me.zsr.feeder.util.NetworkUtil;
 
 /**
@@ -39,7 +41,7 @@ public class ItemListPresenter implements IItemListPresenter {
 
     @Override
     public void loadItem(long sourceId, int currentSize) {
-        OnItemLoadListener itemLoadListener = new OnItemLoadListener() {
+        OnItemListLoadListener itemLoadListener = new OnItemListLoadListener() {
             @Override
             public void success(List<FeedItem> list) {
                 mView.updated(list);
@@ -55,7 +57,7 @@ public class ItemListPresenter implements IItemListPresenter {
         if (sourceId == App.SOURCE_ID_ALL) {
             mModel.loadAllItem(itemLoadListener, currentSize + LIMIT_LOAD_ONCE);
         } else {
-            mModel.loadItem(sourceId, itemLoadListener, currentSize + LIMIT_LOAD_ONCE);
+            mModel.loadItemList(sourceId, itemLoadListener, currentSize + LIMIT_LOAD_ONCE);
         }
     }
 
@@ -82,6 +84,5 @@ public class ItemListPresenter implements IItemListPresenter {
         } else {
             mView.showError("Wi-Fi is disabled");
         }
-
     }
 }

@@ -1,8 +1,12 @@
-package me.zsr.feeder.source;
+package me.zsr.feeder.data;
 
 import java.util.List;
 
 import me.zsr.feeder.dao.FeedItem;
+import me.zsr.feeder.item.OnItemLoadListener;
+import me.zsr.feeder.source.OnActionListener;
+import me.zsr.feeder.source.OnItemListLoadListener;
+import me.zsr.feeder.source.OnSourceLoadListener;
 
 /**
  * @description:
@@ -13,9 +17,11 @@ public interface IDataModel {
 
     void loadAllSource(OnSourceLoadListener listener);
 
-    void loadAllItem(OnItemLoadListener listener, int limit);
+    void loadAllItem(OnItemListLoadListener listener, int limit);
 
-    void loadItem(long sourceId, OnItemLoadListener listener, int limit);
+    void loadItemList(long sourceId, OnItemListLoadListener listener, int limit);
+
+    void loadItem(String itemTitle, OnItemLoadListener listener);
 
     void refreshAll(OnActionListener listener);
 

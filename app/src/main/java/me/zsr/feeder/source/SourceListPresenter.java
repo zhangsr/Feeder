@@ -5,6 +5,8 @@ import java.util.List;
 import me.zsr.feeder.App;
 import me.zsr.feeder.dao.FeedItem;
 import me.zsr.feeder.dao.FeedSource;
+import me.zsr.feeder.data.DataModel;
+import me.zsr.feeder.data.IDataModel;
 import me.zsr.feeder.util.NetworkUtil;
 
 /**
@@ -73,7 +75,7 @@ public class SourceListPresenter implements ISourceListPresenter {
 
     @Override
     public void markAsRead(final long sourceId) {
-        mModel.loadItem(sourceId, new OnItemLoadListener() {
+        mModel.loadItemList(sourceId, new OnItemListLoadListener() {
             @Override
             public void success(List<FeedItem> list) {
                 for (FeedItem item : list) {

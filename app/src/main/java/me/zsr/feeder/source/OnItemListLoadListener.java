@@ -9,7 +9,7 @@ import me.zsr.feeder.dao.FeedItem;
  * @author: Match
  * @date: 11/15/15
  */
-public interface OnItemLoadListener {
+public interface OnItemListLoadListener {
 
     void success(List<FeedItem> list);
 

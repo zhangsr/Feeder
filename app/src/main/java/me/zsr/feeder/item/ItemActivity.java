@@ -5,6 +5,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -19,50 +20,44 @@ import me.zsr.feeder.R;
 import me.zsr.feeder.dao.FeedItem;
 import me.zsr.feeder.base.BaseActivity;
 import me.zsr.feeder.util.DateUtil;
-import me.zsr.feeder.data.FeedDB;
 
 /**
  * @description:
  * @author: Match
  * @date: 8/29/15
  */
-public class ItemActivity extends BaseActivity {
-    private FeedItem mFeedItem;
+public class ItemActivity extends BaseActivity implements IItemView {
     private HtmlTextView mContentTextView;
     private TextView mTitleTextView;
     private TextView mSourceTextView;
     private TextView mDateTextView;
     private TextView mTimeTextView;
 
+    private IItemPresenter mPresenter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item);
 
-        initData();
         initView();
-    }
 
-    private void initData() {
-        mFeedItem = FeedDB.getInstance().getFeedItemByTitle(
-                getIntent().getExtras().getString(App.KEY_BUNDLE_ITEM_TITLE));
+        mPresenter = new ItemPresenter(this);
+        String itemTitle = getIntent().getExtras().getString(App.KEY_BUNDLE_ITEM_TITLE);
+        if (TextUtils.isEmpty(itemTitle)) {
+            showError("Item Title is empty");
+        } else {
+            mPresenter.loadItem(itemTitle);
+        }
     }
 
     private void initView() {
         initToolbar();
         mTitleTextView = (TextView) findViewById(R.id.feed_body_title);
-        mTitleTextView.setText(mFeedItem.getTitle());
         mDateTextView = (TextView) findViewById(R.id.feed_body_date);
-        mDateTextView.setText(DateUtil.formatDate(mFeedItem.getDate()));
         mTimeTextView = (TextView) findViewById(R.id.feed_body_time);
-        mTimeTextView.setText(DateUtil.formatTime(mFeedItem.getDate()));
         mSourceTextView = (TextView) findViewById(R.id.feed_body_source);
-        // FIXME: 11/9/15 Why FeedSource become null
-        if (mFeedItem.getFeedSource() != null) {
-            mSourceTextView.setText(mFeedItem.getFeedSource().getTitle());
-        }
         mContentTextView = (HtmlTextView) findViewById(R.id.feed_body_content);
-        mContentTextView.setHtmlText(mFeedItem.getContent());
     }
 
     private void initToolbar() {
@@ -101,5 +96,22 @@ public class ItemActivity extends BaseActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void updated(FeedItem item) {
+        mTitleTextView.setText(item.getTitle());
+        mDateTextView.setText(DateUtil.formatDate(item.getDate()));
+        mTimeTextView.setText(DateUtil.formatTime(item.getDate()));
+        // FIXME: 11/9/15 Why FeedSource become null
+        if (item.getFeedSource() != null) {
+            mSourceTextView.setText(item.getFeedSource().getTitle());
+        }
+        mContentTextView.setHtmlText(item.getContent());
+    }
+
+    @Override
+    public void showError(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 }
