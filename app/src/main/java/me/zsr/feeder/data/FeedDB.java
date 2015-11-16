@@ -16,7 +16,6 @@ import me.zsr.feeder.util.LogUtil;
  * @date: 15-6-11
  */
 public class FeedDB {
-    private static final int LIMITE_LOAD_ONCE = 20;
     private static FeedDB sFeedDB;
     private FeedSourceDao mFeedSourceDao;
     private FeedItemDao mFeedItemDao;
@@ -69,17 +68,6 @@ public class FeedDB {
             return mFeedItemDao.queryBuilder().where(
                     FeedItemDao.Properties.FeedSourceId.eq(sourceId),
                     FeedItemDao.Properties.Read.eq(read)).list().size();
-        }
-    }
-
-    public List<FeedItem> getItemListByRead(long sourceId, boolean read, int offset) {
-        if (sourceId == App.SOURCE_ID_ALL) {
-            return mFeedItemDao.queryBuilder().offset(offset).limit(LIMITE_LOAD_ONCE).where(
-                    FeedItemDao.Properties.Read.eq(read)).orderDesc(FeedItemDao.Properties.Date).list();
-        } else {
-            return mFeedItemDao.queryBuilder().offset(offset).limit(LIMITE_LOAD_ONCE).where(
-                    FeedItemDao.Properties.FeedSourceId.eq(sourceId),
-                    FeedItemDao.Properties.Read.eq(read)).orderDesc(FeedItemDao.Properties.Date).list();
         }
     }
 

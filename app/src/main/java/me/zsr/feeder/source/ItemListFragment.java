@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
@@ -34,48 +35,59 @@ import me.zsr.feeder.util.CommonEvent;
  * @author: Zhangshaoru
  * @date: 11/3/15
  */
-public class ItemListFragment extends Fragment {
+public class ItemListFragment extends Fragment implements IItemListView {
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private LoadMoreHeaderListView mListView;
     private ItemListAdapter mAdapter;
     private View mRootView;
 
-    private long mFeedSourceId;
-    private List<FeedItem> mItemList;
+    private IItemListPresenter mPresenter;
 
-    private MyHandler mHandler = new MyHandler(this);
+    private long mFeedSourceId;
+
     private LoadMoreHeaderListView.OnLoadMoreListener mLoadMoreListener
             = new LoadMoreHeaderListView.OnLoadMoreListener() {
         @Override
         public void onLoadMore() {
-            List<FeedItem> newItemList = FeedDB.getInstance().getItemListByRead(
-                    mFeedSourceId, false, mItemList.size());
-            if (newItemList.size() > 0) {
-                mItemList.addAll(newItemList);
-                mAdapter.notifyDataSetChanged(mItemList);
-            } else {
-                mListView.setOnLoadMoreListener(null);
-            }
-            mListView.completeLoadMore();
+            mPresenter.loadItem(mFeedSourceId, mAdapter.getCount());
         }
     };
 
-    private static class MyHandler extends Handler {
-        WeakReference<ItemListFragment> mmFragment;
-
-        MyHandler(ItemListFragment fragment) {
-            mmFragment = new WeakReference<>(fragment);
+    @Override
+    public void updated(List<FeedItem> list) {
+        if (mAdapter == null) {
+            mAdapter = new ItemListAdapter(list);
+            mListView.setAdapter(mAdapter);
+            mListView.setEmptyView(new View(getActivity()));
+        } else {
+            mAdapter.notifyDataSetChanged(list);
         }
+        mListView.setOnLoadMoreListener(mLoadMoreListener);
+    }
 
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            if (mmFragment.get() != null) {
-                switch (msg.what) {
+    @Override
+    public void showLoading() {
+        mSwipeRefreshLayout.setRefreshing(true);
+    }
 
-                }
-            }
-        }
+    @Override
+    public void hideLoading() {
+        mSwipeRefreshLayout.setRefreshing(false);
+        mListView.completeLoadMore();
+    }
+
+    @Override
+    public void showError(String msg) {
+        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showBody(String itemTitle) {
+        Bundle bundle = new Bundle();
+        bundle.putString(App.KEY_BUNDLE_ITEM_TITLE, itemTitle);
+        Intent intent = new Intent(getActivity(), ItemActivity.class);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 
     public static ItemListFragment newInstance(long sourceId) {
@@ -93,38 +105,31 @@ public class ItemListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // init data
         mFeedSourceId = getArguments().getLong("sourceId");
-        mItemList = FeedDB.getInstance().getItemListByRead(mFeedSourceId, false, 0);
 
         // init view
         mRootView = inflater.inflate(R.layout.fragment_item_list, container, false);
         mSwipeRefreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.swipe_refresh_layout);
-        mAdapter = new ItemListAdapter(mItemList);
         mListView = (LoadMoreHeaderListView) mRootView.findViewById(R.id.item_lv);
         mListView.setLayoutTransition(new LayoutTransition());
-        mListView.setAdapter(mAdapter);
-        mListView.setEmptyView(new View(getActivity()));
 
         // set listener
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                FeedNetwork.getInstance().refresh(mFeedSourceId);
+                mPresenter.refresh(mFeedSourceId);
             }
         });
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                showBodyActivity(mItemList.get(position));
+                mPresenter.itemSelected(((FeedItem) parent.getAdapter().getItem(position)));
             }
         });
-//        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-//            @Override
-//            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-//                showOptionsDialog(mItemList.get(position));
-//                return true;
-//            }
-//        });
         mListView.setOnLoadMoreListener(mLoadMoreListener);
+
+        mPresenter = new ItemListPresenter(this);
+        mPresenter.refresh(mFeedSourceId);
+
         return mRootView;
     }
 
@@ -140,67 +145,13 @@ public class ItemListFragment extends Fragment {
         EventBus.getDefault().unregister(this);
     }
 
-    private void showOptionsDialog(final FeedItem feedItem) {
-        List<CharSequence> menuList = new ArrayList<>();
-        if (feedItem.getStar()) {
-            menuList.add(getString(R.string.remove_star_mark));
-        } else {
-            menuList.add(getString(R.string.add_star_mark));
-        }
-        if (feedItem.getRead()) {
-            menuList.add(getString(R.string.mark_as_unread));
-        } else {
-            menuList.add(getString(R.string.mark_as_read));
-        }
-        new MaterialDialog.Builder(getActivity())
-                .items(menuList.toArray(new CharSequence[menuList.size()]))
-                .itemsCallback(new MaterialDialog.ListCallback() {
-                    @Override
-                    public void onSelection(MaterialDialog materialDialog, View view, int i,
-                                            CharSequence charSequence) {
-                        switch (i) {
-                            case 0:
-                                feedItem.setStar(!feedItem.getStar());
-                                break;
-                            case 1:
-                                feedItem.setRead(!feedItem.getRead());
-                                break;
-                            default:
-                        }
-
-                        FeedDB.getInstance().saveFeedItem(feedItem, mFeedSourceId);
-                        notifyDataSetsChanged();
-                    }
-                }).show();
-    }
-
-    private void showBodyActivity(FeedItem feedItem) {
-        feedItem.setRead(true);
-        Bundle bundle = new Bundle();
-        FeedDB.getInstance().saveFeedItem(feedItem, mFeedSourceId);
-        bundle.putString(App.KEY_BUNDLE_ITEM_TITLE, feedItem.getTitle());
-        Intent intent = new Intent(getActivity(), ItemActivity.class);
-        intent.putExtras(bundle);
-        startActivity(intent);
-    }
-
     public void onEventMainThread(CommonEvent commonEvent) {
         switch (commonEvent) {
-            case FEED_DB_UPDATED:
-                mSwipeRefreshLayout.setRefreshing(false);
-                mListView.setOnLoadMoreListener(mLoadMoreListener);
-                notifyDataSetsChanged();
-                break;
             case SOURCE_TOOLBAR_DOUBLE_CLICK:
                 mListView.smoothScrollToPosition(0);
                 break;
             default:
         }
-    }
-
-    private void notifyDataSetsChanged() {
-        mItemList = FeedDB.getInstance().getItemListByRead(mFeedSourceId, false, 0);
-        mAdapter.notifyDataSetChanged(mItemList);
     }
 
     public long getShownSourceId() {

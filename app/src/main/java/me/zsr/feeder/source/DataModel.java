@@ -52,6 +52,30 @@ public class DataModel implements IDataModel {
         }.execute();
     }
 
+    @Override
+    public void loadAllItem(final OnItemLoadListener listener, final int limit) {
+        new AsyncTask<Void, Void, List<FeedItem>>() {
+
+            @Override
+            protected List<FeedItem> doInBackground(Void... params) {
+                if (limit == -1) {
+                    return mItemDao.queryBuilder().list();
+                } else {
+                    return mItemDao.queryBuilder().limit(limit).list();
+                }
+            }
+
+            @Override
+            protected void onPostExecute(List<FeedItem> list) {
+                super.onPostExecute(list);
+
+                if (listener != null) {
+                    listener.success(list);
+                }
+            }
+        }.execute();
+    }
+
     private FeedSource loadSourceById(long sourceId) {
         List<FeedSource> list = mSourceDao.queryBuilder()
                 .where(FeedSourceDao.Properties.Id.eq(sourceId)).list();
@@ -67,13 +91,18 @@ public class DataModel implements IDataModel {
     }
 
     @Override
-    public void loadItem(final long sourceId, final OnItemLoadListener listener) {
+    public void loadItem(final long sourceId, final OnItemLoadListener listener, final int limit) {
         new AsyncTask<Void, Void, List<FeedItem>>() {
 
             @Override
             protected List<FeedItem> doInBackground(Void... params) {
-                return mItemDao.queryBuilder().where(
-                        FeedItemDao.Properties.FeedSourceId.eq(sourceId)).list();
+                if (limit == -1) {
+                    return mItemDao.queryBuilder().where(
+                            FeedItemDao.Properties.FeedSourceId.eq(sourceId)).list();
+                } else {
+                    return mItemDao.queryBuilder().limit(limit).where(
+                            FeedItemDao.Properties.FeedSourceId.eq(sourceId)).list();
+                }
             }
 
             @Override
@@ -89,7 +118,6 @@ public class DataModel implements IDataModel {
 
     @Override
     public void refreshAll(final OnActionListener listener) {
-
         new AsyncTask<Void, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(Void... params) {
@@ -124,11 +152,68 @@ public class DataModel implements IDataModel {
     }
 
     @Override
+    public void refreshSource(final long sourceId, final OnActionListener listener) {
+        new AsyncTask<Void, Void, Boolean>() {
+            @Override
+            protected Boolean doInBackground(Void... params) {
+                boolean isSuccess = false;
+                try {
+                    FeedSource oldFeedSource = loadSourceById(sourceId);
+                    FeedSource newFeedSource = mFeedReader.load(oldFeedSource.getUrl());
+                    saveItem(newFeedSource.getFeedItems(), sourceId);
+                    isSuccess = true;
+                } catch (FeedReadException e) {
+                    e.printStackTrace();
+                }
+                return isSuccess;
+            }
+
+            @Override
+            protected void onPostExecute(Boolean isSuccess) {
+                super.onPostExecute(isSuccess);
+
+                if (listener != null) {
+                    if (isSuccess) {
+                        listener.success();
+                    } else {
+                        listener.error("Feed read exception");
+                    }
+                }
+            }
+        }.execute();
+    }
+
+    @Override
     public void saveItem(final List<FeedItem> itemList, final long sourceId, final OnActionListener listener) {
         new AsyncTask<Void, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(Void... params) {
                 saveItem(itemList, sourceId);
+                return true;
+            }
+
+            @Override
+            protected void onPostExecute(Boolean aBoolean) {
+                super.onPostExecute(aBoolean);
+                if (listener != null) {
+                    listener.success();
+                }
+            }
+        }.execute();
+    }
+
+    @Override
+    public void saveItem(final FeedItem item, final OnActionListener listener) {
+        new AsyncTask<Void, Void, Boolean>() {
+            @Override
+            protected Boolean doInBackground(Void... params) {
+                if (item.getDate() == null) {
+                    item.setDate(new Date());
+                }
+                if (item.getTitle() == null) {
+                    item.setTitle("");
+                }
+                mItemDao.insertOrReplace(item);
                 return true;
             }
 

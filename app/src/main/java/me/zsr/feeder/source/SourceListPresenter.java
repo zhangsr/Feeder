@@ -96,7 +96,7 @@ public class SourceListPresenter implements ISourceListPresenter {
             public void error(String msg) {
                 mView.showError(msg);
             }
-        });
+        }, -1);
     }
 
     @Override
