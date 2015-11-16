@@ -119,7 +119,7 @@ public class SourceListFragment extends BaseFragment implements ISourceListView 
                                                         CharSequence charSequence) {
                                     switch (i) {
                                         case 0:
-                                            mPresenter.markAllAsRead(feedSource.getId());
+                                            mPresenter.markAsRead(feedSource.getId());
                                             break;
                                         case 1:
                                             mPresenter.deleteSource(feedSource.getId());

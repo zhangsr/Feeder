@@ -64,8 +64,8 @@ public class ItemActivity extends BaseActivity implements OnMenuItemClickListene
     }
 
     private void initData() {
-        mFeedItem = FeedDB.getInstance().getFeedItemById(
-                getIntent().getExtras().getLong(App.KEY_BUNDLE_ITEM_ID));
+        mFeedItem = FeedDB.getInstance().getFeedItemByTitle(
+                getIntent().getExtras().getString(App.KEY_BUNDLE_ITEM_TITLE));
     }
 
     private void initView() {

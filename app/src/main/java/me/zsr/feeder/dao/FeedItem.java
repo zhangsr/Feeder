@@ -12,7 +12,6 @@ import de.greenrobot.dao.DaoException;
  */
 public class FeedItem {
 
-    private Long id;
     /** Not-null value. */
     private String title;
     private String link;
@@ -39,12 +38,11 @@ public class FeedItem {
     public FeedItem() {
     }
 
-    public FeedItem(Long id) {
-        this.id = id;
+    public FeedItem(String title) {
+        this.title = title;
     }
 
-    public FeedItem(Long id, String title, String link, String description, Boolean read, Boolean star, String content, java.util.Date date, long feedSourceId) {
-        this.id = id;
+    public FeedItem(String title, String link, String description, Boolean read, Boolean star, String content, java.util.Date date, long feedSourceId) {
         this.title = title;
         this.link = link;
         this.description = description;
@@ -59,14 +57,6 @@ public class FeedItem {
     public void __setDaoSession(DaoSession daoSession) {
         this.daoSession = daoSession;
         myDao = daoSession != null ? daoSession.getFeedItemDao() : null;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     /** Not-null value. */
@@ -192,7 +182,6 @@ public class FeedItem {
     @Override
     public String toString() {
         return "FeedItem{" +
-                "id=" + id +
                 ", title='" + title + '\'' +
                 ", link='" + link + '\'' +
                 ", description='" + description + '\'' +
@@ -207,7 +196,6 @@ public class FeedItem {
                 ", feedSource__resolvedKey=" + feedSource__resolvedKey +
                 '}';
     }
-
     // KEEP METHODS END
 
 }

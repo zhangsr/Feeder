@@ -1,14 +1,10 @@
 package me.zsr.feeder.source;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import de.greenrobot.event.EventBus;
 import me.zsr.feeder.App;
+import me.zsr.feeder.dao.FeedItem;
 import me.zsr.feeder.dao.FeedSource;
-import me.zsr.feeder.data.FeedDB;
-import me.zsr.feeder.data.FeedNetwork;
-import me.zsr.feeder.util.CommonEvent;
 import me.zsr.feeder.util.NetworkUtil;
 
 /**
@@ -19,11 +15,11 @@ import me.zsr.feeder.util.NetworkUtil;
 public class SourceListPresenter implements ISourceListPresenter {
     private ISourceListView mView;
     private OnSourceSelectedListener mSourceSelectedListener;
-    private List<FeedSource> mSourceList = new ArrayList<>();
+    private IDataModel mModel;
 
     public SourceListPresenter(ISourceListView view) {
         mView = view;
-        EventBus.getDefault().register(this);
+        mModel = new DataModel();
     }
 
     @Override
@@ -40,39 +36,81 @@ public class SourceListPresenter implements ISourceListPresenter {
 
     @Override
     public void loadSource() {
-        // TODO: 11/13/15 load async
-        mSourceList = FeedDB.getInstance().loadAll();
-        mView.updated(mSourceList);
-        mView.hideLoading();
+        mModel.loadAllSource(new OnSourceLoadListener() {
+            @Override
+            public void success(List<FeedSource> list) {
+                mView.updated(list);
+                mView.hideLoading();
+            }
+
+            @Override
+            public void error(String msg) {
+                mView.showError(msg);
+                mView.hideLoading();
+            }
+        });
     }
 
     @Override
     public void refresh() {
         if (NetworkUtil.isWifiEnabled(App.getInstance())) {
-            FeedNetwork.getInstance().refreshAll();
+            mModel.refreshAll(new OnActionListener() {
+                @Override
+                public void success() {
+                    loadSource();
+                }
+
+                @Override
+                public void error(String msg) {
+                    mView.showError(msg);
+                    mView.hideLoading();
+                }
+            });
         } else {
             mView.showError("Wi-Fi is disabled");
         }
     }
 
     @Override
-    public void markAllAsRead(long sourceId) {
-        FeedDB.getInstance().markAllAsRead(sourceId);
-        loadSource();
+    public void markAsRead(final long sourceId) {
+        mModel.loadItem(sourceId, new OnItemLoadListener() {
+            @Override
+            public void success(List<FeedItem> list) {
+                for (FeedItem item : list) {
+                    item.setRead(true);
+                }
+                mModel.saveItem(list, sourceId, new OnActionListener() {
+                    @Override
+                    public void success() {
+                        loadSource();
+                    }
+
+                    @Override
+                    public void error(String msg) {
+                        mView.showError(msg);
+                    }
+                });
+            }
+
+            @Override
+            public void error(String msg) {
+                mView.showError(msg);
+            }
+        });
     }
 
     @Override
     public void deleteSource(long sourceId) {
-        FeedDB.getInstance().deleteSource(sourceId);
-        loadSource();
-    }
-
-    public void onEventMainThread(CommonEvent commonEvent) {
-        switch (commonEvent) {
-            case FEED_DB_UPDATED:
+        mModel.deleteSource(sourceId, new OnActionListener() {
+            @Override
+            public void success() {
                 loadSource();
-                break;
-            default:
-        }
+            }
+
+            @Override
+            public void error(String msg) {
+                mView.showError(msg);
+            }
+        });
     }
 }

@@ -44,26 +44,21 @@ public class FeedDB {
         } else { // already exist
             mFeedSourceDao.update(feedSource);
         }
-
-//        //TODO really need to post DB_UPDATED ?
-//        EventBus.getDefault().post(CommonEvent.FEED_DB_UPDATED);
     }
 
     public void saveFeedItem(FeedItem feedItem, long sourceId) {
         feedItem.setFeedSourceId(sourceId);
-        if (feedItem.getId() == null) { // new fetch
-            if (mFeedItemDao.queryBuilder().where(FeedItemDao.Properties.Title.eq(
-                    feedItem.getTitle())).list().size() == 0) {
-                mFeedItemDao.insertOrReplace(feedItem);
-            } else { // Has same
-
-            }
-        } else { // already exist
-            mFeedItemDao.update(feedItem);
-        }
-
-//        //TODO really need to post DB_UPDATED ?
-//        EventBus.getDefault().post(CommonEvent.FEED_DB_UPDATED);
+        mFeedItemDao.insertOrReplace(feedItem);
+//        if (feedItem.getId() == null) { // new fetch
+//            if (mFeedItemDao.queryBuilder().where(FeedItemDao.Properties.Title.eq(
+//                    feedItem.getTitle())).list().size() == 0) {
+//                mFeedItemDao.insertOrReplace(feedItem);
+//            } else { // Has same
+//
+//            }
+//        } else { // already exist
+//            mFeedItemDao.update(feedItem);
+//        }
     }
 
     public int countItemByRead(long sourceId, boolean read) {
@@ -92,17 +87,6 @@ public class FeedDB {
         return mFeedItemDao.queryBuilder().where(
                 FeedItemDao.Properties.FeedSourceId.eq(sourceId),
                 FeedItemDao.Properties.Star.eq(star)).list().size();
-    }
-
-    public List<FeedItem> getFeedItemListByStar(long sourceId, boolean star, int offset) {
-        return mFeedItemDao.queryBuilder().offset(offset).limit(LIMITE_LOAD_ONCE).where(
-                FeedItemDao.Properties.FeedSourceId.eq(sourceId),
-                FeedItemDao.Properties.Star.eq(star)).orderDesc(FeedItemDao.Properties.Date).list();
-    }
-
-    public List<FeedItem> getAllFeedItemList(long sourceId, int offset) {
-        return mFeedItemDao.queryBuilder().offset(offset).limit(LIMITE_LOAD_ONCE).where(
-                FeedItemDao.Properties.FeedSourceId.eq(sourceId)).orderDesc(FeedItemDao.Properties.Date).list();
     }
 
     public void saveFeedItem(final List<FeedItem> feedItemList, final long sourceId) {
@@ -138,9 +122,9 @@ public class FeedDB {
         }
     }
 
-    public FeedItem getFeedItemById(long id) {
+    public FeedItem getFeedItemByTitle(String title) {
         List<FeedItem> list = App.getDaoSession().getFeedItemDao().queryBuilder()
-                .where(FeedItemDao.Properties.Id.eq(id)).list();
+                .where(FeedItemDao.Properties.Title.eq(title)).list();
         if (list.size() == 0) {
             LogUtil.w("No FeedItem found.");
             return null;
@@ -159,21 +143,5 @@ public class FeedDB {
     public boolean hasSource(String url) {
         return App.getDaoSession().getFeedSourceDao().queryBuilder()
                 .where(FeedSourceDao.Properties.Url.eq(url)).list().size() > 0;
-    }
-
-    public void markAllAsRead(long sourceId) {
-        List<FeedItem> feedItemList = mFeedItemDao.queryBuilder().where(
-                FeedItemDao.Properties.FeedSourceId.eq(sourceId)).list();
-        for (FeedItem feedItem : feedItemList) {
-            feedItem.setRead(true);
-        }
-        saveFeedItem(feedItemList, sourceId);
-    }
-
-    public void deleteSource(long sourceId) {
-        mFeedItemDao.deleteInTx(mFeedItemDao.queryBuilder().where(
-                FeedItemDao.Properties.FeedSourceId.eq(sourceId)).list());
-        mFeedSourceDao.deleteByKey(sourceId);
-//        EventBus.getDefault().post(CommonEvent.FEED_DB_UPDATED);
     }
 }

@@ -178,7 +178,7 @@ public class ItemListFragment extends Fragment {
         feedItem.setRead(true);
         Bundle bundle = new Bundle();
         FeedDB.getInstance().saveFeedItem(feedItem, mFeedSourceId);
-        bundle.putLong(App.KEY_BUNDLE_ITEM_ID, feedItem.getId());
+        bundle.putString(App.KEY_BUNDLE_ITEM_TITLE, feedItem.getTitle());
         Intent intent = new Intent(getActivity(), ItemActivity.class);
         intent.putExtras(bundle);
         startActivity(intent);
