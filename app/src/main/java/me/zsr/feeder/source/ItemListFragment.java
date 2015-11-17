@@ -4,8 +4,6 @@ import android.animation.LayoutTransition;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
@@ -14,18 +12,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.MaterialDialog;
-
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
 import me.zsr.feeder.App;
 import me.zsr.feeder.R;
 import me.zsr.feeder.dao.FeedItem;
-import me.zsr.feeder.data.FeedDB;
-import me.zsr.feeder.data.FeedNetwork;
 import me.zsr.feeder.item.ItemActivity;
 import me.zsr.feeder.view.LoadMoreHeaderListView;
 import me.zsr.feeder.util.CommonEvent;
@@ -49,7 +41,7 @@ public class ItemListFragment extends Fragment implements IItemListView {
             = new LoadMoreHeaderListView.OnLoadMoreListener() {
         @Override
         public void onLoadMore() {
-            mPresenter.loadItem(mFeedSourceId, mAdapter.getCount());
+            mPresenter.loadMore(mFeedSourceId, mAdapter.getCount());
         }
     };
 
@@ -128,7 +120,6 @@ public class ItemListFragment extends Fragment implements IItemListView {
         mListView.setOnLoadMoreListener(mLoadMoreListener);
 
         mPresenter = new ItemListPresenter(this);
-        mPresenter.refresh(mFeedSourceId);
 
         return mRootView;
     }
@@ -136,6 +127,11 @@ public class ItemListFragment extends Fragment implements IItemListView {
     @Override
     public void onResume() {
         super.onResume();
+        if (mAdapter == null) {
+            mPresenter.loadMore(mFeedSourceId, 0);
+        } else {
+            mPresenter.reload(mFeedSourceId, mAdapter.getCount());
+        }
         EventBus.getDefault().register(this);
     }
 

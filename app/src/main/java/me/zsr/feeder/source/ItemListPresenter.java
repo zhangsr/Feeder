@@ -17,6 +17,19 @@ public class ItemListPresenter implements IItemListPresenter {
     private static final int LIMIT_LOAD_ONCE = 20;
     private IItemListView mView;
     private IDataModel mModel;
+    private OnItemListLoadListener mItemLoadListener = new OnItemListLoadListener() {
+        @Override
+        public void success(List<FeedItem> list) {
+            mView.updated(list);
+            mView.hideLoading();
+        }
+
+        @Override
+        public void error(String msg) {
+            mView.showError(msg);
+            mView.hideLoading();
+        }
+    };
 
     public ItemListPresenter(IItemListView view) {
         mView = view;
@@ -40,24 +53,20 @@ public class ItemListPresenter implements IItemListPresenter {
     }
 
     @Override
-    public void loadItem(long sourceId, int currentSize) {
-        OnItemListLoadListener itemLoadListener = new OnItemListLoadListener() {
-            @Override
-            public void success(List<FeedItem> list) {
-                mView.updated(list);
-                mView.hideLoading();
-            }
-
-            @Override
-            public void error(String msg) {
-                mView.showError(msg);
-                mView.hideLoading();
-            }
-        };
+    public void loadMore(long sourceId, int currentSize) {
         if (sourceId == App.SOURCE_ID_ALL) {
-            mModel.loadAllItem(itemLoadListener, currentSize + LIMIT_LOAD_ONCE);
+            mModel.loadAllItem(mItemLoadListener, currentSize + LIMIT_LOAD_ONCE);
         } else {
-            mModel.loadItemList(sourceId, itemLoadListener, currentSize + LIMIT_LOAD_ONCE);
+            mModel.loadItemList(sourceId, mItemLoadListener, currentSize + LIMIT_LOAD_ONCE);
+        }
+    }
+
+    @Override
+    public void reload(long sourceId, int currentSize) {
+        if (sourceId == App.SOURCE_ID_ALL) {
+            mModel.loadAllItem(mItemLoadListener, currentSize);
+        } else {
+            mModel.loadItemList(sourceId, mItemLoadListener, currentSize);
         }
     }
 
@@ -67,7 +76,7 @@ public class ItemListPresenter implements IItemListPresenter {
             OnActionListener onActionListener = new OnActionListener() {
                 @Override
                 public void success() {
-                    loadItem(sourceId, 0);
+                    loadMore(sourceId, 0);
                 }
 
                 @Override

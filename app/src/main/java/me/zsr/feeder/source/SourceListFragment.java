@@ -53,7 +53,7 @@ public class SourceListFragment extends BaseFragment implements ISourceListView 
         initView();
         setListener();
 
-        mPresenter.refresh();
+        mPresenter.loadSource();
         return mRootView;
     }
 

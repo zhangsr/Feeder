@@ -61,9 +61,11 @@ public class DataModel implements IDataModel {
             @Override
             protected List<FeedItem> doInBackground(Void... params) {
                 if (limit == -1) {
-                    return mItemDao.queryBuilder().list();
+                    return mItemDao.queryBuilder()
+                            .orderDesc(FeedItemDao.Properties.Date).list();
                 } else {
-                    return mItemDao.queryBuilder().limit(limit).list();
+                    return mItemDao.queryBuilder()
+                            .limit(limit).orderDesc(FeedItemDao.Properties.Date).list();
                 }
             }
 
@@ -99,11 +101,13 @@ public class DataModel implements IDataModel {
             @Override
             protected List<FeedItem> doInBackground(Void... params) {
                 if (limit == -1) {
-                    return mItemDao.queryBuilder().where(
-                            FeedItemDao.Properties.FeedSourceId.eq(sourceId)).list();
+                    return mItemDao.queryBuilder()
+                            .where(FeedItemDao.Properties.FeedSourceId.eq(sourceId))
+                            .orderDesc(FeedItemDao.Properties.Date).list();
                 } else {
-                    return mItemDao.queryBuilder().limit(limit).where(
-                            FeedItemDao.Properties.FeedSourceId.eq(sourceId)).list();
+                    return mItemDao.queryBuilder().limit(limit)
+                            .where(FeedItemDao.Properties.FeedSourceId.eq(sourceId))
+                            .orderDesc(FeedItemDao.Properties.Date).list();
                 }
             }
 
