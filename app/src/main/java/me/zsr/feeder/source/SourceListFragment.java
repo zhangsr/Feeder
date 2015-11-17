@@ -46,17 +46,6 @@ public class SourceListFragment extends BaseFragment implements ISourceListView 
         return sInstance;
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mRootView = inflater.inflate(R.layout.fragment_source_list, container, false);
-        initView();
-        setListener();
-
-        mPresenter.loadSource();
-        return mRootView;
-    }
-
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -64,6 +53,28 @@ public class SourceListFragment extends BaseFragment implements ISourceListView 
         // FIXME: 11/15/15 something wild to init here
         mPresenter = new SourceListPresenter(this);
         mPresenter.setOnSourceSelectedListener((OnSourceSelectedListener) activity);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        mRootView = inflater.inflate(R.layout.fragment_source_list, container, false);
+        initView();
+        setListener();
+
+        return mRootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mPresenter.loadSource();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        sInstance = null;
     }
 
     private void initView() {
@@ -145,7 +156,7 @@ public class SourceListFragment extends BaseFragment implements ISourceListView 
 
         int allCount = 0;
         for (FeedSource source : list) {
-            allCount += source.getFeedItems().size();
+            allCount += SourceHelper.countUnread(source);
         }
         ((TextView) mAllHeaderView.findViewById(R.id.source_item_num_txt)).setText("" + allCount);
     }

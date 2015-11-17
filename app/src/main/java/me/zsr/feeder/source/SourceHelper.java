@@ -10,7 +10,10 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.avos.avoscloud.AVAnalytics;
 import com.avos.avoscloud.AVObject;
 
+import java.util.List;
+
 import me.zsr.feeder.R;
+import me.zsr.feeder.dao.FeedItem;
 import me.zsr.feeder.dao.FeedSource;
 import me.zsr.feeder.data.FeedNetwork;
 import me.zsr.feeder.util.AnalysisEvent;
@@ -100,5 +103,15 @@ class SourceHelper {
                         dialog.getActionButton(DialogAction.POSITIVE).setEnabled(true);
                     }
                 }).show();
+    }
+
+    public static int countUnread(FeedSource source) {
+        int count = 0;
+        for (FeedItem item : source.getFeedItems()) {
+            if (!item.getRead()) {
+                count++;
+            }
+        }
+        return count;
     }
 }

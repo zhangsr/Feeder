@@ -8,11 +8,9 @@ import com.android.volley.toolbox.NetworkImageView;
 
 import java.util.List;
 
-import me.zsr.feeder.App;
 import me.zsr.feeder.R;
 import me.zsr.feeder.base.BaseListAdapter;
 import me.zsr.feeder.dao.FeedSource;
-import me.zsr.feeder.data.FeedDB;
 import me.zsr.feeder.util.VolleySingleton;
 
 /**
@@ -45,20 +43,7 @@ public class SourceListAdapter extends BaseListAdapter {
 
         viewHolder.imageView.setImageUrl(feedSource.getFavicon(), VolleySingleton.getInstance().getImageLoader());
         viewHolder.titleTextView.setText(feedSource.getTitle());
-        switch (App.getInstance().mCurrentMode) {
-            case STAR:
-                viewHolder.numTextView.setText("" + FeedDB.getInstance().countItemByStar(
-                        feedSource.getId(), true));
-                break;
-            case UNREAD:
-                viewHolder.numTextView.setText("" + FeedDB.getInstance().countItemByRead(
-                        feedSource.getId(), false));
-                break;
-            case ALL:
-                viewHolder.numTextView.setText("" + feedSource.getFeedItems().size());
-                break;
-            default:
-        }
+        viewHolder.numTextView.setText("" + SourceHelper.countUnread(feedSource));
         return convertView;
     }
 

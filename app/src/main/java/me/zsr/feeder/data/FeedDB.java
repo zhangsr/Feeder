@@ -60,23 +60,6 @@ public class FeedDB {
 //        }
     }
 
-    public int countItemByRead(long sourceId, boolean read) {
-        if (sourceId == App.SOURCE_ID_ALL) {
-            return mFeedItemDao.queryBuilder().where(
-                    FeedItemDao.Properties.Read.eq(read)).list().size();
-        } else {
-            return mFeedItemDao.queryBuilder().where(
-                    FeedItemDao.Properties.FeedSourceId.eq(sourceId),
-                    FeedItemDao.Properties.Read.eq(read)).list().size();
-        }
-    }
-
-    public int countItemByStar(long sourceId, boolean star) {
-        return mFeedItemDao.queryBuilder().where(
-                FeedItemDao.Properties.FeedSourceId.eq(sourceId),
-                FeedItemDao.Properties.Star.eq(star)).list().size();
-    }
-
     public void saveFeedItem(final List<FeedItem> feedItemList, final long sourceId) {
         App.getDaoSession().runInTx(new Runnable() {
             @Override
@@ -101,20 +84,6 @@ public class FeedDB {
                 .where(FeedSourceDao.Properties.Id.eq(id)).list();
         if (list.size() == 0) {
             LogUtil.w("No FeedSource found.");
-            return null;
-        } if (list.size() == 1) {
-            return list.get(0);
-        } else {
-            LogUtil.e("Somethings wrong with DB !!");
-            return null;
-        }
-    }
-
-    public FeedItem getFeedItemByTitle(String title) {
-        List<FeedItem> list = App.getDaoSession().getFeedItemDao().queryBuilder()
-                .where(FeedItemDao.Properties.Title.eq(title)).list();
-        if (list.size() == 0) {
-            LogUtil.w("No FeedItem found.");
             return null;
         } if (list.size() == 1) {
             return list.get(0);
