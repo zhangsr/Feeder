@@ -17,7 +17,7 @@ public class FeedItem {
     private String link;
     private String description;
     private Boolean read;
-    private Boolean star;
+    private Boolean trash;
     private String content;
     private java.util.Date date;
     private long feedSourceId;
@@ -42,12 +42,12 @@ public class FeedItem {
         this.title = title;
     }
 
-    public FeedItem(String title, String link, String description, Boolean read, Boolean star, String content, java.util.Date date, long feedSourceId) {
+    public FeedItem(String title, String link, String description, Boolean read, Boolean trash, String content, java.util.Date date, long feedSourceId) {
         this.title = title;
         this.link = link;
         this.description = description;
         this.read = read;
-        this.star = star;
+        this.trash = trash;
         this.content = content;
         this.date = date;
         this.feedSourceId = feedSourceId;
@@ -93,12 +93,12 @@ public class FeedItem {
         this.read = read;
     }
 
-    public Boolean getStar() {
-        return star;
+    public Boolean getTrash() {
+        return trash;
     }
 
-    public void setStar(Boolean star) {
-        this.star = star;
+    public void setTrash(Boolean trash) {
+        this.trash = trash;
     }
 
     public String getContent() {
@@ -186,7 +186,7 @@ public class FeedItem {
                 ", link='" + link + '\'' +
                 ", description='" + description + '\'' +
                 ", read=" + read +
-                ", star=" + star +
+                ", trash=" + trash +
                 ", content='" + content + '\'' +
                 ", date=" + date +
                 ", feedSourceId=" + feedSourceId +

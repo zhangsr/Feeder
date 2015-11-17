@@ -237,7 +237,7 @@ public class FeedHandler extends DefaultHandler {
         feedItem.setDescription(description);
         feedItem.setContent(content);
         feedItem.setRead(false);
-        feedItem.setStar(false);
+        feedItem.setTrash(false);
     }
 
     @Override

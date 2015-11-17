@@ -108,7 +108,7 @@ class SourceHelper {
     public static int countUnread(FeedSource source) {
         int count = 0;
         for (FeedItem item : source.getFeedItems()) {
-            if (!item.getRead()) {
+            if (!item.getRead() && !item.getTrash()) {
                 count++;
             }
         }

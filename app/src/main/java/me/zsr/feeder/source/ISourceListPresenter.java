@@ -18,4 +18,6 @@ public interface ISourceListPresenter {
     void markAsRead(long sourceId);
 
     void deleteSource(long sourceId);
+
+    void clearRead();
 }

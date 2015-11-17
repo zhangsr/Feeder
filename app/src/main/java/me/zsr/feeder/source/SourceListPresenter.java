@@ -1,5 +1,6 @@
 package me.zsr.feeder.source;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import me.zsr.feeder.App;
@@ -112,6 +113,31 @@ public class SourceListPresenter implements ISourceListPresenter {
             @Override
             public void error(String msg) {
                 mView.showError(msg);
+            }
+        });
+    }
+
+    @Override
+    public void clearRead() {
+        mModel.loadAllSource(new OnSourceLoadListener() {
+            @Override
+            public void success(List<FeedSource> list) {
+                List<FeedItem> listToTrash = new ArrayList<>();
+                for (FeedSource feedSource : list) {
+                    for (FeedItem feedItem : feedSource.getFeedItems()) {
+                        if (feedItem.getRead()) {
+                            feedItem.setTrash(true);
+                            listToTrash.add(feedItem);
+                        }
+                    }
+                }
+                if (listToTrash.size() != 0) {
+                    mModel.updateItemList(listToTrash, null);
+                }
+            }
+
+            @Override
+            public void error(String msg) {
             }
         });
     }

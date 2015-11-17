@@ -32,7 +32,7 @@ public class FeedItemDao extends AbstractDao<FeedItem, String> {
         public final static Property Link = new Property(1, String.class, "link", false, "LINK");
         public final static Property Description = new Property(2, String.class, "description", false, "DESCRIPTION");
         public final static Property Read = new Property(3, Boolean.class, "read", false, "READ");
-        public final static Property Star = new Property(4, Boolean.class, "star", false, "STAR");
+        public final static Property Trash = new Property(4, Boolean.class, "trash", false, "TRASH");
         public final static Property Content = new Property(5, String.class, "content", false, "CONTENT");
         public final static Property Date = new Property(6, java.util.Date.class, "date", false, "DATE");
         public final static Property FeedSourceId = new Property(7, long.class, "feedSourceId", false, "FEED_SOURCE_ID");
@@ -59,7 +59,7 @@ public class FeedItemDao extends AbstractDao<FeedItem, String> {
                 "'LINK' TEXT," + // 1: link
                 "'DESCRIPTION' TEXT," + // 2: description
                 "'READ' INTEGER," + // 3: read
-                "'STAR' INTEGER," + // 4: star
+                "'TRASH' INTEGER," + // 4: trash
                 "'CONTENT' TEXT," + // 5: content
                 "'DATE' INTEGER," + // 6: date
                 "'FEED_SOURCE_ID' INTEGER NOT NULL );"); // 7: feedSourceId
@@ -92,9 +92,9 @@ public class FeedItemDao extends AbstractDao<FeedItem, String> {
             stmt.bindLong(4, read ? 1l: 0l);
         }
  
-        Boolean star = entity.getStar();
-        if (star != null) {
-            stmt.bindLong(5, star ? 1l: 0l);
+        Boolean trash = entity.getTrash();
+        if (trash != null) {
+            stmt.bindLong(5, trash ? 1l: 0l);
         }
  
         String content = entity.getContent();
@@ -129,7 +129,7 @@ public class FeedItemDao extends AbstractDao<FeedItem, String> {
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // link
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // description
             cursor.isNull(offset + 3) ? null : cursor.getShort(offset + 3) != 0, // read
-            cursor.isNull(offset + 4) ? null : cursor.getShort(offset + 4) != 0, // star
+            cursor.isNull(offset + 4) ? null : cursor.getShort(offset + 4) != 0, // trash
             cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // content
             cursor.isNull(offset + 6) ? null : new java.util.Date(cursor.getLong(offset + 6)), // date
             cursor.getLong(offset + 7) // feedSourceId
@@ -144,7 +144,7 @@ public class FeedItemDao extends AbstractDao<FeedItem, String> {
         entity.setLink(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
         entity.setDescription(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setRead(cursor.isNull(offset + 3) ? null : cursor.getShort(offset + 3) != 0);
-        entity.setStar(cursor.isNull(offset + 4) ? null : cursor.getShort(offset + 4) != 0);
+        entity.setTrash(cursor.isNull(offset + 4) ? null : cursor.getShort(offset + 4) != 0);
         entity.setContent(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
         entity.setDate(cursor.isNull(offset + 6) ? null : new java.util.Date(cursor.getLong(offset + 6)));
         entity.setFeedSourceId(cursor.getLong(offset + 7));

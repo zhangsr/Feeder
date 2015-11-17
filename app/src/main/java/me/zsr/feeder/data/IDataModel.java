@@ -29,7 +29,11 @@ public interface IDataModel {
 
     void saveItem(List<FeedItem> itemList, long sourceId, OnActionListener listener);
 
-    void saveItem(FeedItem item, OnActionListener listener);
+    void updateItem(FeedItem item, OnActionListener listener);
+
+    void updateItemList(List<FeedItem> itemList, OnActionListener listener);
 
     void deleteSource(long sourceId, OnActionListener listener);
+
+    void deleteItem(List<FeedItem> itemList, OnActionListener listener);
 }

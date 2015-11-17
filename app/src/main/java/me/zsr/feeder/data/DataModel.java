@@ -224,17 +224,30 @@ public class DataModel implements IDataModel {
     }
 
     @Override
-    public void saveItem(final FeedItem item, final OnActionListener listener) {
+    public void updateItem(final FeedItem item, final OnActionListener listener) {
         new AsyncTask<Void, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(Void... params) {
-                if (item.getDate() == null) {
-                    item.setDate(new Date());
-                }
-                if (item.getTitle() == null) {
-                    item.setTitle("");
-                }
                 mItemDao.insertOrReplace(item);
+                return true;
+            }
+
+            @Override
+            protected void onPostExecute(Boolean aBoolean) {
+                super.onPostExecute(aBoolean);
+                if (listener != null) {
+                    listener.success();
+                }
+            }
+        }.execute();
+    }
+
+    @Override
+    public void updateItemList(final List<FeedItem> itemList, final OnActionListener listener) {
+        new AsyncTask<Void, Void, Boolean>() {
+            @Override
+            protected Boolean doInBackground(Void... params) {
+                mItemDao.insertOrReplaceInTx(itemList);
                 return true;
             }
 
@@ -254,6 +267,7 @@ public class DataModel implements IDataModel {
                 item.setDate(new Date());
             }
             if (item.getTitle() == null) {
+                // TODO: 11/17/15 why title null
                 item.setTitle("");
             }
             item.setFeedSourceId(sourceId);
@@ -269,6 +283,26 @@ public class DataModel implements IDataModel {
                 mItemDao.deleteInTx(mItemDao.queryBuilder().where(
                         FeedItemDao.Properties.FeedSourceId.eq(sourceId)).list());
                 mSourceDao.deleteByKey(sourceId);
+                return true;
+            }
+
+            @Override
+            protected void onPostExecute(Boolean aBoolean) {
+                super.onPostExecute(aBoolean);
+                if (listener != null) {
+                    listener.success();
+                }
+            }
+        }.execute();
+    }
+
+    @Override
+    public void deleteItem(final List<FeedItem> itemList, final OnActionListener listener) {
+        new AsyncTask<Void, Void, Boolean>() {
+
+            @Override
+            protected Boolean doInBackground(Void... params) {
+                mItemDao.deleteInTx(itemList);
                 return true;
             }
 

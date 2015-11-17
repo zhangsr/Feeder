@@ -75,6 +75,7 @@ public class SourceListFragment extends BaseFragment implements ISourceListView 
     public void onDestroy() {
         super.onDestroy();
         sInstance = null;
+        mPresenter.clearRead();
     }
 
     private void initView() {

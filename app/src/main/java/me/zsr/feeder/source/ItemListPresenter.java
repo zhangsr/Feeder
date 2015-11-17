@@ -1,5 +1,6 @@
 package me.zsr.feeder.source;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import me.zsr.feeder.App;
@@ -20,7 +21,14 @@ public class ItemListPresenter implements IItemListPresenter {
     private OnItemListLoadListener mItemLoadListener = new OnItemListLoadListener() {
         @Override
         public void success(List<FeedItem> list) {
-            mView.updated(list);
+            List<FeedItem> filtedList = new ArrayList<>();
+            for (FeedItem feedItem : list) {
+                if (!feedItem.getTrash()) {
+                    filtedList.add(feedItem);
+                }
+            }
+
+            mView.updated(filtedList);
             mView.hideLoading();
         }
 
@@ -39,7 +47,7 @@ public class ItemListPresenter implements IItemListPresenter {
     @Override
     public void itemSelected(final FeedItem item) {
         item.setRead(true);
-        mModel.saveItem(item, new OnActionListener() {
+        mModel.updateItem(item, new OnActionListener() {
             @Override
             public void success() {
                 mView.showBody(item.getTitle());
