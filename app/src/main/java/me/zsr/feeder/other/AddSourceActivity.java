@@ -209,6 +209,12 @@ public class AddSourceActivity extends BaseActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        dismiss();
+    }
+
     public void dismiss() {
         ActivityCompat.finishAfterTransition(this);
         overridePendingTransition(0, 0);
