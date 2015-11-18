@@ -29,6 +29,7 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
+            android:windowSoftInputMode="stateVisible"
             android:name=".other.AddSourceActivity"
             android:theme="@style/AddSourceTheme">
         </activity>

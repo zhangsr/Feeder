@@ -88,6 +88,7 @@ public class AddSourceActivity extends BaseActivity {
     }
 
     private void setListener() {
+        mRootView.setOnClickListener(this);
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -206,7 +207,11 @@ public class AddSourceActivity extends BaseActivity {
 
     @Override
     public void onClick(View v) {
-
+        switch (v.getId()) {
+            case R.id.root_view:
+                dismiss();
+                break;
+        }
     }
 
     @Override

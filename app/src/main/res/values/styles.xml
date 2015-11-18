@@ -11,6 +11,13 @@
 
     <style name="AddSourceTheme" parent="AppTheme">
         <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="searchViewStyle">@style/SearchView</item>
         <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <style name="SearchView" parent="Widget.AppCompat.SearchView">
+        <item name="searchHintIcon">@null</item>
+        <item name="queryBackground">@null</item>
+        <item name="submitBackground">@null</item>
     </style>
 </resources>

@@ -6,7 +6,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:onClick="dismiss"
     tools:context=".ui.SearchActivity">
 
     <View
@@ -37,9 +36,6 @@
 
                 <android.support.v7.widget.SearchView
                     android:id="@+id/search_view"
-                    app:searchHintIcon="@null"
-                    app:queryBackground="@null"
-                    app:submitBackground="@null"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:imeOptions="actionSearch|flagNoExtractUi" />
