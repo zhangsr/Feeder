@@ -1,6 +1,7 @@
 package me.zsr.feeder.source;
 
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -24,6 +25,7 @@ import me.zsr.feeder.App;
 import me.zsr.feeder.BuildConfig;
 import me.zsr.feeder.R;
 import me.zsr.feeder.base.BaseActivity;
+import me.zsr.feeder.other.AddSourceActivity;
 import me.zsr.feeder.util.CommonEvent;
 import me.zsr.feeder.util.SnackbarUtil;
 import me.zsr.library_common.FileUtil;
@@ -34,6 +36,7 @@ import me.zsr.library_common.FileUtil;
  * @date: 8/29/15
  */
 public class SourceActivity extends BaseActivity implements OnSourceSelectedListener {
+    public static final int CODE_RESULT_SUCCESS = 1;
     private static final String SP_KEY_VERSION_CODE = "sp_key_version_code";
     private static final int MSG_DOUBLE_TAP = 0;
     private DrawerLayout mDrawerLayout;
@@ -120,13 +123,23 @@ public class SourceActivity extends BaseActivity implements OnSourceSelectedList
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.context_menu:
-                SourceHelper.showAddSourceDialog(this, mHandler);
+                startActivityForResult(new Intent(this, AddSourceActivity.class), 0);
+                overridePendingTransition(0, 0);
                 break;
             case android.R.id.home:
                 mDrawerLayout.openDrawer(GravityCompat.START);
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (CODE_RESULT_SUCCESS == resultCode) {
+            showItemList(data.getLongExtra("sourceId", App.SOURCE_ID_ALL));
+        }
     }
 
     @Override

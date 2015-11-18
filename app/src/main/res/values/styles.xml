@@ -8,4 +8,9 @@
         <!--<item name="colorControlActivated">@color/main_grey_dark</item>-->
         <!--<item name="colorControlHighlight">@color/main_grey_dark</item>-->
     </style>
+
+    <style name="AddSourceTheme" parent="AppTheme">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
 </resources>

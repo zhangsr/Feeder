@@ -205,19 +205,56 @@ public class DataModel implements IDataModel {
     }
 
     @Override
+    public void saveSource(final FeedSource feedSource, final OnActionListener listener) {
+        new AsyncTask<Void, Void, Boolean>() {
+            @Override
+            protected Boolean doInBackground(Void... params) {
+                return saveSource(feedSource);
+            }
+
+            @Override
+            protected void onPostExecute(Boolean isSuccess) {
+                super.onPostExecute(isSuccess);
+                if (listener != null) {
+                    if (isSuccess) {
+                        listener.success();
+                    } else {
+                        listener.error("");
+                    }
+                }
+            }
+        }.execute();
+    }
+
+    @Override
+    public boolean saveSource(FeedSource feedSource) {
+        // Has same
+        if (mSourceDao.queryBuilder().where(FeedSourceDao.Properties.Url.eq(
+                feedSource.getUrl())).list().size() > 0) {
+            return false;
+        }
+
+        mSourceDao.insertOrReplace(feedSource);
+        return true;
+    }
+
+    @Override
     public void saveItem(final List<FeedItem> itemList, final long sourceId, final OnActionListener listener) {
         new AsyncTask<Void, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(Void... params) {
-                saveItem(itemList, sourceId);
-                return true;
+                return saveItem(itemList, sourceId);
             }
 
             @Override
             protected void onPostExecute(Boolean aBoolean) {
                 super.onPostExecute(aBoolean);
                 if (listener != null) {
-                    listener.success();
+                    if (aBoolean) {
+                        listener.success();
+                    } else {
+                        listener.error("");
+                    }
                 }
             }
         }.execute();
@@ -261,7 +298,8 @@ public class DataModel implements IDataModel {
         }.execute();
     }
 
-    private void saveItem(final List<FeedItem> itemList, final long sourceId) {
+    @Override
+    public boolean saveItem(final List<FeedItem> itemList, final long sourceId) {
         for (FeedItem item : itemList) {
             if (item.getDate() == null) {
                 item.setDate(new Date());
@@ -273,6 +311,8 @@ public class DataModel implements IDataModel {
             item.setFeedSourceId(sourceId);
         }
         mItemDao.insertOrReplaceInTx(itemList);
+
+        return true;
     }
 
     @Override

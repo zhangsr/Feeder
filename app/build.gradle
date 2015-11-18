@@ -50,4 +50,7 @@ dependencies {
     compile project(':library_common')
     compile project(':rss')
     compile 'com.yalantis:contextmenu:1.0.4@aar'
+
+    compile 'com.wang.avi:library:1.0.0'
+    compile 'com.nineoldandroids:library:2.4.0'
 }
