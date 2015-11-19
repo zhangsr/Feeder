@@ -3,10 +3,12 @@ package me.zsr.feeder.source;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
 import me.zsr.feeder.App;
 import me.zsr.feeder.dao.FeedItem;
 import me.zsr.feeder.data.DataModel;
 import me.zsr.feeder.data.IDataModel;
+import me.zsr.feeder.util.CommonEvent;
 import me.zsr.feeder.util.NetworkUtil;
 
 /**
@@ -85,6 +87,7 @@ public class ItemListPresenter implements IItemListPresenter {
                 @Override
                 public void success() {
                     loadMore(sourceId, 0);
+                    EventBus.getDefault().post(CommonEvent.ITEM_LIST_REFRESH_SUCCESS);
                 }
 
                 @Override

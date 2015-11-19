@@ -3,11 +3,13 @@ package me.zsr.feeder.source;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
 import me.zsr.feeder.App;
 import me.zsr.feeder.dao.FeedItem;
 import me.zsr.feeder.dao.FeedSource;
 import me.zsr.feeder.data.DataModel;
 import me.zsr.feeder.data.IDataModel;
+import me.zsr.feeder.util.CommonEvent;
 import me.zsr.feeder.util.NetworkUtil;
 
 /**
@@ -23,6 +25,7 @@ public class SourceListPresenter implements ISourceListPresenter {
     public SourceListPresenter(ISourceListView view) {
         mView = view;
         mModel = new DataModel();
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -140,5 +143,13 @@ public class SourceListPresenter implements ISourceListPresenter {
             public void error(String msg) {
             }
         });
+    }
+
+    public void onEventMainThread(CommonEvent commonEvent) {
+        switch (commonEvent) {
+            case ITEM_LIST_REFRESH_SUCCESS:
+                loadSource();
+                break;
+        }
     }
 }

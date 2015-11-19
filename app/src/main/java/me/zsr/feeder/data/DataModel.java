@@ -40,7 +40,16 @@ public class DataModel implements IDataModel {
 
             @Override
             protected List<FeedSource> doInBackground(Void... params) {
-                return mSourceDao.loadAll();
+                // TODO: 11/19/15 why load source has not feeditemlist ?
+                List<FeedSource> feedSourceList = mSourceDao.loadAll();
+                for (FeedSource feedSource : feedSourceList) {
+
+                    List<FeedItem> feedItemList = mItemDao.queryBuilder()
+                            .where(FeedItemDao.Properties.FeedSourceId.eq(feedSource.getId()))
+                            .orderDesc(FeedItemDao.Properties.Date).list();
+                    feedSource.setFeedItems(feedItemList);
+                }
+                return feedSourceList;
             }
 
             @Override
