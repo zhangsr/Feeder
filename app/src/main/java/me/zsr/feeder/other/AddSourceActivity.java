@@ -3,6 +3,7 @@ package me.zsr.feeder.other;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -54,6 +56,7 @@ public class AddSourceActivity extends BaseActivity {
     private List<FeedlyResult> mResultList;
     private FeedReader mFeedReader;
     private IDataModel mDataModel;
+    private Handler mHandler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,7 +130,10 @@ public class AddSourceActivity extends BaseActivity {
                     protected FeedSource doInBackground(Void... params) {
                         try {
                             FeedSource feedSource = mFeedReader.load(url);
-                            mDataModel.saveSource(feedSource);
+                            if (!mDataModel.saveSource(feedSource)) {
+                                showError(getString(R.string.already_add));
+                                return null;
+                            }
                             mDataModel.addNewItem(feedSource.getFeedItems(), feedSource.getId());
                             return feedSource;
                         } catch (FeedReadException e) {
@@ -235,5 +241,15 @@ public class AddSourceActivity extends BaseActivity {
         mLoadingView.setVisibility(View.GONE);
         mAddSourcePanel.setVisibility(View.VISIBLE);
         mRootView.setClickable(true);
+    }
+
+    private void showError(final String msg) {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(AddSourceActivity.this, msg,
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
