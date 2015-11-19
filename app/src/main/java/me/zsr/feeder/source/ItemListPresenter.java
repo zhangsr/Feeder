@@ -20,6 +20,7 @@ public class ItemListPresenter implements IItemListPresenter {
     private static final int LIMIT_LOAD_ONCE = 20;
     private IItemListView mView;
     private IDataModel mModel;
+    private int mLoadMultiple;
     private OnItemListLoadListener mItemLoadListener = new OnItemListLoadListener() {
         @Override
         public void success(List<FeedItem> list) {
@@ -63,20 +64,21 @@ public class ItemListPresenter implements IItemListPresenter {
     }
 
     @Override
-    public void loadMore(long sourceId, int currentSize) {
+    public void loadMore(long sourceId) {
+        mLoadMultiple++;
         if (sourceId == App.SOURCE_ID_ALL) {
-            mModel.loadAllItem(mItemLoadListener, currentSize + LIMIT_LOAD_ONCE);
+            mModel.loadAllItem(mItemLoadListener, mLoadMultiple * LIMIT_LOAD_ONCE);
         } else {
-            mModel.loadItemList(sourceId, mItemLoadListener, currentSize + LIMIT_LOAD_ONCE);
+            mModel.loadItemList(sourceId, mItemLoadListener, mLoadMultiple * LIMIT_LOAD_ONCE);
         }
     }
 
     @Override
-    public void reload(long sourceId, int currentSize) {
+    public void reload(long sourceId) {
         if (sourceId == App.SOURCE_ID_ALL) {
-            mModel.loadAllItem(mItemLoadListener, currentSize);
+            mModel.loadAllItem(mItemLoadListener, mLoadMultiple * LIMIT_LOAD_ONCE);
         } else {
-            mModel.loadItemList(sourceId, mItemLoadListener, currentSize);
+            mModel.loadItemList(sourceId, mItemLoadListener, mLoadMultiple * LIMIT_LOAD_ONCE);
         }
     }
 
@@ -86,7 +88,8 @@ public class ItemListPresenter implements IItemListPresenter {
             OnActionListener onActionListener = new OnActionListener() {
                 @Override
                 public void success() {
-                    loadMore(sourceId, 0);
+                    mLoadMultiple = 0;
+                    loadMore(sourceId);
                     EventBus.getDefault().post(CommonEvent.ITEM_LIST_REFRESH_SUCCESS);
                 }
 

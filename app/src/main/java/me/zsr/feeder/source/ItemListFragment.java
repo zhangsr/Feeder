@@ -41,7 +41,7 @@ public class ItemListFragment extends Fragment implements IItemListView {
             = new LoadMoreHeaderListView.OnLoadMoreListener() {
         @Override
         public void onLoadMore() {
-            mPresenter.loadMore(mFeedSourceId, mAdapter.getCount());
+            mPresenter.loadMore(mFeedSourceId);
         }
     };
 
@@ -128,9 +128,9 @@ public class ItemListFragment extends Fragment implements IItemListView {
     public void onResume() {
         super.onResume();
         if (mAdapter == null) {
-            mPresenter.loadMore(mFeedSourceId, 0);
+            mPresenter.loadMore(mFeedSourceId);
         } else {
-            mPresenter.reload(mFeedSourceId, mAdapter.getCount());
+            mPresenter.reload(mFeedSourceId);
         }
         EventBus.getDefault().register(this);
     }

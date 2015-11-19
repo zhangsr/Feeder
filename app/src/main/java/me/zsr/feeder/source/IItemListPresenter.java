@@ -11,9 +11,9 @@ public interface IItemListPresenter {
 
     void itemSelected(FeedItem item);
 
-    void loadMore(long sourceId, int currentSize);
+    void loadMore(long sourceId);
 
-    void reload(long sourceId, int currentSize);
+    void reload(long sourceId);
 
     void refresh(long sourceId);
 }
