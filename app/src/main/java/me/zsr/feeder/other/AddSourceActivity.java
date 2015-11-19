@@ -82,7 +82,7 @@ public class AddSourceActivity extends BaseActivity {
         mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         mSearchView.setIconified(false);
         // Set the query hint.
-        mSearchView.setQueryHint("Hint");
+        mSearchView.setQueryHint(getString(R.string.add_subscription_content));
 
         mResultListView = (ListView) findViewById(R.id.result_lv);
 

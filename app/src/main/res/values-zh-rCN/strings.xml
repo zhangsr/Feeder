@@ -14,7 +14,7 @@
     <string name="cancel">取消</string>
     <string name="invalid_input">无效的输入</string>
     <string name="no_subscription_found">没有找到订阅</string>
-    <string name="add_subscription_content">RSS地址、网站或名称</string>
+    <string name="add_subscription_content">标题、网址或主题</string>
     <string name="add_subscription_hint">例如输入：酷</string>
     <string name="none"/>
     <string name="got_it">知道了</string>

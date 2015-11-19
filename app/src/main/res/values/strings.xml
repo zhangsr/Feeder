@@ -14,7 +14,7 @@
     <string name="cancel">cancel</string>
     <string name="invalid_input">Invalid Input</string>
     <string name="no_subscription_found">No Subscription Found</string>
-    <string name="add_subscription_content">RSS address, website or name</string>
+    <string name="add_subscription_content">Title, URL or Topic</string>
     <string name="add_subscription_hint">e.g. cool</string>
     <string name="none"/>
     <string name="got_it">Got it</string>
