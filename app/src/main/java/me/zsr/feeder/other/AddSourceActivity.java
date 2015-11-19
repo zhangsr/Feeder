@@ -128,7 +128,7 @@ public class AddSourceActivity extends BaseActivity {
                         try {
                             FeedSource feedSource = mFeedReader.load(url);
                             mDataModel.saveSource(feedSource);
-                            mDataModel.saveItem(feedSource.getFeedItems(), feedSource.getId());
+                            mDataModel.addNewItem(feedSource.getFeedItems(), feedSource.getId());
                             return feedSource;
                         } catch (FeedReadException e) {
                             e.printStackTrace();

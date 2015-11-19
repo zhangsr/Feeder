@@ -85,7 +85,7 @@ public class SourceListPresenter implements ISourceListPresenter {
                 for (FeedItem item : list) {
                     item.setRead(true);
                 }
-                mModel.saveItem(list, sourceId, new OnActionListener() {
+                mModel.updateItemList(list, new OnActionListener() {
                     @Override
                     public void success() {
                         loadSource();

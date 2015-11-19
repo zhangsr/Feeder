@@ -32,9 +32,9 @@ public interface IDataModel {
 
     boolean saveSource(FeedSource feedSource);
 
-    void saveItem(List<FeedItem> itemList, long sourceId, OnActionListener listener);
+    void addNewItem(List<FeedItem> itemList, long sourceId, OnActionListener listener);
 
-    boolean saveItem(List<FeedItem> itemList, long sourceId);
+    boolean addNewItem(List<FeedItem> itemList, long sourceId);
 
     void updateItem(FeedItem item, OnActionListener listener);
 

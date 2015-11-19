@@ -2,6 +2,7 @@ package me.zsr.feeder.data;
 
 import android.os.AsyncTask;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -157,7 +158,7 @@ public class DataModel implements IDataModel {
                     try {
                         FeedSource oldFeedSource = loadSourceById(sourceId);
                         FeedSource newFeedSource = mFeedReader.load(oldFeedSource.getUrl());
-                        saveItem(newFeedSource.getFeedItems(), sourceId);
+                        addNewItem(newFeedSource.getFeedItems(), sourceId);
                     } catch (FeedReadException e) {
                         e.printStackTrace();
                     }
@@ -190,7 +191,7 @@ public class DataModel implements IDataModel {
                 try {
                     FeedSource oldFeedSource = loadSourceById(sourceId);
                     FeedSource newFeedSource = mFeedReader.load(oldFeedSource.getUrl());
-                    saveItem(newFeedSource.getFeedItems(), sourceId);
+                    addNewItem(newFeedSource.getFeedItems(), sourceId);
                     isSuccess = true;
                 } catch (FeedReadException e) {
                     e.printStackTrace();
@@ -248,11 +249,11 @@ public class DataModel implements IDataModel {
     }
 
     @Override
-    public void saveItem(final List<FeedItem> itemList, final long sourceId, final OnActionListener listener) {
+    public void addNewItem(final List<FeedItem> itemList, final long sourceId, final OnActionListener listener) {
         new AsyncTask<Void, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(Void... params) {
-                return saveItem(itemList, sourceId);
+                return addNewItem(itemList, sourceId);
             }
 
             @Override
@@ -308,18 +309,22 @@ public class DataModel implements IDataModel {
     }
 
     @Override
-    public boolean saveItem(final List<FeedItem> itemList, final long sourceId) {
+    public boolean addNewItem(final List<FeedItem> itemList, final long sourceId) {
+        List<FeedItem> itemToAdd = new ArrayList<>();
         for (FeedItem item : itemList) {
-            if (item.getDate() == null) {
-                item.setDate(new Date());
+            if (mItemDao.queryBuilder().where(FeedItemDao.Properties.Title.eq(item.getTitle())).count() == 0) {
+                if (item.getDate() == null) {
+                    item.setDate(new Date());
+                }
+//                if (item.getTitle() == null) {
+//                    // TODO: 11/17/15 why title null
+//                    item.setTitle("");
+//                }
+                item.setFeedSourceId(sourceId);
+                itemToAdd.add(item);
             }
-            if (item.getTitle() == null) {
-                // TODO: 11/17/15 why title null
-                item.setTitle("");
-            }
-            item.setFeedSourceId(sourceId);
         }
-        mItemDao.insertOrReplaceInTx(itemList);
+        mItemDao.insertInTx(itemToAdd);
 
         return true;
     }
