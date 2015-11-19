@@ -19,6 +19,7 @@ public class FeedItem {
     private Boolean read;
     private Boolean trash;
     private String content;
+    private java.util.Date lastShownDate;
     private java.util.Date date;
     private long feedSourceId;
 
@@ -42,13 +43,14 @@ public class FeedItem {
         this.title = title;
     }
 
-    public FeedItem(String title, String link, String description, Boolean read, Boolean trash, String content, java.util.Date date, long feedSourceId) {
+    public FeedItem(String title, String link, String description, Boolean read, Boolean trash, String content, java.util.Date lastShownDate, java.util.Date date, long feedSourceId) {
         this.title = title;
         this.link = link;
         this.description = description;
         this.read = read;
         this.trash = trash;
         this.content = content;
+        this.lastShownDate = lastShownDate;
         this.date = date;
         this.feedSourceId = feedSourceId;
     }
@@ -107,6 +109,14 @@ public class FeedItem {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public java.util.Date getLastShownDate() {
+        return lastShownDate;
+    }
+
+    public void setLastShownDate(java.util.Date lastShownDate) {
+        this.lastShownDate = lastShownDate;
     }
 
     public java.util.Date getDate() {
@@ -182,12 +192,13 @@ public class FeedItem {
     @Override
     public String toString() {
         return "FeedItem{" +
-                ", title='" + title + '\'' +
+                "title='" + title + '\'' +
                 ", link='" + link + '\'' +
                 ", description='" + description + '\'' +
                 ", read=" + read +
                 ", trash=" + trash +
                 ", content='" + content + '\'' +
+                ", lastShownDate=" + lastShownDate +
                 ", date=" + date +
                 ", feedSourceId=" + feedSourceId +
                 ", daoSession=" + daoSession +
@@ -196,6 +207,7 @@ public class FeedItem {
                 ", feedSource__resolvedKey=" + feedSource__resolvedKey +
                 '}';
     }
+
     // KEEP METHODS END
 
 }

@@ -34,8 +34,9 @@ public class FeedItemDao extends AbstractDao<FeedItem, String> {
         public final static Property Read = new Property(3, Boolean.class, "read", false, "READ");
         public final static Property Trash = new Property(4, Boolean.class, "trash", false, "TRASH");
         public final static Property Content = new Property(5, String.class, "content", false, "CONTENT");
-        public final static Property Date = new Property(6, java.util.Date.class, "date", false, "DATE");
-        public final static Property FeedSourceId = new Property(7, long.class, "feedSourceId", false, "FEED_SOURCE_ID");
+        public final static Property LastShownDate = new Property(6, java.util.Date.class, "lastShownDate", false, "LAST_SHOWN_DATE");
+        public final static Property Date = new Property(7, java.util.Date.class, "date", false, "DATE");
+        public final static Property FeedSourceId = new Property(8, long.class, "feedSourceId", false, "FEED_SOURCE_ID");
     };
 
     private DaoSession daoSession;
@@ -61,8 +62,9 @@ public class FeedItemDao extends AbstractDao<FeedItem, String> {
                 "'READ' INTEGER," + // 3: read
                 "'TRASH' INTEGER," + // 4: trash
                 "'CONTENT' TEXT," + // 5: content
-                "'DATE' INTEGER," + // 6: date
-                "'FEED_SOURCE_ID' INTEGER NOT NULL );"); // 7: feedSourceId
+                "'LAST_SHOWN_DATE' INTEGER," + // 6: lastShownDate
+                "'DATE' INTEGER," + // 7: date
+                "'FEED_SOURCE_ID' INTEGER NOT NULL );"); // 8: feedSourceId
     }
 
     /** Drops the underlying database table. */
@@ -102,11 +104,16 @@ public class FeedItemDao extends AbstractDao<FeedItem, String> {
             stmt.bindString(6, content);
         }
  
+        java.util.Date lastShownDate = entity.getLastShownDate();
+        if (lastShownDate != null) {
+            stmt.bindLong(7, lastShownDate.getTime());
+        }
+ 
         java.util.Date date = entity.getDate();
         if (date != null) {
-            stmt.bindLong(7, date.getTime());
+            stmt.bindLong(8, date.getTime());
         }
-        stmt.bindLong(8, entity.getFeedSourceId());
+        stmt.bindLong(9, entity.getFeedSourceId());
     }
 
     @Override
@@ -131,8 +138,9 @@ public class FeedItemDao extends AbstractDao<FeedItem, String> {
             cursor.isNull(offset + 3) ? null : cursor.getShort(offset + 3) != 0, // read
             cursor.isNull(offset + 4) ? null : cursor.getShort(offset + 4) != 0, // trash
             cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // content
-            cursor.isNull(offset + 6) ? null : new java.util.Date(cursor.getLong(offset + 6)), // date
-            cursor.getLong(offset + 7) // feedSourceId
+            cursor.isNull(offset + 6) ? null : new java.util.Date(cursor.getLong(offset + 6)), // lastShownDate
+            cursor.isNull(offset + 7) ? null : new java.util.Date(cursor.getLong(offset + 7)), // date
+            cursor.getLong(offset + 8) // feedSourceId
         );
         return entity;
     }
@@ -146,8 +154,9 @@ public class FeedItemDao extends AbstractDao<FeedItem, String> {
         entity.setRead(cursor.isNull(offset + 3) ? null : cursor.getShort(offset + 3) != 0);
         entity.setTrash(cursor.isNull(offset + 4) ? null : cursor.getShort(offset + 4) != 0);
         entity.setContent(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
-        entity.setDate(cursor.isNull(offset + 6) ? null : new java.util.Date(cursor.getLong(offset + 6)));
-        entity.setFeedSourceId(cursor.getLong(offset + 7));
+        entity.setLastShownDate(cursor.isNull(offset + 6) ? null : new java.util.Date(cursor.getLong(offset + 6)));
+        entity.setDate(cursor.isNull(offset + 7) ? null : new java.util.Date(cursor.getLong(offset + 7)));
+        entity.setFeedSourceId(cursor.getLong(offset + 8));
      }
     
     /** @inheritdoc */

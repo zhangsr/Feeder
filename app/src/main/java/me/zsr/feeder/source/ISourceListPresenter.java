@@ -19,5 +19,5 @@ public interface ISourceListPresenter {
 
     void deleteSource(long sourceId);
 
-    void clearRead();
+    void clear();
 }

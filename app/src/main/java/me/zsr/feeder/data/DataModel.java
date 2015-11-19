@@ -310,7 +310,7 @@ public class DataModel implements IDataModel {
 
     @Override
     public boolean addNewItem(final List<FeedItem> itemList, final long sourceId) {
-        List<FeedItem> itemToAdd = new ArrayList<>();
+        List<FeedItem> itemToInsert = new ArrayList<>();
         for (FeedItem item : itemList) {
             if (mItemDao.queryBuilder().where(FeedItemDao.Properties.Title.eq(item.getTitle())).count() == 0) {
                 if (item.getDate() == null) {
@@ -321,11 +321,16 @@ public class DataModel implements IDataModel {
 //                    item.setTitle("");
 //                }
                 item.setFeedSourceId(sourceId);
-                itemToAdd.add(item);
+                item.setLastShownDate(new Date());
+                itemToInsert.add(item);
+            } else {
+                FeedItem oldItem = mItemDao.queryBuilder().where(
+                        FeedItemDao.Properties.Title.eq(item.getTitle())).list().get(0);
+                oldItem.setLastShownDate(new Date());
+                itemToInsert.add(oldItem);
             }
         }
-        mItemDao.insertInTx(itemToAdd);
-
+        mItemDao.insertOrReplaceInTx(itemToInsert);
         return true;
     }
 

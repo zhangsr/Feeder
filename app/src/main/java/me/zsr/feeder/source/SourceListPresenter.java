@@ -10,6 +10,7 @@ import me.zsr.feeder.dao.FeedSource;
 import me.zsr.feeder.data.DataModel;
 import me.zsr.feeder.data.IDataModel;
 import me.zsr.feeder.util.CommonEvent;
+import me.zsr.feeder.util.DateUtil;
 import me.zsr.feeder.util.NetworkUtil;
 
 /**
@@ -121,14 +122,21 @@ public class SourceListPresenter implements ISourceListPresenter {
     }
 
     @Override
-    public void clearRead() {
+    public void clear() {
         mModel.loadAllSource(new OnSourceLoadListener() {
             @Override
             public void success(List<FeedSource> list) {
+                // FIXME: 11/19/15 bad performance
                 List<FeedItem> listToTrash = new ArrayList<>();
+                List<FeedItem> listToDelete = new ArrayList<>();
                 for (FeedSource feedSource : list) {
-                    for (FeedItem feedItem : feedSource.getFeedItems()) {
-                        if (feedItem.getRead()) {
+                    List<FeedItem> feedItemList = feedSource.getFeedItems();
+                    for (FeedItem feedItem : feedItemList) {
+                        if (feedItem.getTrash()
+                                && !DateUtil.isSameDay(feedItem.getLastShownDate(),
+                                feedItemList.get(0).getLastShownDate())) {
+                            listToDelete.add(feedItem);
+                        } else if (feedItem.getRead()) {
                             feedItem.setTrash(true);
                             listToTrash.add(feedItem);
                         }
@@ -136,6 +144,10 @@ public class SourceListPresenter implements ISourceListPresenter {
                 }
                 if (listToTrash.size() != 0) {
                     mModel.updateItemList(listToTrash, null);
+                }
+                // TODO: 11/19/15 add analysis to verify work or not
+                if (listToDelete.size() != 0) {
+                    mModel.deleteItem(listToDelete, null);
                 }
             }
 
