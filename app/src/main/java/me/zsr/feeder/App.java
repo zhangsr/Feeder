@@ -27,6 +27,7 @@ public class App extends Application {
     public static final long SOURCE_ID_ALL = -1;
     public static final String KEY_BUNDLE_ITEM_TITLE = "item_title";
     private static final String SP_ADD_DEFAULT = "add_default";
+    public static final String SP_REFRESH_DEFAULT = "refresh_default";
     private static final String WX_APP_ID = "wxf0b102ba70e9fae2";
     private static final String DB_NAME = "feed_db";
     private static final String AVOS_APP_ID = "ms2lsbjilfbqjeb5fitysvm0lkt38nnw2bvwe60sy7j5g50t";

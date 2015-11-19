@@ -1,5 +1,7 @@
 package me.zsr.feeder.source;
 
+import android.content.SharedPreferences;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +47,14 @@ public class ItemListPresenter implements IItemListPresenter {
     public ItemListPresenter(IItemListView view) {
         mView = view;
         mModel = new DataModel();
+
+        if (!App.getSharePreferences().getBoolean(App.SP_REFRESH_DEFAULT, false)) {
+            mView.showLoading();
+            refresh(App.SOURCE_ID_ALL);
+            SharedPreferences.Editor editor = App.getSharePreferences().edit();
+            editor.putBoolean(App.SP_REFRESH_DEFAULT, true);
+            editor.apply();
+        }
     }
 
     @Override
