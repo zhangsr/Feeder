@@ -1,6 +1,7 @@
 package me.zsr.feeder.source;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -8,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +25,7 @@ import me.zsr.feeder.R;
 import me.zsr.feeder.dao.FeedItem;
 import me.zsr.feeder.dao.FeedSource;
 import me.zsr.feeder.base.BaseFragment;
+import me.zsr.feeder.other.AboutActivity;
 
 /**
  * @description:
@@ -87,6 +90,8 @@ public class SourceListFragment extends BaseFragment implements ISourceListView 
         mListView.addHeaderView(mAllHeaderView);
 
         mPullRefreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.feed_pull_to_refresh_layout);
+
+        ((ImageView) mRootView.findViewById(R.id.about_img)).setColorFilter(getResources().getColor(R.color.main_grey_light));
     }
 
     private void setListener() {
@@ -141,6 +146,12 @@ public class SourceListFragment extends BaseFragment implements ISourceListView 
                             }).show();
                     return true;
                 }
+            }
+        });
+        mRootView.findViewById(R.id.about_layout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), AboutActivity.class));
             }
         });
     }

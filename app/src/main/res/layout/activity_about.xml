@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="me.zsr.feeder.other.AboutActivity">
+
+    <ScrollView
+        android:clipToPadding="false"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:padding="@dimen/padding_small"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <include
+                layout="@layout/activity_about_app"
+                android:layout_marginBottom="@dimen/padding_small"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent" />
+
+            <include
+                layout="@layout/activity_about_author"
+                android:layout_marginBottom="@dimen/padding_small"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent" />
+
+            <include
+                layout="@layout/activity_about_support"
+                android:layout_marginBottom="@dimen/padding_small"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent" />
+            <include layout="@layout/activity_about_thanks" />
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

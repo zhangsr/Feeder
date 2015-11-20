@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:background="@android:color/white"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/feed_pull_to_refresh_layout"
-        android:background="@android:color/white"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_weight="1"
+        android:layout_height="0dp">
 
         <ListView
             android:id="@+id/feed_lv"
@@ -16,4 +17,36 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </android.support.v4.widget.SwipeRefreshLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_height"
+        android:background="@color/divider" />
+
+    <LinearLayout
+        android:id="@+id/about_layout"
+        android:minHeight="@dimen/md_listitem_height"
+        android:gravity="center_vertical"
+        android:background="@drawable/rect_selector"
+        android:clickable="true"
+        android:paddingLeft="@dimen/padding_normal"
+        android:paddingRight="@dimen/padding_normal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/about_img"
+            android:src="@drawable/ic_help"
+            android:layout_width="24dp"
+            android:layout_height="24dp"/>
+
+        <TextView
+            android:paddingTop="@dimen/padding_small"
+            android:paddingBottom="@dimen/padding_small"
+            android:layout_marginLeft="@dimen/padding_big"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            android:text="@string/about"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
 </LinearLayout>

@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardBackgroundColor="@color/card"
+    app:cardCornerRadius="@dimen/card_corner_radius"
+    app:cardElevation="@dimen/card_elevation"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_marginBottom="@dimen/padding_small"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:paddingLeft="@dimen/padding_normal"
+            android:paddingRight="@dimen/padding_normal"
+            android:paddingBottom="@dimen/padding_normal"
+            android:paddingTop="24dp"
+            android:text="@string/author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:minHeight="@dimen/md_listitem_height"
+            android:gravity="center_vertical"
+            android:background="@drawable/rect_selector"
+            android:clickable="true"
+            android:paddingLeft="@dimen/padding_normal"
+            android:paddingRight="@dimen/padding_normal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/author_img"
+                android:src="@drawable/ic_person"
+                android:layout_width="24dp"
+                android:layout_height="24dp"/>
+
+            <LinearLayout
+                android:paddingTop="@dimen/padding_small"
+                android:paddingBottom="@dimen/padding_small"
+                android:paddingLeft="@dimen/padding_big"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                    android:text="@string/author_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:text="@string/author_from"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:minHeight="@dimen/md_listitem_height"
+            android:gravity="center_vertical"
+            android:background="@drawable/rect_selector"
+            android:clickable="true"
+            android:paddingLeft="@dimen/padding_normal"
+            android:paddingRight="@dimen/padding_normal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/wechat_img"
+                android:src="@drawable/ic_wechat"
+                android:layout_width="24dp"
+                android:layout_height="24dp"/>
+
+            <LinearLayout
+                android:paddingTop="@dimen/padding_small"
+                android:paddingBottom="@dimen/padding_small"
+                android:paddingLeft="@dimen/padding_big"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                    android:text="@string/contact_on_wechat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:text="@string/wechat_summary"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/google_plus_layout"
+            android:minHeight="@dimen/md_listitem_height"
+            android:gravity="center_vertical"
+            android:background="@drawable/rect_selector"
+            android:clickable="true"
+            android:paddingLeft="@dimen/padding_normal"
+            android:paddingRight="@dimen/padding_normal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/google_plus_img"
+                android:src="@drawable/ic_google_plus"
+                android:layout_width="24dp"
+                android:layout_height="24dp"/>
+
+            <TextView
+                android:paddingTop="@dimen/padding_small"
+                android:paddingBottom="@dimen/padding_small"
+                android:layout_marginLeft="@dimen/padding_big"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                android:text="@string/add_to_google_plus_circles"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/github_layout"
+            android:minHeight="@dimen/md_listitem_height"
+            android:gravity="center_vertical"
+            android:background="@drawable/rect_selector"
+            android:clickable="true"
+            android:paddingLeft="@dimen/padding_normal"
+            android:paddingRight="@dimen/padding_normal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/github_img"
+                android:src="@drawable/ic_github"
+                android:layout_width="24dp"
+                android:layout_height="24dp"/>
+
+            <TextView
+                android:paddingTop="@dimen/padding_small"
+                android:paddingBottom="@dimen/padding_small"
+                android:layout_marginLeft="@dimen/padding_big"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                android:text="@string/fork_on_github"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:visibility="gone"
+            android:minHeight="@dimen/md_listitem_height"
+            android:gravity="center_vertical"
+            android:background="@drawable/rect_selector"
+            android:clickable="true"
+            android:paddingLeft="@dimen/padding_normal"
+            android:paddingRight="@dimen/padding_normal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/web_img"
+                android:src="@drawable/ic_web"
+                android:layout_width="24dp"
+                android:layout_height="24dp"/>
+
+            <TextView
+                android:paddingTop="@dimen/padding_small"
+                android:paddingBottom="@dimen/padding_small"
+                android:layout_marginLeft="@dimen/padding_big"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                android:text="@string/visit_website"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </LinearLayout>
+</android.support.v7.widget.CardView>
