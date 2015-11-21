@@ -1,8 +1,13 @@
 package me.zsr.feeder.other;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -40,12 +45,22 @@ public class AboutActivity extends BaseActivity {
     ImageView mStoreImageView;
     @Bind(R.id.wechat_img)
     ImageView mWechatImageView;
+    @Bind(R.id.toolbar)
+    Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
         ButterKnife.bind(this);
+
+        mToolbar.setTitleTextColor(Color.WHITE);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        // Make arrow color white
+        Drawable upArrow = getResources().getDrawable(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+        upArrow.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+        getSupportActionBar().setHomeAsUpIndicator(upArrow);
 
         mVersionNameTextView.setText(BuildConfig.VERSION_NAME);
         mInfoImageView.setColorFilter(getResources().getColor(R.color.main_grey_light));
@@ -57,6 +72,16 @@ public class AboutActivity extends BaseActivity {
         mBugImageView.setColorFilter(getResources().getColor(R.color.main_grey_light));
         mStoreImageView.setColorFilter(getResources().getColor(R.color.main_grey_light));
         mWechatImageView.setColorFilter(getResources().getColor(R.color.main_grey_light));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void openUrl(String url) {

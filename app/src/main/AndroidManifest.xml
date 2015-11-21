@@ -33,7 +33,9 @@
             android:theme="@style/AddSourceTheme"
             android:windowSoftInputMode="stateVisible" >
         </activity>
-        <activity android:name=".other.AboutActivity" >
+        <activity
+            android:label="@string/about"
+            android:name=".other.AboutActivity" >
         </activity>
     </application>
 
