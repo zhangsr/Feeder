@@ -20,6 +20,7 @@ import android.view.ViewConfiguration;
 
 import com.avos.avoscloud.AVAnalytics;
 
+import cn.sharesdk.framework.ShareSDK;
 import de.greenrobot.event.EventBus;
 import me.zsr.feeder.App;
 import me.zsr.feeder.BuildConfig;
@@ -48,6 +49,7 @@ public class SourceActivity extends BaseActivity implements OnSourceSelectedList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AVAnalytics.trackAppOpened(getIntent());
+        ShareSDK.initSDK(this);
         setContentView(R.layout.activity_source);
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
@@ -62,6 +64,12 @@ public class SourceActivity extends BaseActivity implements OnSourceSelectedList
 
         initView();
         setListener();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ShareSDK.stopSDK(this);
     }
 
     private void initView() {

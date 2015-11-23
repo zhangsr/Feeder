@@ -12,4 +12,6 @@ public interface IItemView {
     void updated(FeedItem item);
 
     void showError(String msg);
+
+    void showMsg(String msg);
 }

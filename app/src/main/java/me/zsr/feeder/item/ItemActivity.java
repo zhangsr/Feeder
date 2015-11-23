@@ -1,5 +1,6 @@
 package me.zsr.feeder.item;
 
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -7,11 +8,14 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.simplelist.MaterialSimpleListAdapter;
+import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
 
 import org.sufficientlysecure.htmltextview.HtmlTextView;
 
@@ -42,7 +46,7 @@ public class ItemActivity extends BaseActivity implements IItemView {
 
         initView();
 
-        mPresenter = new ItemPresenter(this);
+        mPresenter = new ItemPresenter(this, this);
         String itemTitle = getIntent().getExtras().getString(App.KEY_BUNDLE_ITEM_TITLE);
         if (TextUtils.isEmpty(itemTitle)) {
             showError("Item Title is empty");
@@ -80,22 +84,81 @@ public class ItemActivity extends BaseActivity implements IItemView {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_item, menu);
-        return super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.share, menu);
+        return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.context_menu:
-                Toast.makeText(this, R.string.coming_soon, Toast.LENGTH_SHORT).show();
+            case R.id.menu_share:
+                showShareMenu();
                 break;
             case android.R.id.home:
                 finish();
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showShareMenu() {
+        final MaterialSimpleListAdapter adapter = new MaterialSimpleListAdapter(this);
+        adapter.add(new MaterialSimpleListItem.Builder(this)
+                .content(R.string.wechat)
+                .icon(R.drawable.ic_menu_wechat)
+                .build());
+        adapter.add(new MaterialSimpleListItem.Builder(this)
+                .content(R.string.moment)
+                .icon(R.drawable.ic_menu_moment)
+                .build());
+        adapter.add(new MaterialSimpleListItem.Builder(this)
+                .content(R.string.weibo)
+                .icon(R.drawable.ic_menu_weibo)
+                .build());
+        adapter.add(new MaterialSimpleListItem.Builder(this)
+                .content(R.string.instapaper)
+                .icon(R.drawable.ic_menu_instapaper)
+                .build());
+        adapter.add(new MaterialSimpleListItem.Builder(this)
+                .content(R.string.google_plus)
+                .icon(R.drawable.ic_menu_google_plus)
+                .build());
+        adapter.add(new MaterialSimpleListItem.Builder(this)
+                .content(R.string.pocket)
+                .icon(R.drawable.ic_menu_pocket)
+                .build());
+
+        new MaterialDialog.Builder(this)
+                .title(R.string.share_to)
+                .adapter(adapter, new MaterialDialog.ListCallback() {
+                    @Override
+                    public void onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
+                        switch (which) {
+                            case 0:
+                                mPresenter.shareToWechat(BitmapFactory.decodeResource(
+                                        getResources(), R.drawable.ic_launcher));
+                                break;
+                            case 1:
+                                mPresenter.shareToMoment(BitmapFactory.decodeResource(
+                                        getResources(), R.drawable.ic_launcher));
+                                break;
+                            case 2:
+                                mPresenter.shareToWeibo();
+                                break;
+                            case 3:
+                                mPresenter.shareToInstapaper();
+                                break;
+                            case 4:
+                                mPresenter.shareToGooglePlus();
+                                break;
+                            case 5:
+                                mPresenter.shareToPocket();
+                                break;
+                        }
+                        dialog.dismiss();
+                    }
+                })
+                .show();
     }
 
     @Override
@@ -112,6 +175,11 @@ public class ItemActivity extends BaseActivity implements IItemView {
 
     @Override
     public void showError(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showMsg(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 }
