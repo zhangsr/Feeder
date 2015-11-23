@@ -50,4 +50,7 @@
     <string name="share_complete">Share Complete</string>
     <string name="share_failed">Share Failed</string>
     <string name="share_cancel">Share Cancel</string>
+    <string name="share">Share</string>
+    <string name="share_summary">Share to friends if you like Feeder.</string>
+    <string name="app_share_desc">Rss app with material design and open source.</string>
 </resources>
