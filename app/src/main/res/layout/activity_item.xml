@@ -21,6 +21,7 @@
 
     <!-- Use Nested to make toolbar auto hide enable -->
     <android.support.v4.widget.NestedScrollView
+        android:id="@+id/scroll_layout"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"
         android:layout_height="match_parent">

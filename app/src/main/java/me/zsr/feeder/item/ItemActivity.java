@@ -5,11 +5,14 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,13 +34,16 @@ import me.zsr.feeder.util.DateUtil;
  * @date: 8/29/15
  */
 public class ItemActivity extends BaseActivity implements IItemView {
+    private static final int MSG_DOUBLE_TAP = 0;
     private HtmlTextView mContentTextView;
     private TextView mTitleTextView;
     private TextView mSourceTextView;
     private TextView mDateTextView;
     private TextView mTimeTextView;
+    private NestedScrollView mScrollView;
 
     private IItemPresenter mPresenter;
+    private Handler mHandler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +68,7 @@ public class ItemActivity extends BaseActivity implements IItemView {
         mTimeTextView = (TextView) findViewById(R.id.feed_body_time);
         mSourceTextView = (TextView) findViewById(R.id.feed_body_source);
         mContentTextView = (HtmlTextView) findViewById(R.id.feed_body_content);
+        mScrollView = (NestedScrollView) findViewById(R.id.scroll_layout);
     }
 
     private void initToolbar() {
@@ -70,6 +77,7 @@ public class ItemActivity extends BaseActivity implements IItemView {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+        toolbar.setOnClickListener(this);
 
         // Make arrow color white
         Drawable upArrow = getResources().getDrawable(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
@@ -79,7 +87,16 @@ public class ItemActivity extends BaseActivity implements IItemView {
 
     @Override
     public void onClick(View v) {
-
+        switch (v.getId()) {
+            case R.id.toolbar:
+                if (mHandler.hasMessages(MSG_DOUBLE_TAP)) {
+                    mHandler.removeMessages(MSG_DOUBLE_TAP);
+                    mScrollView.smoothScrollTo(0, 0);
+                } else {
+                    mHandler.sendEmptyMessageDelayed(MSG_DOUBLE_TAP, ViewConfiguration.getDoubleTapTimeout());
+                }
+                break;
+        }
     }
 
     @Override
