@@ -11,16 +11,55 @@ android {
         versionCode 5
         versionName "1.4"
     }
+
+    signingConfigs {
+        release {
+            storeFile file(RELEASE_STORE_FILE)
+            storePassword RELEASE_STORE_PASSWORD
+            keyAlias RELEASE_KEY_ALIAS
+            keyPassword RELEASE_KEY_PASSWORD
+        }
+    }
+
+    productFlavors {
+        wandoujia {
+            buildConfigField("String", "LEANCLOUD_CHANNEL", "\"Wandoujia\"")
+        }
+
+        appchina {
+            buildConfigField("String", "LEANCLOUD_CHANNEL", "\"AppChina\"")
+        }
+
+        mumayi {
+            buildConfigField("String", "LEANCLOUD_CHANNEL", "\"MuMaYi\"")
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
+
     //为了解决部分第三方库重复打包了META-INF的问题
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            output.outputFile = new File(
+                    output.outputFile.parent,
+                    output.outputFile.name.replace(".apk", "-v${variant.versionName}.apk"))
+        }
     }
 }
 
