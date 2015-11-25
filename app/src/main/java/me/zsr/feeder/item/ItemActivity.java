@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,10 +23,14 @@ import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
 
 import org.sufficientlysecure.htmltextview.HtmlTextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import me.zsr.feeder.App;
 import me.zsr.feeder.R;
 import me.zsr.feeder.dao.FeedItem;
 import me.zsr.feeder.base.BaseActivity;
+import me.zsr.feeder.other.SettingsActivity;
 import me.zsr.feeder.util.DateUtil;
 
 /**
@@ -67,8 +72,24 @@ public class ItemActivity extends BaseActivity implements IItemView {
         mDateTextView = (TextView) findViewById(R.id.feed_body_date);
         mTimeTextView = (TextView) findViewById(R.id.feed_body_time);
         mSourceTextView = (TextView) findViewById(R.id.feed_body_source);
-        mContentTextView = (HtmlTextView) findViewById(R.id.feed_body_content);
         mScrollView = (NestedScrollView) findViewById(R.id.scroll_layout);
+
+        mContentTextView = (HtmlTextView) findViewById(R.id.feed_body_content);
+        switch (App.getSharePreferences().getInt(SettingsActivity.KEY_FONT_SIZE,
+                SettingsActivity.FONT_SIZE_MEDIUM)) {
+            case SettingsActivity.FONT_SIZE_SMALL:
+                mContentTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+                        getResources().getDimension(R.dimen.text_size_small));
+                break;
+            case SettingsActivity.FONT_SIZE_MEDIUM:
+                mContentTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+                        getResources().getDimension(R.dimen.text_size_medium));
+                break;
+            case SettingsActivity.FONT_SIZE_BIG:
+                mContentTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+                        getResources().getDimension(R.dimen.text_size_big));
+                break;
+        }
     }
 
     private void initToolbar() {
@@ -120,55 +141,74 @@ public class ItemActivity extends BaseActivity implements IItemView {
 
     private void showShareMenu() {
         final MaterialSimpleListAdapter adapter = new MaterialSimpleListAdapter(this);
-        adapter.add(new MaterialSimpleListItem.Builder(this)
-                .content(R.string.wechat)
-                .icon(R.drawable.ic_menu_wechat)
-                .build());
-        adapter.add(new MaterialSimpleListItem.Builder(this)
-                .content(R.string.moment)
-                .icon(R.drawable.ic_menu_moment)
-                .build());
-        adapter.add(new MaterialSimpleListItem.Builder(this)
-                .content(R.string.weibo)
-                .icon(R.drawable.ic_menu_weibo)
-                .build());
-        adapter.add(new MaterialSimpleListItem.Builder(this)
-                .content(R.string.instapaper)
-                .icon(R.drawable.ic_menu_instapaper)
-                .build());
-        adapter.add(new MaterialSimpleListItem.Builder(this)
-                .content(R.string.google_plus)
-                .icon(R.drawable.ic_menu_google_plus)
-                .build());
-        adapter.add(new MaterialSimpleListItem.Builder(this)
-                .content(R.string.pocket)
-                .icon(R.drawable.ic_menu_pocket)
-                .build());
+        final List<Integer> contentIdList = new ArrayList<>();
+        if (App.getSharePreferences().getBoolean(SettingsActivity.KEY_SWITCH_SHARE_WECHAT, true)) {
+            adapter.add(new MaterialSimpleListItem.Builder(this)
+                    .content(R.string.wechat)
+                    .icon(R.drawable.ic_menu_wechat)
+                    .build());
+            contentIdList.add(R.string.wechat);
+        }
+        if (App.getSharePreferences().getBoolean(SettingsActivity.KEY_SWITCH_SHARE_MOMENT, true)) {
+            adapter.add(new MaterialSimpleListItem.Builder(this)
+                    .content(R.string.moment)
+                    .icon(R.drawable.ic_menu_moment)
+                    .build());
+            contentIdList.add(R.string.moment);
+        }
+        if (App.getSharePreferences().getBoolean(SettingsActivity.KEY_SWITCH_SHARE_WEIBO, true)) {
+            adapter.add(new MaterialSimpleListItem.Builder(this)
+                    .content(R.string.weibo)
+                    .icon(R.drawable.ic_menu_weibo)
+                    .build());
+            contentIdList.add(R.string.weibo);
+        }
+        if (App.getSharePreferences().getBoolean(SettingsActivity.KEY_SWITCH_SHARE_INSTAPAPER, true)) {
+            adapter.add(new MaterialSimpleListItem.Builder(this)
+                    .content(R.string.instapaper)
+                    .icon(R.drawable.ic_menu_instapaper)
+                    .build());
+            contentIdList.add(R.string.instapaper);
+        }
+        if (App.getSharePreferences().getBoolean(SettingsActivity.KEY_SWITCH_SHARE_GOOGLE_PLUS, true)) {
+            adapter.add(new MaterialSimpleListItem.Builder(this)
+                    .content(R.string.google_plus)
+                    .icon(R.drawable.ic_menu_google_plus)
+                    .build());
+            contentIdList.add(R.string.google_plus);
+        }
+        if (App.getSharePreferences().getBoolean(SettingsActivity.KEY_SWITCH_SHARE_POCKET, true)) {
+            adapter.add(new MaterialSimpleListItem.Builder(this)
+                    .content(R.string.pocket)
+                    .icon(R.drawable.ic_menu_pocket)
+                    .build());
+            contentIdList.add(R.string.pocket);
+        }
 
         new MaterialDialog.Builder(this)
                 .title(R.string.share_to)
                 .adapter(adapter, new MaterialDialog.ListCallback() {
                     @Override
                     public void onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
-                        switch (which) {
-                            case 0:
+                        switch (contentIdList.get(which)) {
+                            case R.string.wechat:
                                 mPresenter.shareToWechat(BitmapFactory.decodeResource(
                                         getResources(), R.drawable.ic_launcher));
                                 break;
-                            case 1:
+                            case R.string.moment:
                                 mPresenter.shareToMoment(BitmapFactory.decodeResource(
                                         getResources(), R.drawable.ic_launcher));
                                 break;
-                            case 2:
+                            case R.string.weibo:
                                 mPresenter.shareToWeibo();
                                 break;
-                            case 3:
+                            case R.string.instapaper:
                                 mPresenter.shareToInstapaper();
                                 break;
-                            case 4:
+                            case R.string.google_plus:
                                 mPresenter.shareToGooglePlus();
                                 break;
-                            case 5:
+                            case R.string.pocket:
                                 mPresenter.shareToPocket();
                                 break;
                         }

@@ -26,6 +26,7 @@ import me.zsr.feeder.dao.FeedItem;
 import me.zsr.feeder.dao.FeedSource;
 import me.zsr.feeder.base.BaseFragment;
 import me.zsr.feeder.other.AboutActivity;
+import me.zsr.feeder.other.SettingsActivity;
 
 /**
  * @description:
@@ -92,6 +93,7 @@ public class SourceListFragment extends BaseFragment implements ISourceListView 
         mPullRefreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.feed_pull_to_refresh_layout);
 
         ((ImageView) mRootView.findViewById(R.id.about_img)).setColorFilter(getResources().getColor(R.color.main_grey_light));
+        ((ImageView) mRootView.findViewById(R.id.settings_img)).setColorFilter(getResources().getColor(R.color.main_grey_light));
     }
 
     private void setListener() {
@@ -152,6 +154,12 @@ public class SourceListFragment extends BaseFragment implements ISourceListView 
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getActivity(), AboutActivity.class));
+            }
+        });
+        mRootView.findViewById(R.id.settings_layout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), SettingsActivity.class));
             }
         });
     }

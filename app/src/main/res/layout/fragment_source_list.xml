@@ -21,13 +21,42 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/divider_height"
+        android:layout_marginBottom="@dimen/spacing_normal"
         android:background="@color/divider" />
+
+    <LinearLayout
+        android:id="@+id/settings_layout"
+        android:minHeight="@dimen/md_listitem_height"
+        android:gravity="center_vertical"
+        android:background="@drawable/rect_selector"
+        android:clickable="true"
+        android:paddingLeft="@dimen/padding_normal"
+        android:paddingRight="@dimen/padding_normal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/settings_img"
+            android:src="@drawable/ic_settings"
+            android:layout_width="24dp"
+            android:layout_height="24dp"/>
+
+        <TextView
+            android:paddingTop="@dimen/padding_small"
+            android:paddingBottom="@dimen/padding_small"
+            android:layout_marginLeft="@dimen/padding_big"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            android:text="@string/settings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/about_layout"
         android:minHeight="@dimen/md_listitem_height"
         android:gravity="center_vertical"
         android:background="@drawable/rect_selector"
+        android:layout_marginBottom="@dimen/spacing_normal"
         android:clickable="true"
         android:paddingLeft="@dimen/padding_normal"
         android:paddingRight="@dimen/padding_normal"
