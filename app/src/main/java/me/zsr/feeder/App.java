@@ -10,8 +10,6 @@ import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
-import com.tencent.mm.sdk.openapi.IWXAPI;
-import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
 import me.zsr.feeder.dao.DaoMaster;
 import me.zsr.feeder.dao.DaoSession;
@@ -28,12 +26,8 @@ public class App extends Application {
     public static final String KEY_BUNDLE_ITEM_TITLE = "item_title";
     private static final String SP_ADD_DEFAULT = "add_default";
     public static final String SP_REFRESH_DEFAULT = "refresh_default";
-    private static final String WX_APP_ID = "wxf0b102ba70e9fae2";
     private static final String DB_NAME = "feed_db";
-    private static final String AVOS_APP_ID = "ms2lsbjilfbqjeb5fitysvm0lkt38nnw2bvwe60sy7j5g50t";
-    private static final String AVOS_CLIENT_KEY = "84gf4pv73s99zme304ks1e5f5qwdpls1exgg5cx7c2rah0u4";
     private static App sInstance;
-    private static IWXAPI sIWXApi;
     private static SharedPreferences sSharePreferences;
     private static DaoSession sDaoSession;
     public Mode mCurrentMode = Mode.UNREAD;
@@ -53,7 +47,6 @@ public class App extends Application {
 
         initUniversalImageLoader();
         initLeanCloud();
-        initWeiXin();
         initDB();
     }
 
@@ -79,17 +72,8 @@ public class App extends Application {
 
     private void initLeanCloud() {
         AVAnalytics.setAppChannel(BuildConfig.LEANCLOUD_CHANNEL);
-        AVOSCloud.initialize(this, AVOS_APP_ID, AVOS_CLIENT_KEY);
+        AVOSCloud.initialize(this, BuildConfig.AVOS_APP_ID, BuildConfig.AVOS_CLIENT_KEY);
         AVAnalytics.enableCrashReport(this, true);
-    }
-
-    private void initWeiXin() {
-        sIWXApi = WXAPIFactory.createWXAPI(this, WX_APP_ID, true);
-        sIWXApi.registerApp(WX_APP_ID);
-    }
-
-    public static IWXAPI getWXAPI() {
-        return sIWXApi;
     }
 
     public static SharedPreferences getSharePreferences() {
