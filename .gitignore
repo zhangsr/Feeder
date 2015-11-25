@@ -14,3 +14,4 @@ gradlew.bat
 *.swp
 doc/
 android.keystore
+ShareSDK.xml
