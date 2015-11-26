@@ -67,6 +67,7 @@ public class ItemActivity extends BaseActivity implements IItemView {
     }
 
     private void initView() {
+        initSystemBar();
         initToolbar();
         mTitleTextView = (TextView) findViewById(R.id.feed_body_title);
         mDateTextView = (TextView) findViewById(R.id.feed_body_date);

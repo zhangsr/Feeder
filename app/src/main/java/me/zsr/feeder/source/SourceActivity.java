@@ -17,8 +17,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.ViewGroup;
 
 import com.avos.avoscloud.AVAnalytics;
+import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import cn.sharesdk.framework.ShareSDK;
 import de.greenrobot.event.EventBus;
@@ -73,12 +75,18 @@ public class SourceActivity extends BaseActivity implements OnSourceSelectedList
     }
 
     private void initView() {
+        initSystemBar();
         initToolbar();
         initDrawer();
         showItemList(App.SOURCE_ID_ALL);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+        // FIXME: 11/26/15 Handle strange offset in DrawerLayout
+        SystemBarTintManager tintManager = new SystemBarTintManager(this);
+        ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) mDrawerLayout.getLayoutParams();
+        mlp.topMargin = tintManager.getConfig().getStatusBarHeight();
+        mDrawerLayout.setLayoutParams(mlp);
     }
 
     private void initToolbar() {

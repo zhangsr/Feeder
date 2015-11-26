@@ -4,7 +4,6 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
@@ -21,8 +20,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import me.zsr.feeder.App;
 import me.zsr.feeder.R;
+import me.zsr.feeder.base.BaseActivity;
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends BaseActivity {
     public static final String KEY_FONT_SIZE = "font_size";
     public static final int FONT_SIZE_SMALL = 0;
     public static final int FONT_SIZE_MEDIUM = 1;
@@ -82,6 +82,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void initView() {
+        initSystemBar();
         mToolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -241,5 +242,10 @@ public class SettingsActivity extends AppCompatActivity {
                 mFontSizeTextView.setText(R.string.big);
                 break;
         }
+    }
+
+    @Override
+    public void onClick(View v) {
+
     }
 }

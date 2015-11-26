@@ -74,6 +74,7 @@ public class AddSourceActivity extends BaseActivity {
     }
 
     private void initView() {
+        initSystemBar();
         mRootView = findViewById(R.id.root_view);
         mAddSourcePanel = findViewById(R.id.add_source_panel);
         mLoadingView = findViewById(R.id.loading_view);
