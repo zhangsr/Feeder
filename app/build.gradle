@@ -36,6 +36,10 @@ android {
         mumayi {
             buildConfigField("String", "LEANCLOUD_CHANNEL", "\"MuMaYi\"")
         }
+
+        beta {
+            buildConfigField("String", "LEANCLOUD_CHANNEL", "\"Beta\"")
+        }
     }
 
     buildTypes {
