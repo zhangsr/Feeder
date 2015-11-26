@@ -54,15 +54,15 @@ public class SourceActivity extends BaseActivity implements OnSourceSelectedList
         ShareSDK.initSDK(this);
         setContentView(R.layout.activity_source);
 
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        if (sp.getInt(SP_KEY_VERSION_CODE, 0) < BuildConfig.VERSION_CODE) {
-            // Show newest version info
-            // TODO: 11/4/15 Add en version info
-            SnackbarUtil.show(this, "升级成功：" + FileUtil.readAssetFie(this, "version_info"));
-            SharedPreferences.Editor editor = sp.edit();
-            editor.putInt(SP_KEY_VERSION_CODE, BuildConfig.VERSION_CODE);
-            editor.apply();
-        }
+//        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+//        if (sp.getInt(SP_KEY_VERSION_CODE, 0) < BuildConfig.VERSION_CODE) {
+//            // Show newest version info
+//            // TODO: 11/4/15 Add en version info
+//            SnackbarUtil.show(this, "升级成功：" + FileUtil.readAssetFie(this, "version_info"));
+//            SharedPreferences.Editor editor = sp.edit();
+//            editor.putInt(SP_KEY_VERSION_CODE, BuildConfig.VERSION_CODE);
+//            editor.apply();
+//        }
 
         initView();
         setListener();
