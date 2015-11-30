@@ -29,6 +29,7 @@ import cn.sharesdk.wechat.moments.WechatMoments;
 import me.zsr.feeder.BuildConfig;
 import me.zsr.feeder.R;
 import me.zsr.feeder.base.BaseActivity;
+import me.zsr.feeder.view.MarkdownView;
 
 public class AboutActivity extends BaseActivity {
     private static final String URL_GITHUB = "https://github.com/zhangsr/Feeder";
@@ -113,6 +114,7 @@ public class AboutActivity extends BaseActivity {
     }
 
     @OnClick({
+            R.id.change_log_layout,
             R.id.google_plus_layout,
             R.id.github_layout,
             R.id.bug_layout,
@@ -122,6 +124,9 @@ public class AboutActivity extends BaseActivity {
     })
     public void layoutOnClick(View view) {
         switch (view.getId()) {
+            case R.id.change_log_layout:
+                showChangeLogDialog();
+                break;
             case R.id.google_plus_layout:
                 openUrl(URL_GOOGLE_PLUS);
                 break;
@@ -141,6 +146,24 @@ public class AboutActivity extends BaseActivity {
                 showShareMenu();
                 break;
         }
+    }
+
+    private void showChangeLogDialog() {
+        // TODO: 11/30/15 fix margin
+        MarkdownView markdownView = new MarkdownView(this);
+        markdownView.loadMarkdownFile("file:///android_asset/CHANGELOG.md");
+
+        MaterialDialog dialog = new MaterialDialog.Builder(this)
+                .title(R.string.changelog)
+                .customView(markdownView, false)
+                .positiveText(R.string.got_it)
+                .callback(new MaterialDialog.ButtonCallback() {
+                    @Override
+                    public void onPositive(MaterialDialog dialog) {
+                        dialog.dismiss();
+                    }
+                }).build();
+        dialog.show();
     }
 
     private void showShareMenu() {
