@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -82,11 +83,14 @@ public class SourceActivity extends BaseActivity implements OnSourceSelectedList
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-        // FIXME: 11/26/15 Handle strange offset in DrawerLayout
-        SystemBarTintManager tintManager = new SystemBarTintManager(this);
-        ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) mDrawerLayout.getLayoutParams();
-        mlp.topMargin = tintManager.getConfig().getStatusBarHeight();
-        mDrawerLayout.setLayoutParams(mlp);
+
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+            // FIXME: 11/26/15 Handle strange offset in DrawerLayout
+            SystemBarTintManager tintManager = new SystemBarTintManager(this);
+            ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) mDrawerLayout.getLayoutParams();
+            mlp.topMargin = tintManager.getConfig().getStatusBarHeight();
+            mDrawerLayout.setLayoutParams(mlp);
+        }
     }
 
     private void initToolbar() {

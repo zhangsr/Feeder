@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/context_menu"
-        android:title="Context Menu"
+        android:title="@string/add_subscription"
         android:icon="@drawable/ic_add"
         android:orderInCategory="100"
         app:showAsAction="always" />

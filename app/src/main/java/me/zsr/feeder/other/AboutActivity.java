@@ -136,7 +136,7 @@ public class AboutActivity extends BaseActivity {
                 ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
                 ClipData clip = ClipData.newPlainText("Wechat ID", ID_WECHAT);
                 clipboard.setPrimaryClip(clip);
-                Toast.makeText(this, R.string.copy_success, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.copied, Toast.LENGTH_SHORT).show();
                 break;
             case R.id.google_plus_layout:
                 openUrl(URL_GOOGLE_PLUS);
