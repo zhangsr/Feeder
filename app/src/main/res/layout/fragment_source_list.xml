@@ -5,18 +5,12 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/feed_pull_to_refresh_layout"
-        android:layout_width="match_parent"
+    <ListView
+        android:id="@+id/feed_lv"
+        android:divider="@null"
         android:layout_weight="1"
-        android:layout_height="0dp">
-
-        <ListView
-            android:id="@+id/feed_lv"
-            android:divider="@null"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </android.support.v4.widget.SwipeRefreshLayout>
+        android:layout_width="match_parent"
+        android:layout_height="0dp" />
 
     <View
         android:layout_width="match_parent"

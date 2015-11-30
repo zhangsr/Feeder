@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +39,6 @@ public class SourceListFragment extends BaseFragment implements ISourceListView 
     private View mRootView;
     private ListView mListView;
     private SourceListAdapter mAdapter;
-    private SwipeRefreshLayout mPullRefreshLayout;
     private View mAllHeaderView;
 
     public static SourceListFragment getInstance() {
@@ -90,19 +88,11 @@ public class SourceListFragment extends BaseFragment implements ISourceListView 
         ((TextView) mAllHeaderView.findViewById(R.id.source_title_txt)).setText(R.string.all);
         mListView.addHeaderView(mAllHeaderView);
 
-        mPullRefreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.feed_pull_to_refresh_layout);
-
         ((ImageView) mRootView.findViewById(R.id.about_img)).setColorFilter(getResources().getColor(R.color.main_grey_light));
         ((ImageView) mRootView.findViewById(R.id.settings_img)).setColorFilter(getResources().getColor(R.color.main_grey_light));
     }
 
     private void setListener() {
-        mPullRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mPresenter.refresh();
-            }
-        });
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -183,12 +173,10 @@ public class SourceListFragment extends BaseFragment implements ISourceListView 
 
     @Override
     public void showLoading() {
-        mPullRefreshLayout.setRefreshing(true);
     }
 
     @Override
     public void hideLoading() {
-        mPullRefreshLayout.setRefreshing(false);
     }
 
     @Override
