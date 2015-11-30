@@ -117,7 +117,8 @@ public class AddSourceActivity extends BaseActivity {
         mResultListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                final String url = mResultList.get(position).feedId.substring(5);
+                final FeedlyResult result = mResultList.get(position);
+                final String url = result.feedId.substring(5);
 
                 new AsyncTask<Void, Void, FeedSource>() {
 
@@ -152,6 +153,8 @@ public class AddSourceActivity extends BaseActivity {
                             intent.putExtra("sourceId", source.getId());
                             setResult(SourceActivity.CODE_RESULT_SUCCESS, intent);
                             dismiss();
+
+                            AddSourceHelper.upload(result);
                         } else {
                             hideLoading();
                         }
