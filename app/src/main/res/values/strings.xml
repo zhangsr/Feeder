@@ -58,6 +58,7 @@
     <string name="small">Small</string>
     <string name="big">Big</string>
     <string name="medium">Medium</string>
+    <string name="copy_success">Copy Success</string>
     <string-array name="font_size">
         <item>@string/small</item>
         <item>@string/medium</item>

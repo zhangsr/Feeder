@@ -1,5 +1,7 @@
 package me.zsr.feeder.other;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -12,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListAdapter;
@@ -32,6 +35,7 @@ import me.zsr.feeder.base.BaseActivity;
 import me.zsr.feeder.view.MarkdownView;
 
 public class AboutActivity extends BaseActivity {
+    private static final String ID_WECHAT = "matchzsr";
     private static final String URL_GITHUB = "https://github.com/zhangsr/Feeder";
     private static final String URL_GOOGLE_PLUS = "https://plus.google.com/108838785221141135915";
     private static final String URL_BUG = "https://github.com/zhangsr/Feeder/issues";
@@ -115,6 +119,7 @@ public class AboutActivity extends BaseActivity {
 
     @OnClick({
             R.id.change_log_layout,
+            R.id.wechat_layout,
             R.id.google_plus_layout,
             R.id.github_layout,
             R.id.bug_layout,
@@ -126,6 +131,12 @@ public class AboutActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.change_log_layout:
                 showChangeLogDialog();
+                break;
+            case R.id.wechat_layout:
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("Wechat ID", ID_WECHAT);
+                clipboard.setPrimaryClip(clip);
+                Toast.makeText(this, R.string.copy_success, Toast.LENGTH_SHORT).show();
                 break;
             case R.id.google_plus_layout:
                 openUrl(URL_GOOGLE_PLUS);

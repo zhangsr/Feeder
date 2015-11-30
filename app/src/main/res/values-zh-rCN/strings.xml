@@ -58,6 +58,7 @@
     <string name="small">小</string>
     <string name="big">大</string>
     <string name="medium">中</string>
+    <string name="copy_success">复制成功</string>
     <string-array name="font_size">
         <item>@string/small</item>
         <item>@string/medium</item>
