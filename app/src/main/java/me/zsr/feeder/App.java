@@ -30,10 +30,6 @@ public class App extends Application {
     private static App sInstance;
     private static SharedPreferences sSharePreferences;
     private static DaoSession sDaoSession;
-    public Mode mCurrentMode = Mode.UNREAD;
-    public enum Mode {
-        STAR, UNREAD, ALL
-    }
 
     public static App getInstance() {
         return sInstance;
