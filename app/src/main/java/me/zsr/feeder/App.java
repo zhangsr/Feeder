@@ -11,6 +11,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 
+import cn.sharesdk.framework.ShareSDK;
 import me.zsr.feeder.dao.DaoMaster;
 import me.zsr.feeder.dao.DaoSession;
 import me.zsr.feeder.dao.FeedSource;
@@ -44,6 +45,7 @@ public class App extends Application {
         initUniversalImageLoader();
         initLeanCloud();
         initDB();
+        initShareSDK();
     }
 
     public static DaoSession getDaoSession() {
@@ -107,5 +109,9 @@ public class App extends Application {
             editor.putBoolean(SP_ADD_DEFAULT, true);
             editor.apply();
         }
+    }
+
+    private void initShareSDK() {
+        ShareSDK.initSDK(this);
     }
 }

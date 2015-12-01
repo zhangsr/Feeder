@@ -2,14 +2,12 @@ package me.zsr.feeder.source;
 
 import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
@@ -26,13 +24,10 @@ import com.readystatesoftware.systembartint.SystemBarTintManager;
 import cn.sharesdk.framework.ShareSDK;
 import de.greenrobot.event.EventBus;
 import me.zsr.feeder.App;
-import me.zsr.feeder.BuildConfig;
 import me.zsr.feeder.R;
 import me.zsr.feeder.base.BaseActivity;
 import me.zsr.feeder.other.AddSourceActivity;
 import me.zsr.feeder.util.CommonEvent;
-import me.zsr.feeder.util.SnackbarUtil;
-import me.zsr.library_common.FileUtil;
 
 /**
  * @description:
@@ -52,7 +47,6 @@ public class SourceActivity extends BaseActivity implements OnSourceSelectedList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AVAnalytics.trackAppOpened(getIntent());
-        ShareSDK.initSDK(this);
         setContentView(R.layout.activity_source);
 
 //        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
@@ -108,7 +102,7 @@ public class SourceActivity extends BaseActivity implements OnSourceSelectedList
 
     private void initDrawer() {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.replace(R.id.drawer_frame, SourceListFragment.getInstance());
+        ft.replace(R.id.drawer_frame, new SourceListFragment());
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         ft.commit();
     }

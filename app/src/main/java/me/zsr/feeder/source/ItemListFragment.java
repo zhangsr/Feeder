@@ -47,6 +47,11 @@ public class ItemListFragment extends Fragment implements IItemListView {
 
     @Override
     public void updated(List<FeedItem> list) {
+        // TODO: 12/1/15 when fragment detach from activity ? getActivity return null
+        if (!isAdded()) {
+            return;
+        }
+
         if (mAdapter == null) {
             mAdapter = new ItemListAdapter(list);
             mListView.setAdapter(mAdapter);
@@ -75,6 +80,11 @@ public class ItemListFragment extends Fragment implements IItemListView {
 
     @Override
     public void showBody(String itemTitle) {
+        // TODO: 12/1/15 when fragment detach from activity ? getActivity return null
+        if (!isAdded()) {
+            return;
+        }
+
         Bundle bundle = new Bundle();
         bundle.putString(App.KEY_BUNDLE_ITEM_TITLE, itemTitle);
         Intent intent = new Intent(getActivity(), ItemActivity.class);
@@ -114,6 +124,12 @@ public class ItemListFragment extends Fragment implements IItemListView {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // FIXME: 12/1/15 may there be better solution
+                if (position + 1 == parent.getAdapter().getCount()) {
+                    // Click on load more view
+                    return;
+                }
+
                 mPresenter.itemSelected(((FeedItem) parent.getAdapter().getItem(position)));
             }
         });

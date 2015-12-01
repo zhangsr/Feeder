@@ -232,12 +232,22 @@ public class ItemActivity extends BaseActivity implements IItemView {
     }
 
     @Override
-    public void showError(String msg) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    public void showError(final String msg) {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(ItemActivity.this, msg, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
-    public void showMsg(String msg) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    public void showMsg(final String msg) {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(ItemActivity.this, msg, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
