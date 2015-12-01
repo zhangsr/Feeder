@@ -9,7 +9,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 21
         versionCode 6
-        versionName "1.5Beta"
+        versionName "1.5"
 
         buildConfigField("String", "AVOS_APP_ID", "\"${AVOS_APP_ID}\"")
         buildConfigField("String", "AVOS_CLIENT_KEY", "\"${AVOS_CLIENT_KEY}\"")
@@ -39,6 +39,10 @@ android {
 
         beta {
             buildConfigField("String", "LEANCLOUD_CHANNEL", "\"Beta\"")
+        }
+
+        xiaomi {
+            buildConfigField("String", "LEANCLOUD_CHANNEL", "\"Xiaomi\"")
         }
     }
 
