@@ -84,7 +84,7 @@ public class SourceActivity extends BaseActivity implements OnSourceSelectedList
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
             // FIXME: 11/26/15 Handle strange offset in DrawerLayout
             SystemBarTintManager tintManager = new SystemBarTintManager(this);
             ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) mDrawerLayout.getLayoutParams();

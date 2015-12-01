@@ -67,6 +67,10 @@ public class App extends Application {
     }
 
     private void initLeanCloud() {
+        // TODO: 11/30/15 Verify
+        if (BuildConfig.DEBUG) {
+            AVAnalytics.setAnalyticsEnabled(false);
+        }
         AVAnalytics.setAppChannel(BuildConfig.LEANCLOUD_CHANNEL);
         AVOSCloud.initialize(this, BuildConfig.AVOS_APP_ID, BuildConfig.AVOS_CLIENT_KEY);
         AVAnalytics.enableCrashReport(this, true);
