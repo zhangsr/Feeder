@@ -20,12 +20,12 @@
             android:paddingRight="@dimen/padding_normal"
             android:paddingBottom="@dimen/padding_normal"
             android:paddingTop="24dp"
-            android:text="@string/font"
+            android:text="@string/account"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
         <LinearLayout
-            android:id="@+id/font_size_layout"
+            android:id="@+id/account_manage_layout"
             android:minHeight="@dimen/md_listitem_height"
             android:gravity="center_vertical"
             android:background="@drawable/rect_selector"
@@ -36,8 +36,8 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/font_size_img"
-                android:src="@drawable/ic_format_size"
+                android:id="@+id/account_manage_img"
+                android:src="@drawable/ic_person"
                 android:layout_width="24dp"
                 android:layout_height="24dp"/>
 
@@ -47,15 +47,43 @@
                 android:layout_marginLeft="@dimen/padding_big"
                 android:layout_marginRight="@dimen/padding_big"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                android:text="@string/reading_font_size"
+                android:text="@string/account_management"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/account_feedly_layout"
+            android:minHeight="@dimen/md_listitem_height"
+            android:gravity="center_vertical"
+            android:background="@drawable/rect_selector"
+            android:clickable="true"
+            android:paddingLeft="@dimen/padding_normal"
+            android:paddingRight="@dimen/padding_normal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/account_feedly_icon"
+                android:src="@drawable/ic_feedly"
+                android:layout_width="24dp"
+                android:layout_height="24dp"/>
+
+            <TextView
+                android:paddingTop="@dimen/padding_small"
+                android:paddingBottom="@dimen/padding_small"
+                android:layout_marginLeft="@dimen/padding_big"
+                android:layout_marginRight="@dimen/padding_big"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                android:text="@string/account_feedly_add"
                 android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"/>
 
-            <TextView
-                android:id="@+id/font_size_txt"
-                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                android:gravity="center"
+            <ImageView
+                android:id="@+id/account_feedly_add"
+                android:src="@drawable/ic_add"
                 android:layout_width="24dp"
                 android:layout_height="24dp"/>
         </LinearLayout>

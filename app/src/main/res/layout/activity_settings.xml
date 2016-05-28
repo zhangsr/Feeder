@@ -26,6 +26,12 @@
             android:layout_height="wrap_content">
 
             <include
+                layout="@layout/activity_settings_account"
+                android:layout_marginBottom="@dimen/padding_small"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent" />
+
+            <include
                 layout="@layout/activity_settings_font"
                 android:layout_marginBottom="@dimen/padding_small"
                 android:layout_height="wrap_content"

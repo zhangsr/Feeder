@@ -36,6 +36,13 @@ public class SettingsActivity extends BaseActivity {
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
 
+    @Bind(R.id.account_manage_img)
+    ImageView mAccountManageImageView;
+    @Bind(R.id.account_feedly_icon)
+    ImageView mFeedlyIconImageView;
+    @Bind(R.id.account_feedly_add)
+    ImageView mFeedlyAddImageView;
+
     @Bind(R.id.font_size_img)
     ImageView mFontSizeImageView;
     @Bind(R.id.font_size_txt)
@@ -90,6 +97,10 @@ public class SettingsActivity extends BaseActivity {
         Drawable upArrow = getResources().getDrawable(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
         upArrow.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
         getSupportActionBar().setHomeAsUpIndicator(upArrow);
+
+        mAccountManageImageView.setColorFilter(getResources().getColor(R.color.main_grey_light));
+        mFeedlyIconImageView.setColorFilter(getResources().getColor(R.color.main_grey_light));
+        mFeedlyAddImageView.setColorFilter(getResources().getColor(R.color.main_grey_light));
 
         mFontSizeImageView.setColorFilter(getResources().getColor(R.color.main_grey_light));
         setFontSizeText(App.getSharePreferences().getInt(KEY_FONT_SIZE, FONT_SIZE_MEDIUM));

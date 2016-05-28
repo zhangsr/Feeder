@@ -50,15 +50,18 @@
     <string name="share_failed">分享失败</string>
     <string name="share_cancel">分享取消</string>
     <string name="share">分享</string>
-    <string name="share_summary">如果你喜欢 Feeder 请把它分享给朋友</string>
+    <string name="share_summary">如果你喜欢 Feeder 请把它分享给你的朋友</string>
     <string name="app_share_desc">Rss 阅读器，开源，Material Design。</string>
     <string name="settings">设置</string>
     <string name="reading_font_size">阅读字体大小</string>
+    <string name="account_management">账号管理</string>
     <string name="font">字体</string>
+    <string name="account">账号</string>
     <string name="small">小</string>
     <string name="big">大</string>
     <string name="medium">中</string>
     <string name="copied">已复制</string>
+    <string name="account_feedly_add">添加 Feedly 账号</string>
     <string-array name="font_size">
         <item>@string/small</item>
         <item>@string/medium</item>
