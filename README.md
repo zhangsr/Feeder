@@ -10,6 +10,6 @@
 
 ### APP 下载
 
-[下载链接](http://fir.im/vdwa)
+[下载链接](http://fir.im/feeder)
 
 ![](https://github.com/zhangsr/Image/blob/master/qrcode.png?raw=true)
