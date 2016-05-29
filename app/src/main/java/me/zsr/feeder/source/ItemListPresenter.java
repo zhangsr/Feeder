@@ -63,7 +63,7 @@ public class ItemListPresenter implements IItemListPresenter {
         mModel.updateItem(item, new OnActionListener() {
             @Override
             public void success() {
-                mView.showBody(item.getTitle());
+                mView.showBody(item.getId());
             }
 
             @Override
@@ -77,7 +77,7 @@ public class ItemListPresenter implements IItemListPresenter {
     public void loadMore(long sourceId) {
         mLoadMultiple++;
         if (sourceId == App.SOURCE_ID_ALL) {
-            mModel.loadAllItem(mItemLoadListener, mLoadMultiple * LIMIT_LOAD_ONCE);
+            mModel.loadAllItem(App.getCurrentAccount(), mItemLoadListener, mLoadMultiple * LIMIT_LOAD_ONCE);
         } else {
             mModel.loadItemList(sourceId, mItemLoadListener, mLoadMultiple * LIMIT_LOAD_ONCE);
         }
@@ -86,7 +86,7 @@ public class ItemListPresenter implements IItemListPresenter {
     @Override
     public void reload(long sourceId) {
         if (sourceId == App.SOURCE_ID_ALL) {
-            mModel.loadAllItem(mItemLoadListener, mLoadMultiple * LIMIT_LOAD_ONCE);
+            mModel.loadAllItem(App.getCurrentAccount(), mItemLoadListener, mLoadMultiple * LIMIT_LOAD_ONCE);
         } else {
             mModel.loadItemList(sourceId, mItemLoadListener, mLoadMultiple * LIMIT_LOAD_ONCE);
         }
@@ -110,7 +110,7 @@ public class ItemListPresenter implements IItemListPresenter {
                 }
             };
             if (sourceId == App.SOURCE_ID_ALL) {
-                mModel.refreshAll(onActionListener);
+                mModel.refreshAll(App.getCurrentAccount(), onActionListener);
             } else {
                 mModel.refreshSource(sourceId, onActionListener);
             }

@@ -12,6 +12,7 @@ import de.greenrobot.dao.DaoException;
  */
 public class FeedItem {
 
+    private Long id;
     /** Not-null value. */
     private String title;
     private String link;
@@ -20,6 +21,7 @@ public class FeedItem {
     private Boolean trash;
     private String content;
     private java.util.Date lastShownDate;
+    private String reserved;
     private java.util.Date date;
     private long feedSourceId;
 
@@ -39,11 +41,12 @@ public class FeedItem {
     public FeedItem() {
     }
 
-    public FeedItem(String title) {
-        this.title = title;
+    public FeedItem(Long id) {
+        this.id = id;
     }
 
-    public FeedItem(String title, String link, String description, Boolean read, Boolean trash, String content, java.util.Date lastShownDate, java.util.Date date, long feedSourceId) {
+    public FeedItem(Long id, String title, String link, String description, Boolean read, Boolean trash, String content, java.util.Date lastShownDate, String reserved, java.util.Date date, long feedSourceId) {
+        this.id = id;
         this.title = title;
         this.link = link;
         this.description = description;
@@ -51,6 +54,7 @@ public class FeedItem {
         this.trash = trash;
         this.content = content;
         this.lastShownDate = lastShownDate;
+        this.reserved = reserved;
         this.date = date;
         this.feedSourceId = feedSourceId;
     }
@@ -59,6 +63,14 @@ public class FeedItem {
     public void __setDaoSession(DaoSession daoSession) {
         this.daoSession = daoSession;
         myDao = daoSession != null ? daoSession.getFeedItemDao() : null;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     /** Not-null value. */
@@ -117,6 +129,14 @@ public class FeedItem {
 
     public void setLastShownDate(java.util.Date lastShownDate) {
         this.lastShownDate = lastShownDate;
+    }
+
+    public String getReserved() {
+        return reserved;
+    }
+
+    public void setReserved(String reserved) {
+        this.reserved = reserved;
     }
 
     public java.util.Date getDate() {
@@ -207,7 +227,6 @@ public class FeedItem {
                 ", feedSource__resolvedKey=" + feedSource__resolvedKey +
                 '}';
     }
-
     // KEEP METHODS END
 
 }

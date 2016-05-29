@@ -9,9 +9,11 @@ import de.greenrobot.dao.AbstractDaoSession;
 import de.greenrobot.dao.identityscope.IdentityScopeType;
 import de.greenrobot.dao.internal.DaoConfig;
 
+import me.zsr.feeder.dao.FeedAccount;
 import me.zsr.feeder.dao.FeedSource;
 import me.zsr.feeder.dao.FeedItem;
 
+import me.zsr.feeder.dao.FeedAccountDao;
 import me.zsr.feeder.dao.FeedSourceDao;
 import me.zsr.feeder.dao.FeedItemDao;
 
@@ -24,9 +26,11 @@ import me.zsr.feeder.dao.FeedItemDao;
  */
 public class DaoSession extends AbstractDaoSession {
 
+    private final DaoConfig feedAccountDaoConfig;
     private final DaoConfig feedSourceDaoConfig;
     private final DaoConfig feedItemDaoConfig;
 
+    private final FeedAccountDao feedAccountDao;
     private final FeedSourceDao feedSourceDao;
     private final FeedItemDao feedItemDao;
 
@@ -34,22 +38,32 @@ public class DaoSession extends AbstractDaoSession {
             daoConfigMap) {
         super(db);
 
+        feedAccountDaoConfig = daoConfigMap.get(FeedAccountDao.class).clone();
+        feedAccountDaoConfig.initIdentityScope(type);
+
         feedSourceDaoConfig = daoConfigMap.get(FeedSourceDao.class).clone();
         feedSourceDaoConfig.initIdentityScope(type);
 
         feedItemDaoConfig = daoConfigMap.get(FeedItemDao.class).clone();
         feedItemDaoConfig.initIdentityScope(type);
 
+        feedAccountDao = new FeedAccountDao(feedAccountDaoConfig, this);
         feedSourceDao = new FeedSourceDao(feedSourceDaoConfig, this);
         feedItemDao = new FeedItemDao(feedItemDaoConfig, this);
 
+        registerDao(FeedAccount.class, feedAccountDao);
         registerDao(FeedSource.class, feedSourceDao);
         registerDao(FeedItem.class, feedItemDao);
     }
     
     public void clear() {
+        feedAccountDaoConfig.getIdentityScope().clear();
         feedSourceDaoConfig.getIdentityScope().clear();
         feedItemDaoConfig.getIdentityScope().clear();
+    }
+
+    public FeedAccountDao getFeedAccountDao() {
+        return feedAccountDao;
     }
 
     public FeedSourceDao getFeedSourceDao() {

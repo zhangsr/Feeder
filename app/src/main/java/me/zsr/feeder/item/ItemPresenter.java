@@ -55,8 +55,8 @@ public class ItemPresenter implements IItemPresenter {
     }
 
     @Override
-    public void loadItem(final String itemTitle) {
-        mModel.loadItem(itemTitle, new OnItemLoadListener() {
+    public void loadItem(Long id) {
+        mModel.loadItem(id, new OnItemLoadListener() {
             @Override
             public void success(FeedItem item) {
                 mFeedItem = item;

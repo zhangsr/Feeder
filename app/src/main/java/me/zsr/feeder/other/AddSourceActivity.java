@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import me.zsr.feeder.App;
 import me.zsr.feeder.R;
 import me.zsr.feeder.base.BaseActivity;
 import me.zsr.feeder.dao.FeedSource;
@@ -132,11 +133,12 @@ public class AddSourceActivity extends BaseActivity {
                     protected FeedSource doInBackground(Void... params) {
                         try {
                             FeedSource feedSource = mFeedReader.load(url);
-                            if (!mDataModel.saveSource(feedSource)) {
+                            feedSource.setFeedAccount(App.getCurrentAccount());
+                            if (!mDataModel.saveSource(App.getCurrentAccount(), feedSource)) {
                                 showError(getString(R.string.already_add));
                                 return null;
                             }
-                            mDataModel.addNewItem(feedSource.getFeedItems(), feedSource.getId());
+                            mDataModel.addNewItem(App.getCurrentAccount(), feedSource.getFeedItems(), feedSource.getId());
                             return feedSource;
                         } catch (FeedReadException e) {
                             e.printStackTrace();

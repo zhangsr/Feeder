@@ -43,7 +43,7 @@ public class SourceListPresenter implements ISourceListPresenter {
 
     @Override
     public void loadSource() {
-        mModel.loadAllSource(new OnSourceLoadListener() {
+        mModel.loadAllSource(App.getCurrentAccount(), new OnSourceLoadListener() {
             @Override
             public void success(List<FeedSource> list) {
                 mView.updated(list);
@@ -61,7 +61,7 @@ public class SourceListPresenter implements ISourceListPresenter {
     @Override
     public void refresh() {
         if (NetworkUtil.isWifiEnabled(App.getInstance())) {
-            mModel.refreshAll(new OnActionListener() {
+            mModel.refreshAll(App.getCurrentAccount(), new OnActionListener() {
                 @Override
                 public void success() {
                     loadSource();
@@ -108,7 +108,7 @@ public class SourceListPresenter implements ISourceListPresenter {
 
     @Override
     public void deleteSource(long sourceId) {
-        mModel.deleteSource(sourceId, new OnActionListener() {
+        mModel.deleteSource(App.getCurrentAccount(), sourceId, new OnActionListener() {
             @Override
             public void success() {
                 loadSource();
@@ -123,7 +123,7 @@ public class SourceListPresenter implements ISourceListPresenter {
 
     @Override
     public void clear() {
-        mModel.loadAllSource(new OnSourceLoadListener() {
+        mModel.loadAllSource(App.getCurrentAccount(), new OnSourceLoadListener() {
             @Override
             public void success(List<FeedSource> list) {
                 // FIXME: 11/19/15 bad performance

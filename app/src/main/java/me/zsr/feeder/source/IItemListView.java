@@ -19,5 +19,5 @@ public interface IItemListView {
 
     void showError(String msg);
 
-    void showBody(String itemTitle);
+    void showBody(Long id);
 }

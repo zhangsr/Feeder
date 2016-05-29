@@ -58,12 +58,8 @@ public class ItemActivity extends BaseActivity implements IItemView {
         initView();
 
         mPresenter = new ItemPresenter(this, this);
-        String itemTitle = getIntent().getExtras().getString(App.KEY_BUNDLE_ITEM_TITLE);
-        if (TextUtils.isEmpty(itemTitle)) {
-            showError("Item Title is empty");
-        } else {
-            mPresenter.loadItem(itemTitle);
-        }
+        Long id = getIntent().getExtras().getLong(App.KEY_BUNDLE_ITEM_ID);
+        mPresenter.loadItem(id);
     }
 
     private void initView() {

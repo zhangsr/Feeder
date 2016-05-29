@@ -21,12 +21,17 @@ public class FeedSource {
     private String link;
     private String favicon;
     private String description;
+    private String reserved;
+    private long feedAccountId;
 
     /** Used to resolve relations */
     private transient DaoSession daoSession;
 
     /** Used for active entity operations. */
     private transient FeedSourceDao myDao;
+
+    private FeedAccount feedAccount;
+    private Long feedAccount__resolvedKey;
 
     private List<FeedItem> feedItems;
 
@@ -40,7 +45,7 @@ public class FeedSource {
         this.id = id;
     }
 
-    public FeedSource(Long id, String title, String url, java.util.Date date, String link, String favicon, String description) {
+    public FeedSource(Long id, String title, String url, java.util.Date date, String link, String favicon, String description, String reserved, long feedAccountId) {
         this.id = id;
         this.title = title;
         this.url = url;
@@ -48,6 +53,8 @@ public class FeedSource {
         this.link = link;
         this.favicon = favicon;
         this.description = description;
+        this.reserved = reserved;
+        this.feedAccountId = feedAccountId;
     }
 
     /** called by internal mechanisms, do not call yourself. */
@@ -112,6 +119,50 @@ public class FeedSource {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getReserved() {
+        return reserved;
+    }
+
+    public void setReserved(String reserved) {
+        this.reserved = reserved;
+    }
+
+    public long getFeedAccountId() {
+        return feedAccountId;
+    }
+
+    public void setFeedAccountId(long feedAccountId) {
+        this.feedAccountId = feedAccountId;
+    }
+
+    /** To-one relationship, resolved on first access. */
+    public FeedAccount getFeedAccount() {
+        long __key = this.feedAccountId;
+        if (feedAccount__resolvedKey == null || !feedAccount__resolvedKey.equals(__key)) {
+            if (daoSession == null) {
+                throw new DaoException("Entity is detached from DAO context");
+            }
+            FeedAccountDao targetDao = daoSession.getFeedAccountDao();
+            FeedAccount feedAccountNew = targetDao.load(__key);
+            synchronized (this) {
+                feedAccount = feedAccountNew;
+            	feedAccount__resolvedKey = __key;
+            }
+        }
+        return feedAccount;
+    }
+
+    public void setFeedAccount(FeedAccount feedAccount) {
+        if (feedAccount == null) {
+            throw new DaoException("To-one property 'feedAccountId' has not-null constraint; cannot set to-one to null");
+        }
+        synchronized (this) {
+            this.feedAccount = feedAccount;
+            feedAccountId = feedAccount.getId();
+            feedAccount__resolvedKey = feedAccountId;
+        }
     }
 
     /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */

@@ -2,6 +2,8 @@ package me.zsr.feeder.data;
 
 import java.util.List;
 
+import me.zsr.feeder.App;
+import me.zsr.feeder.dao.FeedAccount;
 import me.zsr.feeder.dao.FeedItem;
 import me.zsr.feeder.dao.FeedSource;
 import me.zsr.feeder.item.OnItemLoadListener;
@@ -16,31 +18,31 @@ import me.zsr.feeder.source.OnSourceLoadListener;
  */
 public interface IDataModel {
 
-    void loadAllSource(OnSourceLoadListener listener);
+    void loadAllSource(FeedAccount account, OnSourceLoadListener listener);
 
-    void loadAllItem(OnItemListLoadListener listener, int limit);
+    void loadAllItem(FeedAccount account, OnItemListLoadListener listener, int limit);
 
     void loadItemList(long sourceId, OnItemListLoadListener listener, int limit);
 
-    void loadItem(String itemTitle, OnItemLoadListener listener);
+    void loadItem(Long id, OnItemLoadListener listener);
 
-    void refreshAll(OnActionListener listener);
+    void refreshAll(FeedAccount account, OnActionListener listener);
 
     void refreshSource(long sourceId, OnActionListener listener);
 
-    void saveSource(FeedSource feedSource, OnActionListener listener);
+    void saveSource(FeedAccount account, FeedSource feedSource, OnActionListener listener);
 
-    boolean saveSource(FeedSource feedSource);
+    boolean saveSource(FeedAccount account, FeedSource feedSource);
 
-    void addNewItem(List<FeedItem> itemList, long sourceId, OnActionListener listener);
+    void addNewItem(FeedAccount account, List<FeedItem> itemList, long sourceId, OnActionListener listener);
 
-    boolean addNewItem(List<FeedItem> itemList, long sourceId);
+    boolean addNewItem(FeedAccount account, List<FeedItem> itemList, long sourceId);
 
     void updateItem(FeedItem item, OnActionListener listener);
 
     void updateItemList(List<FeedItem> itemList, OnActionListener listener);
 
-    void deleteSource(long sourceId, OnActionListener listener);
+    void deleteSource(FeedAccount account, long sourceId, OnActionListener listener);
 
     void deleteItem(List<FeedItem> itemList, OnActionListener listener);
 }

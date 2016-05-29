@@ -1,12 +1,14 @@
 package me.zsr.feeder.data;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import me.zsr.feeder.App;
+import me.zsr.feeder.dao.FeedAccount;
 import me.zsr.feeder.dao.FeedItem;
 import me.zsr.feeder.dao.FeedItemDao;
 import me.zsr.feeder.dao.FeedSource;
@@ -34,7 +36,7 @@ public class DataModel implements IDataModel {
     }
 
     @Override
-    public void loadAllSource(final OnSourceLoadListener listener) {
+    public void loadAllSource(final FeedAccount account, final OnSourceLoadListener listener) {
         // TODO: 11/16/15 many request and do once as volley ?
         // TODO: 11/16/15 Handle some error
         new AsyncTask<Void, Void, List<FeedSource>>() {
@@ -42,7 +44,7 @@ public class DataModel implements IDataModel {
             @Override
             protected List<FeedSource> doInBackground(Void... params) {
                 // TODO: 11/19/15 why load source has not feeditemlist ?
-                List<FeedSource> feedSourceList = mSourceDao.loadAll();
+                List<FeedSource> feedSourceList = account.getFeedSources();
                 for (FeedSource feedSource : feedSourceList) {
 
                     List<FeedItem> feedItemList = mItemDao.queryBuilder()
@@ -65,16 +67,22 @@ public class DataModel implements IDataModel {
     }
 
     @Override
-    public void loadAllItem(final OnItemListLoadListener listener, final int limit) {
+    public void loadAllItem(final FeedAccount account, final OnItemListLoadListener listener, final int limit) {
         new AsyncTask<Void, Void, List<FeedItem>>() {
 
             @Override
             protected List<FeedItem> doInBackground(Void... params) {
+                List<Long> sourceIdList = new ArrayList<>();
+                for (FeedSource source : account.getFeedSources()) {
+                    sourceIdList.add(source.getId());
+                }
                 if (limit == -1) {
                     return mItemDao.queryBuilder()
+                            .where(FeedItemDao.Properties.FeedSourceId.in(sourceIdList))
                             .orderDesc(FeedItemDao.Properties.Date).list();
                 } else {
                     return mItemDao.queryBuilder()
+                            .where(FeedItemDao.Properties.FeedSourceId.in(sourceIdList))
                             .limit(limit).orderDesc(FeedItemDao.Properties.Date).list();
                 }
             }
@@ -133,12 +141,12 @@ public class DataModel implements IDataModel {
     }
 
     @Override
-    public void loadItem(String itemTitle, OnItemLoadListener listener) {
+    public void loadItem(Long id, OnItemLoadListener listener) {
         List<FeedItem> list = mItemDao.queryBuilder().where(
-                FeedItemDao.Properties.Title.eq(itemTitle)).list();
+                FeedItemDao.Properties.Id.eq(id)).list();
         if (listener != null) {
             if (list == null || list.size() == 0) {
-                listener.error("No FeedSource found");
+                listener.error("No FeedItem found");
             } else if (list.size() == 1) {
                 listener.success(list.get(0));
             } else {
@@ -148,17 +156,17 @@ public class DataModel implements IDataModel {
     }
 
     @Override
-    public void refreshAll(final OnActionListener listener) {
+    public void refreshAll(final FeedAccount account, final OnActionListener listener) {
         new AsyncTask<Void, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(Void... params) {
                 boolean isSuccess = false;
-                for (FeedSource source : mSourceDao.loadAll()) {
+                for (FeedSource source : account.getFeedSources()) {
                     long sourceId = source.getId();
                     try {
                         FeedSource oldFeedSource = loadSourceById(sourceId);
                         FeedSource newFeedSource = mFeedReader.load(oldFeedSource.getUrl());
-                        addNewItem(newFeedSource.getFeedItems(), sourceId);
+                        addNewItem(oldFeedSource.getFeedAccount(), newFeedSource.getFeedItems(), sourceId);
                     } catch (FeedReadException e) {
                         e.printStackTrace();
                     }
@@ -191,7 +199,7 @@ public class DataModel implements IDataModel {
                 try {
                     FeedSource oldFeedSource = loadSourceById(sourceId);
                     FeedSource newFeedSource = mFeedReader.load(oldFeedSource.getUrl());
-                    addNewItem(newFeedSource.getFeedItems(), sourceId);
+                    addNewItem(oldFeedSource.getFeedAccount(), newFeedSource.getFeedItems(), sourceId);
                     isSuccess = true;
                 } catch (FeedReadException e) {
                     e.printStackTrace();
@@ -215,11 +223,11 @@ public class DataModel implements IDataModel {
     }
 
     @Override
-    public void saveSource(final FeedSource feedSource, final OnActionListener listener) {
+    public void saveSource(final FeedAccount account, final FeedSource feedSource, final OnActionListener listener) {
         new AsyncTask<Void, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(Void... params) {
-                return saveSource(feedSource);
+                return saveSource(account, feedSource);
             }
 
             @Override
@@ -237,23 +245,29 @@ public class DataModel implements IDataModel {
     }
 
     @Override
-    public boolean saveSource(FeedSource feedSource) {
+    public boolean saveSource(FeedAccount account, FeedSource feedSource) {
         // Has same
-        if (mSourceDao.queryBuilder().where(FeedSourceDao.Properties.Url.eq(
-                feedSource.getUrl())).list().size() > 0) {
+        if (mSourceDao.queryBuilder()
+                .where(FeedSourceDao.Properties.FeedAccountId.eq(account.getId()),
+                        FeedSourceDao.Properties.Url.eq(feedSource.getUrl()))
+                .list().size() > 0) {
             return false;
         }
 
         mSourceDao.insertOrReplace(feedSource);
+
+        // update list
+        account.resetFeedSources();
+
         return true;
     }
 
     @Override
-    public void addNewItem(final List<FeedItem> itemList, final long sourceId, final OnActionListener listener) {
+    public void addNewItem(final FeedAccount account, final List<FeedItem> itemList, final long sourceId, final OnActionListener listener) {
         new AsyncTask<Void, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(Void... params) {
-                return addNewItem(itemList, sourceId);
+                return addNewItem(account, itemList, sourceId);
             }
 
             @Override
@@ -309,10 +323,18 @@ public class DataModel implements IDataModel {
     }
 
     @Override
-    public boolean addNewItem(final List<FeedItem> itemList, final long sourceId) {
+    public boolean addNewItem(FeedAccount account, final List<FeedItem> itemList, final long sourceId) {
         List<FeedItem> itemToInsert = new ArrayList<>();
+        List<Long> sourceIdList = new ArrayList<>();
+        for (FeedSource source : account.getFeedSources()) {
+            sourceIdList.add(source.getId());
+        }
         for (FeedItem item : itemList) {
-            if (mItemDao.queryBuilder().where(FeedItemDao.Properties.Title.eq(item.getTitle())).count() == 0) {
+            long existCount = mItemDao.queryBuilder().where(
+                    FeedItemDao.Properties.FeedSourceId.in(sourceIdList),
+                    FeedItemDao.Properties.Title.eq(item.getTitle())).count();
+
+            if (existCount == 0) {
                 if (item.getDate() == null) {
                     item.setDate(new Date());
                 }
@@ -323,11 +345,13 @@ public class DataModel implements IDataModel {
                 item.setFeedSourceId(sourceId);
                 item.setLastShownDate(new Date());
                 itemToInsert.add(item);
-            } else {
+            } else if (existCount == 1) {
                 FeedItem oldItem = mItemDao.queryBuilder().where(
                         FeedItemDao.Properties.Title.eq(item.getTitle())).list().get(0);
                 oldItem.setLastShownDate(new Date());
                 itemToInsert.add(oldItem);
+            } else {
+                LogUtil.e(existCount + " items with same title in account " + account.getName() + " !!");
             }
         }
         mItemDao.insertOrReplaceInTx(itemToInsert);
@@ -335,13 +359,14 @@ public class DataModel implements IDataModel {
     }
 
     @Override
-    public void deleteSource(final long sourceId, final OnActionListener listener) {
+    public void deleteSource(final FeedAccount account, final long sourceId, final OnActionListener listener) {
         new AsyncTask<Void, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(Void... params) {
                 mItemDao.deleteInTx(mItemDao.queryBuilder().where(
                         FeedItemDao.Properties.FeedSourceId.eq(sourceId)).list());
                 mSourceDao.deleteByKey(sourceId);
+                account.resetFeedSources();
                 return true;
             }
 

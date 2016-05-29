@@ -9,7 +9,7 @@ import android.graphics.Bitmap;
  */
 public interface IItemPresenter {
 
-    void loadItem(String itemTitle);
+    void loadItem(Long id);
 
     void shareToWechat(Bitmap defaultImage);
 

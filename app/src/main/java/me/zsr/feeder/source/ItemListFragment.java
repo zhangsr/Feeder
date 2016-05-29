@@ -79,14 +79,14 @@ public class ItemListFragment extends Fragment implements IItemListView {
     }
 
     @Override
-    public void showBody(String itemTitle) {
+    public void showBody(Long id) {
         // TODO: 12/1/15 when fragment detach from activity ? getActivity return null
         if (!isAdded()) {
             return;
         }
 
         Bundle bundle = new Bundle();
-        bundle.putString(App.KEY_BUNDLE_ITEM_TITLE, itemTitle);
+        bundle.putLong(App.KEY_BUNDLE_ITEM_ID, id);
         Intent intent = new Intent(getActivity(), ItemActivity.class);
         intent.putExtras(bundle);
         startActivity(intent);
