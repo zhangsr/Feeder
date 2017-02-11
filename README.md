@@ -1,3 +1,5 @@
+### DEPRECATED [跳转到新版本](https://github.com/zhangsr/Feeder2)
+
 ![](https://github.com/zhangsr/Image/blob/master/feeder_logo.png?raw=true)
 
 
